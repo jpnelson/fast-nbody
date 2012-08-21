@@ -1,0 +1,140 @@
+\documentclass[10pt]{beamer}
+% Class options include: notes, notesonly, handout, trans,
+%                        hidesubsections, shadesubsections,
+%                        inrow, blue, red, grey, brown
+
+% Theme for beamer presentation.
+\usepackage{beamerthemesplit} 
+%\usepackage{times}
+\usepackage{anysize}
+\usepackage{fancyhdr}
+\usepackage{graphicx}
+\usepackage{pdfpages}
+\usepackage{amsmath}
+\usepackage{amssymb}
+% Other themes include: beamerthemebars, beamerthemelined, 
+%                       beamerthemetree, beamerthemetreebars  
+
+\title{The Fast Multipole Algorithm vs. The Particle Mesh Ewald Method}    % Enter your title between curly braces
+\author{Joshua Nelson}                 % Enter your name between curly braces
+\institute{COMP3006 Research Project}      % Enter your institute name between curly braces
+\date{\today}                    % Enter the date or \today between curly braces
+
+\usetheme{PaloAlto}
+\usecolortheme{beaver}
+
+\newcommand{\bcen}{\begin{center}}
+\newcommand{\ecen}{\end{center}}
+
+\begin{document}
+
+% Creates title page of slide show using above information
+\begin{frame}
+  \titlepage
+\end{frame}
+\note{} % Add notes to yourself that will be displayed when
+        % typeset with the notes or notesonly class options
+
+
+
+\section{The N-body problem}
+
+\begin{frame}
+    \frametitle{The N-body problem}
+    \begin{itemize}
+        \item<1-> The problem
+        \begin{itemize}
+            \item<1-> N bodies in space - calculate some interaction between them
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{N-body diagram}
+    \bcen \includegraphics<1>[width=2.5cm,bb=60 70 150 150]{nbodies.pdf} \ecen
+\end{frame}
+
+\section{Motivation}
+\begin{frame}
+    Why is this useful?
+\end{frame}
+
+\begin{frame}
+    \frametitle{The millenium run}
+    \bcen \includegraphics<1>[width=7.5cm,bb= 0 0 2048 1536,clip]{millenium_run.jpg} \ecen
+\end{frame}
+\begin{frame}
+    \frametitle{Plasma physics simulation}
+    \bcen \includegraphics<1>[width=7.5cm,bb= 0 0 1589 1609,clip]{plasma.jpg} \ecen
+\end{frame}
+\begin{frame}
+    \frametitle{Molecular dynamics}
+    \bcen \includegraphics<1>[width=7.5cm,bb= 0 0 1144 936,clip]{molecule.jpg} \ecen
+\end{frame}
+
+\begin{frame}
+    \frametitle{The basic solution}
+    \begin{itemize}
+        \item<1-> The na\"{\i}ve solution
+        \begin{itemize}
+            \item<1-> Calculate interactions between every pair of bodies
+            \item<2-> $O(n^2)$ complexity for N bodies.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{N-body diagram}
+    \bcen \includegraphics<1>[width=2.5cm,bb=60 70 150 150]{nbodies.pdf} \ecen
+    \bcen \includegraphics<2>[width=2.5cm,bb=60 0 150 150]{nbodies_arrows.pdf} \ecen
+\end{frame}
+
+\section{Alternative solutions}
+\begin{frame}
+    \frametitle{Alternative solutions}
+    \begin{itemize}
+        \item<1-> Can this be done faster?
+        \begin{itemize}
+            \item<2-> The fast multipole method
+            \item<3-> The particle mesh ewald method
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{The fast multipole method}
+    \begin{itemize}
+        \item<1-> Form a grid and group particles in the grid
+        \item<2-> Treat far away groups as singular entities, forming a function for their potentials
+        \item<3-> Sum these functions
+        \item<4 -> Turns out to be $O(n)$
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{The particle mesh ewald method}
+    \begin{itemize}
+        \item<1-> We take the potential function, and apply a fast fourier transform over a discrete mesh, then interpolate
+        \item<2-> Turns out to be $O(n \text{log} n )$
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Comparing}
+    \begin{itemize}
+        \item<1-> Which is more commonly used?
+        \item<2-> Particle Mesh Ewald Method, $O(n \text{log} n )$...
+    \end{itemize}
+\end{frame}
+
+\section{My project}
+\begin{frame}
+    \frametitle{The scope}
+    \begin{itemize}
+        \item<1-> Compare these two algorithms
+        \item<2-> Attempt to improve the algorithms and their implementations
+        \item<3-> Determine the point at which each algorithm is preferable
+    \end{itemize}
+\end{frame}
+\end{document}
+

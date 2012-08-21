@@ -1,0 +1,5 @@
+\beamer@endinputifotherversion {3.10pt}
+\beamer@sectionintoc {1}{The N-body problem}{2}{0}{1}
+\beamer@sectionintoc {2}{Motivation}{4}{0}{2}
+\beamer@sectionintoc {3}{Alternative solutions}{12}{0}{3}
+\beamer@sectionintoc {4}{My project}{23}{0}{4}
