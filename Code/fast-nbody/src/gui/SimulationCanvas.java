@@ -5,11 +5,13 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
 import javax.swing.JComponent;
+import javax.swing.JOptionPane;
 
 import particles.Particle;
 import particles.ParticleList;
@@ -36,17 +38,24 @@ public class SimulationCanvas extends Canvas implements MouseListener, MouseMoti
 		g.fillRect(0, 0, this.getWidth(), this.getHeight());
 		gui.particleList.draw((Graphics2D) g);
     }
+
     
 
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
 		//Add a particle
-		Particle newParticle = new Particle(e.getX(),e.getY());
+		Particle newParticle = null;
+		if(e.getButton()==e.BUTTON1)
+			newParticle = new Particle(e.getX(),e.getY(),1,1);
+		if(e.getButton()==e.BUTTON3)
+			newParticle = new Particle(e.getX(),e.getY(),1,-1);
+		if(!(e.getButton()==e.BUTTON1 || e.getButton()==e.BUTTON3))
+			return;
 		gui.particleList.add(newParticle);
 		gui.redraw();
 		
-		System.out.println("Mouse click");		
+		System.out.println("Particle created with position "+newParticle.getPosition().toString()+" and charge "+newParticle.getCharge());		
 	}
 
 	@Override
