@@ -6,8 +6,10 @@ import java.util.ArrayList;
 
 import math.Complex;
 
-public class ParticleList extends ArrayList<Particle>{
-	
+public abstract class ParticleList extends ArrayList<Particle>{
+	public ParticleList(ArrayList particles) {
+		this.addAll(particles);
+	}
 	public void draw(Graphics2D g)
 	{
 		
@@ -17,12 +19,5 @@ public class ParticleList extends ArrayList<Particle>{
 		}
 	}
 	
-	public double charge(Complex position)
-	{
-		Complex sum = Complex.zero;
-		for (Particle particle : this) {
-			   sum = sum.add(position.sub(particle.getPosition()).ln().scale(particle.getCharge()));
-		}
-		return sum.re();
-	}
+	public abstract double charge(Complex position);
 }

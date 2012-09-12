@@ -5,6 +5,8 @@ import java.awt.Graphics2D;
 import java.awt.geom.Point2D;
 import math.Complex;
 public class Particle{
+	public static int DEFAULT_CHARGE = 1;
+	public static int DEFAULT_MASS = 1;
 	Complex position;
 	double mass;
 	double charge;
