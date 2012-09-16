@@ -11,6 +11,7 @@ public class Complex {
 
 	private final double im;
 	
+	
 	public Complex(double r, double i) {
 		re = r;
 		im = i;

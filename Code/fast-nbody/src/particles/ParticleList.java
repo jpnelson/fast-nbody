@@ -1,6 +1,7 @@
 package particles;
 
 import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
 
@@ -20,4 +21,7 @@ public abstract class ParticleList extends ArrayList<Particle>{
 	}
 	
 	public abstract double charge(Complex position);
+	
+	public abstract void debugDraw(Graphics g);
+
 }

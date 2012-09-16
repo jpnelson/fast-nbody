@@ -1,6 +1,7 @@
 package particles;
 
 import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
 
@@ -22,5 +23,10 @@ public class NSquaredList extends ParticleList{
 			   sum = sum.add(position.sub(particle.getPosition()).ln().scale(particle.getCharge()));
 		}
 		return sum.re();
+	}
+
+	@Override
+	public void debugDraw(Graphics g) {
+		//No debug drawing for this one
 	}
 }

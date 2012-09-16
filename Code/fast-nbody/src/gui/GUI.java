@@ -13,28 +13,36 @@ import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JProgressBar;
+import javax.swing.SwingWorker;
 
-import particles.FastMultipoleList;
+import fma.FastMultipoleList;
+
+
 import particles.NSquaredList;
 import particles.Particle;
 import particles.ParticleList;
 
 public class GUI implements ActionListener, PropertyChangeListener{
 	//Window
-	static Dimension windowSize = new Dimension(1024,768);
+	static Dimension windowSize = new Dimension(512,512);
 	JFrame jFrame;
 	JMenuBar jMenuBar;
 	JMenu chargesMenu;
+	JMenu particlesMenu;
 	JMenuItem calculateChargesItem;
 	JMenuItem calculateFMAItem;
 	JMenuItem clearParticlesItem;
 	JMenuItem distributeRandomlyItem;
+	JMenuItem distributeRegularlyItem;
 	JProgressBar progressBar;
 	//Graphics
 	SimulationCanvas simulationCanvas;
@@ -53,6 +61,7 @@ public class GUI implements ActionListener, PropertyChangeListener{
 		//Menu
 		jMenuBar = new JMenuBar();
 		chargesMenu = new JMenu("Charges");
+		particlesMenu = new JMenu("Particles");
 		
 		calculateChargesItem = new JMenuItem("Calculate charges (Basic algorithm)");
 		calculateChargesItem.addActionListener(this);
@@ -63,18 +72,23 @@ public class GUI implements ActionListener, PropertyChangeListener{
 		distributeRandomlyItem = new JMenuItem("Distribute particles randomly");
 		distributeRandomlyItem.addActionListener(this);
 		
+		distributeRegularlyItem = new JMenuItem("Distribute particles regularly");
+		distributeRegularlyItem.addActionListener(this);
+		
 		clearParticlesItem = new JMenuItem("Clear particles");
 		clearParticlesItem.addActionListener(this);
 
 		chargesMenu.add(calculateChargesItem);
 		chargesMenu.add(calculateFMAItem);
-		chargesMenu.add(clearParticlesItem);
-		chargesMenu.add(distributeRandomlyItem);
-		
+		particlesMenu.add(distributeRandomlyItem);
+		particlesMenu.add(distributeRegularlyItem);
+		particlesMenu.add(clearParticlesItem);
+
 		//Interface
 		progressBar = new JProgressBar(0,100);
 
 		//Add the menus to the menubar
+		jMenuBar.add(particlesMenu);
 		jMenuBar.add(chargesMenu);
 		
 		//Add components
@@ -98,6 +112,8 @@ public class GUI implements ActionListener, PropertyChangeListener{
 			calculateFMA();
 		if (e.getSource() == distributeRandomlyItem)
 			distributeRandomly();
+		if (e.getSource() == distributeRegularlyItem)
+			distributeRegularly();
 	}
 	
 	//Button actions
@@ -105,8 +121,6 @@ public class GUI implements ActionListener, PropertyChangeListener{
 	{
 		NSquaredList nsquaredList = new NSquaredList(particles);
 		System.out.println("Calculating charges");
-		Graphics graphics = simulationCanvas.getGraphics();
-		ArrayList<Double> charges = new ArrayList<Double>();
 		
 		int height = simulationCanvas.getHeight();
 		int width = simulationCanvas.getWidth();
@@ -120,9 +134,8 @@ public class GUI implements ActionListener, PropertyChangeListener{
 	public void calculateFMA()
 	{
 		//Copy the ParticleList list
-		FastMultipoleList fmList = new FastMultipoleList(particles);
+		FastMultipoleList fmList = new FastMultipoleList(particles,simulationCanvas.canvasSize);
 		System.out.println("Calculating charges using Fast Multipole Algorithm");
-		Graphics graphics = simulationCanvas.getGraphics();
 		
 		int height = simulationCanvas.getHeight();
 		int width = simulationCanvas.getWidth();
@@ -133,12 +146,56 @@ public class GUI implements ActionListener, PropertyChangeListener{
 		
 		
 	}
+	public void distributeRandomly()
+	{
+		for(int i = 0; i < 20; i++)
+		{
+			Particle p;
+			int charge = Math.random() < 0.5? -Particle.DEFAULT_CHARGE:Particle.DEFAULT_CHARGE;
+			p = new Particle(Math.random()*simulationCanvas.getWidth(),Math.random()*simulationCanvas.getWidth(),Particle.DEFAULT_MASS,charge);
+			particles.add(p);
+		}
+		simulationCanvas.repaint();
+	}
+	
+	public void clearParticles()
+	{
+		System.out.println("Clearing particles");
+		particles.clear();
+		redraw();
+	}
+	
+	public void distributeRegularly()
+	{
+		particles.add(new Particle(simulationCanvas.getWidth()/4,simulationCanvas.getHeight()/5,Particle.DEFAULT_MASS,Particle.DEFAULT_CHARGE));
+		particles.add(new Particle(simulationCanvas.getWidth()/4,2*simulationCanvas.getHeight()/5,Particle.DEFAULT_MASS,Particle.DEFAULT_CHARGE));
+		particles.add(new Particle(simulationCanvas.getWidth()/4,3*simulationCanvas.getHeight()/5,Particle.DEFAULT_MASS,Particle.DEFAULT_CHARGE));
+
+		particles.add(new Particle(3*simulationCanvas.getWidth()/4,simulationCanvas.getHeight()/5,Particle.DEFAULT_MASS,-Particle.DEFAULT_CHARGE));
+		particles.add(new Particle(3*simulationCanvas.getWidth()/4,2*simulationCanvas.getHeight()/5,Particle.DEFAULT_MASS,-Particle.DEFAULT_CHARGE));
+		particles.add(new Particle(3*simulationCanvas.getWidth()/4,3*simulationCanvas.getHeight()/5,Particle.DEFAULT_MASS,-Particle.DEFAULT_CHARGE));
+		
+		redraw();
+	}
 	
 	@Override
 	public void propertyChange(PropertyChangeEvent e) {
+		//If progress has been made
         if ("progress" == e.getPropertyName()) {
             int progress = (Integer) e.getNewValue();
             progressBar.setValue(progress);        
+        }
+        //Check to see if the worker failed
+        if ("state" == e.getPropertyName() && e.getNewValue().equals(SwingWorker.StateValue.DONE)){
+            @SuppressWarnings("unchecked")
+			SwingWorker<Void,Void> source = (SwingWorker<Void,Void>)e.getSource();  
+            try {
+                source.get();  
+            } catch (ExecutionException ex) {  
+                Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex.getCause());  
+            } catch (InterruptedException ex) {  
+                Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);  
+            } 
         }
 	}
 	
@@ -173,24 +230,6 @@ public class GUI implements ActionListener, PropertyChangeListener{
 		}
 	}
 	
-	public void distributeRandomly()
-	{
-		for(int i = 0; i < 20; i++)
-		{
-			Particle p;
-			int charge = Math.random() < 0.5? -Particle.DEFAULT_CHARGE:Particle.DEFAULT_CHARGE;
-			p = new Particle(Math.random()*simulationCanvas.getWidth(),Math.random()*simulationCanvas.getWidth(),Particle.DEFAULT_MASS,charge);
-			particles.add(p);
-		}
-		simulationCanvas.repaint();
-	}
-	
-	public void clearParticles()
-	{
-		System.out.println("Clearing particles");
-		particles.clear();
-		redraw();
-	}
 	
 	public void start()
 	{
