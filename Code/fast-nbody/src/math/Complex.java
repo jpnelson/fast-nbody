@@ -6,7 +6,8 @@ package math;
  */
 public class Complex {
 	public static final Complex zero = new Complex(0.0,0.0);
-	
+	public static final Complex one = new Complex(1.0,0.0);
+
 	private final double re;
 
 	private final double im;

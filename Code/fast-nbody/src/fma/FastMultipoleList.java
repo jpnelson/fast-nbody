@@ -12,14 +12,16 @@ import particles.ParticleList;
 import math.Complex;
 
 public class FastMultipoleList extends ParticleList{
-	static int EXPANSION_TERMS = 6;
+	static int EXPANSION_TERMS = 25;
 	static int LEVEL_COUNT = 4; //should be about log_4(N) (G&R)
 	Dimension windowSize;
 	Mesh lowestLevelMesh;
+	Mesh[] meshes = new Mesh[LEVEL_COUNT+1];
 	
 	public FastMultipoleList(ArrayList particles, Dimension windowSize) {
 		super(particles);
 		this.windowSize = windowSize;
+		
 		
 		init();
 
@@ -40,7 +42,18 @@ public class FastMultipoleList extends ParticleList{
 		
 		//Form multipole expansions
 		lowestLevelMesh.formMultipoleExpansions(EXPANSION_TERMS);
-		//Get the next highest multipole expansion
+		
+		//Save all the coarse meshes
+		int l = lowestLevelMesh.level;
+		meshes[l] = lowestLevelMesh;
+		while(l > 0)
+		{
+			meshes[l-1] = meshes[l].makeCoarserMesh();
+			l--;
+		}
+		
+		//Step 3 (G&R)
+		
 	}
 	
 	public void debugDraw(Graphics g)
@@ -61,7 +74,7 @@ public class FastMultipoleList extends ParticleList{
 	public double charge(Complex position) {
 		//Algorithm from Greengard and Rokhlin
 		//Form a p-term multipole expansion \phi_{n,ibox} by using Theorem 2.1
-		
+
 		return 0;
 	}
 }

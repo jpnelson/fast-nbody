@@ -5,11 +5,12 @@ import java.util.ArrayList;
 import particles.Particle;
 import particles.ParticleList;
 
+import math.Binomial;
 import math.Complex;
 
 public class MultipoleExpansion {
 	private double chargeSum = 0; //Q (G&R)
-	private ArrayList<Complex> expansionNumerators = new ArrayList<Complex>();
+	private ArrayList<Complex> expansionNumerators = new ArrayList<Complex>(); //goes from a_1 to a_numberOfTerms-1
 	private final int numberOfTerms;
 	private final Complex center;
 	
@@ -65,18 +66,7 @@ public class MultipoleExpansion {
 		return complexPotential.re();
 	}
 	
-	//Taken from MP.java by Eric McCreath.
-	static double binomial(int n, int k) {
-		 if (k > n)
-		      return 0;
-		  if (k > n/2)
-		        k = n-k; // faster
-		   double accum = 1.0;
-		    for (int i = 1; i <= k; i++) {
-		         accum = accum * (n-k+i) / (double) i;
-		 }
-		 return accum;
-	}
+
 	
 	public MultipoleExpansion shift(Complex newCenter)
 	{
@@ -88,13 +78,40 @@ public class MultipoleExpansion {
 			for(int k = 1; k <= l; k++)
 			{
 				int kIndex = k-1; //we start at 1, but our arrays are indexed at 0
-				thisTerm = thisTerm.add(expansionNumerators.get(kIndex).mult(offset.power(l-k)).scale(binomial(l-1,k-1)).sub(offset.power(l).scale((double)(chargeSum)/(double)(l))));
+				thisTerm = thisTerm.add(expansionNumerators.get(kIndex).mult(offset.power(l-k)).scale(Binomial.binomial(l-1,k-1)).sub(offset.power(l).scale((double)(chargeSum)/(double)(l))));
 			}
 			
 			newNumerators.add(thisTerm);
 		}
 		MultipoleExpansion shiftedExpansion = new MultipoleExpansion(newCenter,numberOfTerms,chargeSum,newNumerators);
 		return shiftedExpansion;
+	}
+	
+	//Combine two multipole expansions
+	public MultipoleExpansion add(MultipoleExpansion otherMP)
+	{
+		//The centers should be the same
+		if(!otherMP.center.equals(center))
+		{
+			System.err.println("MultipoleExpansion.add: The centers should be the same");
+			return null;
+		}
+		ArrayList<Complex> newNumerators = new ArrayList<Complex>();
+		for(int i = 0; i < otherMP.expansionNumerators.size(); i++)
+		{
+			newNumerators.add(expansionNumerators.get(i).add(otherMP.expansionNumerators.get(i)));
+		}
+		MultipoleExpansion newMultipoleExpansion = new MultipoleExpansion(center,newNumerators.size(),chargeSum+otherMP.chargeSum,newNumerators);
+		return newMultipoleExpansion;
+	}
+	public double getChargeSum()
+	{
+		return chargeSum;
+	}
+	
+	public ArrayList<Complex> getNumerators()
+	{
+		return (ArrayList<Complex>)expansionNumerators.clone();
 	}
 	
 	@Override
