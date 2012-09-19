@@ -134,7 +134,7 @@ public class GUI implements ActionListener, PropertyChangeListener{
 	public void calculateFMA()
 	{
 		//Copy the ParticleList list
-		FastMultipoleList fmList = new FastMultipoleList(particles,simulationCanvas.canvasSize);
+		FastMultipoleList fmList = new FastMultipoleList(particles,new SpaceSize(simulationCanvas.canvasSize.width,simulationCanvas.canvasSize.height));
 		System.out.println("Calculating charges using Fast Multipole Algorithm");
 		
 		int height = simulationCanvas.getHeight();

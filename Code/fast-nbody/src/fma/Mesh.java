@@ -1,5 +1,7 @@
 package fma;
 
+import gui.SpaceSize;
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -13,9 +15,10 @@ public class Mesh {
 	int boxesOnSide;
 	final int level;
 	Cell[][] meshCells;
-	Dimension meshSize;
+	SpaceSize meshSize;
 
-	public Mesh(int boxesOnSide, int level, Dimension meshSize)
+	//TODO: this only really makes sense when level=0, otherwise we *could* make a 'wrong' mesh
+	public Mesh(int boxesOnSide, int level, SpaceSize meshSize)
 	{
 		this.boxesOnSide = boxesOnSide;
 		this.meshSize = meshSize;
@@ -26,7 +29,7 @@ public class Mesh {
 		{
 			for(int y = 0; y < boxesOnSide; y++)
 			{
-				meshCells[x][y] = new Cell();
+				meshCells[x][y] = new Cell(x,y);
 			}
 		}
 	}
@@ -34,8 +37,8 @@ public class Mesh {
 	//Allocates a particle to one of the boxes
 	public void add(Particle p)
 	{
-		int xCoordinate = (int) Math.floor(p.getPosition().re() / (meshSize.width / boxesOnSide));
-		int yCoordinate = (int) Math.floor(p.getPosition().im() / (meshSize.height / boxesOnSide));
+		int xCoordinate = (int) Math.floor(p.getPosition().re() / (meshSize.getWidth() / (double)(boxesOnSide)));
+		int yCoordinate = (int) Math.floor(p.getPosition().im() / (meshSize.getHeight() / (double)(boxesOnSide)));
 		
 		meshCells[xCoordinate][yCoordinate].add(p);
 		System.out.println(p.getPosition().toString() + " in cell "+xCoordinate+","+yCoordinate);
@@ -48,12 +51,11 @@ public class Mesh {
 		{
 			for(int y = 0; y < boxesOnSide; y++)
 			{
-				int boxWidth = (meshSize.width/boxesOnSide);
-				int boxHeight = (meshSize.height/boxesOnSide);
-				int centerX = x * boxWidth + (boxWidth/2);
-				int centerY = y * boxHeight + (boxHeight/2);
-				Complex center = new Complex(centerX,centerY);
-				meshCells[x][y].multipoleExpansion = new MultipoleExpansion(meshCells[x][y].particles,center,numberOfTerms);
+				meshCells[x][y].multipoleExpansion = new MultipoleExpansion(meshCells[x][y].particles,getCellCenter(x,y),numberOfTerms);
+				if(x==14 && y==11)
+				{
+					System.out.println(meshCells[x][y].multipoleExpansion);
+				}
 			}
 		}
 	}
@@ -63,6 +65,17 @@ public class Mesh {
 		int parentX = (x - x%2)/2;
 		int parentY = (y - y%2)/2;
 		return new Pair<Integer,Integer>(parentX,parentY);
+	}
+	//Returns a cell's center in pixel like coordinates
+	public Complex getCellCenter(int x, int y)
+	{
+		
+		double boxWidth =  (double)(meshSize.getWidth()) / (double)(boxesOnSide);
+		double boxHeight =  (double)(meshSize.getHeight()) / (double)(boxesOnSide);
+		double xCenter = x*boxWidth + boxWidth/2;
+		double yCenter = y*boxWidth + boxHeight/2;
+
+		return new Complex(xCenter,yCenter);
 	}
 	//for use in the getInteractionList function, to determine if well separated
 	private static int distance(int x1, int y1, int x2, int y2)
@@ -109,8 +122,8 @@ public class Mesh {
 	public Mesh makeCoarserMesh()
 	{
 		Mesh coarserMesh = new Mesh(boxesOnSide/2,level-1,meshSize);
-		int coarseBoxWidth = (coarserMesh.meshSize.width/boxesOnSide);
-		int coarseBoxHeight = (coarserMesh.meshSize.height/boxesOnSide);
+		int coarseBoxWidth = (int) (coarserMesh.meshSize.getWidth()/boxesOnSide);
+		int coarseBoxHeight = (int) (coarserMesh.meshSize.getHeight()/boxesOnSide);
 		
 		//Don't worry about adding particles, just concerned with the Multipole expansions
 		for(int x = 0; x < coarserMesh.boxesOnSide; x++)
@@ -125,7 +138,7 @@ public class Mesh {
 				combinedMultipoleExpansion = combinedMultipoleExpansion.add(meshCells[topLeftX][topLeftY+1].multipoleExpansion.shift(newCenter));
 				combinedMultipoleExpansion = combinedMultipoleExpansion.add(meshCells[topLeftX+1][topLeftY].multipoleExpansion.shift(newCenter));
 				combinedMultipoleExpansion = combinedMultipoleExpansion.add(meshCells[topLeftX+1][topLeftY+1].multipoleExpansion.shift(newCenter));
-				meshCells[x][y].multipoleExpansion = combinedMultipoleExpansion;
+				coarserMesh.meshCells[x][y].multipoleExpansion = combinedMultipoleExpansion;
 			}
 		}
 		
@@ -140,10 +153,10 @@ public class Mesh {
 		{
 			for(int y = 0; y < boxesOnSide; y++)
 			{
-				double boxWidth = meshSize.width / boxesOnSide;
-				double boxHeight = meshSize.height / boxesOnSide;
+				double boxWidth = meshSize.getWidth() / (double)(boxesOnSide);
+				double boxHeight = meshSize.getHeight() / (double)(boxesOnSide);
 				g.setColor(Color.white);
-				g.drawRect((int)(x*boxWidth), (int)(y*boxHeight), (int)boxWidth, (int)boxHeight);
+				//g.drawRect((int)(x*boxWidth), (int)(y*boxHeight), (int)boxWidth, (int)boxHeight);
 			}
 		}
 	}

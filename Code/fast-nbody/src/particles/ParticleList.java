@@ -11,6 +11,9 @@ public abstract class ParticleList extends ArrayList<Particle>{
 	public ParticleList(ArrayList particles) {
 		this.addAll(particles);
 	}
+	public ParticleList() {
+		//Don't do anything
+	}
 	public void draw(Graphics2D g)
 	{
 		

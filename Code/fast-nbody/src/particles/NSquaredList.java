@@ -13,6 +13,10 @@ public class NSquaredList extends ParticleList{
 	public NSquaredList(ArrayList particles) {
 		super(particles);
 	}
+	public NSquaredList() //empty
+	{
+		super();
+	}
 
 	@Override
 	public double charge(Complex position)
