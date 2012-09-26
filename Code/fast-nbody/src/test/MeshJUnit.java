@@ -13,7 +13,7 @@ import fma.Mesh;
 import gui.SpaceSize;
 
 public class MeshJUnit {
-	Mesh testMesh = new Mesh(8,3,new SpaceSize(512,512));
+	Mesh testMesh = new Mesh(8,3,20,new SpaceSize(512,512));
 	
 	@Test
 	public void testInteractionList()

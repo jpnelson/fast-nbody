@@ -31,4 +31,7 @@ public class Particle{
 	public double getCharge(){
 		return charge;
 	}
+	public double getMass(){
+		return mass;
+	}
 }

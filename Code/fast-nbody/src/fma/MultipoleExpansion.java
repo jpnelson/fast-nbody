@@ -54,6 +54,17 @@ public class MultipoleExpansion {
 		center = Complex.zero;
 	}
 	
+	//This one provides an empty multipole expansion, will always return 0. Has place holders of numberOfTerms size
+	public MultipoleExpansion(int numberOfTerms, Complex center)
+	{
+		this.center = center;
+		this.numberOfTerms = numberOfTerms;
+		for(int i = 0; i < numberOfTerms; i++)
+		{
+			this.expansionNumerators.add(Complex.zero);
+		}
+	}
+	
 	public double potential(Complex z)
 	{
 		Complex complexPotential = Complex.zero;
@@ -107,6 +118,16 @@ public class MultipoleExpansion {
 	public double getChargeSum()
 	{
 		return chargeSum;
+	}
+	
+	public int getNumberOfTerms()
+	{
+		return numberOfTerms;
+	}
+	
+	public Complex getCenter()
+	{
+		return center;
 	}
 	
 	public ArrayList<Complex> getNumerators()

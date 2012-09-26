@@ -14,22 +14,25 @@ import particles.Particle;
 public class Mesh {
 	int boxesOnSide;
 	final int level;
+	final int cellExpansionTerms;
 	Cell[][] meshCells;
 	SpaceSize meshSize;
 
 	//TODO: this only really makes sense when level=0, otherwise we *could* make a 'wrong' mesh
-	public Mesh(int boxesOnSide, int level, SpaceSize meshSize)
+	public Mesh(int boxesOnSide, int level, int cellExpansionTerms, SpaceSize meshSize)
 	{
 		this.boxesOnSide = boxesOnSide;
 		this.meshSize = meshSize;
 		this.level = level;
+		this.cellExpansionTerms = cellExpansionTerms;
 		meshCells = new Cell[boxesOnSide][boxesOnSide];
 		//Initialize the cells to be empty, and the multipole expansions to be empty too
 		for(int x = 0; x < boxesOnSide; x++)
 		{
 			for(int y = 0; y < boxesOnSide; y++)
 			{
-				meshCells[x][y] = new Cell(x,y);
+				Complex cellCenter = getCellCenter(x,y);
+				meshCells[x][y] = new Cell(x,y,cellExpansionTerms,cellCenter);
 			}
 		}
 	}
@@ -52,10 +55,10 @@ public class Mesh {
 			for(int y = 0; y < boxesOnSide; y++)
 			{
 				meshCells[x][y].multipoleExpansion = new MultipoleExpansion(meshCells[x][y].particles,getCellCenter(x,y),numberOfTerms);
-				if(x==14 && y==11)
-				{
-					System.out.println(meshCells[x][y].multipoleExpansion);
-				}
+//				if(x==14 && y==11)
+//				{
+//					System.out.println(meshCells[x][y].multipoleExpansion);
+//				}
 			}
 		}
 	}
@@ -121,9 +124,9 @@ public class Mesh {
 	//Create the next highest mesh, using Lemma 2.3 (G&R)
 	public Mesh makeCoarserMesh()
 	{
-		Mesh coarserMesh = new Mesh(boxesOnSide/2,level-1,meshSize);
-		int coarseBoxWidth = (int) (coarserMesh.meshSize.getWidth()/boxesOnSide);
-		int coarseBoxHeight = (int) (coarserMesh.meshSize.getHeight()/boxesOnSide);
+		Mesh coarserMesh = new Mesh(boxesOnSide/2,level-1,cellExpansionTerms,meshSize);
+		double coarseBoxWidth = (double) (coarserMesh.meshSize.getWidth()/(double)(coarserMesh.boxesOnSide));
+		double coarseBoxHeight = (double) (coarserMesh.meshSize.getHeight()/(double)(coarserMesh.boxesOnSide));
 		
 		//Don't worry about adding particles, just concerned with the Multipole expansions
 		for(int x = 0; x < coarserMesh.boxesOnSide; x++)
@@ -133,14 +136,42 @@ public class Mesh {
 				int topLeftX = x*2;
 				int topLeftY = y*2;
 				//The 4 corners are at topLeftX,topLeftY +0,1
-				Complex newCenter = new Complex(x*coarseBoxWidth + coarseBoxWidth/2.0,y*coarseBoxHeight + coarseBoxHeight/2.0);
-				MultipoleExpansion combinedMultipoleExpansion = meshCells[topLeftX][topLeftY].multipoleExpansion.shift(newCenter);
+				Complex newCenter = coarserMesh.getCellCenter(x, y);
+				MultipoleExpansion combinedMultipoleExpansion = new MultipoleExpansion(meshCells[topLeftX][topLeftY].multipoleExpansion.getNumberOfTerms(),newCenter);
+				combinedMultipoleExpansion = combinedMultipoleExpansion.add(meshCells[topLeftX][topLeftY].multipoleExpansion.shift(newCenter));
 				combinedMultipoleExpansion = combinedMultipoleExpansion.add(meshCells[topLeftX][topLeftY+1].multipoleExpansion.shift(newCenter));
 				combinedMultipoleExpansion = combinedMultipoleExpansion.add(meshCells[topLeftX+1][topLeftY].multipoleExpansion.shift(newCenter));
 				combinedMultipoleExpansion = combinedMultipoleExpansion.add(meshCells[topLeftX+1][topLeftY+1].multipoleExpansion.shift(newCenter));
 				coarserMesh.meshCells[x][y].multipoleExpansion = combinedMultipoleExpansion;
+
+				if(coarserMesh.meshCells[x][y].multipoleExpansion.getNumerators().get(0).re() != 0.0 && level==1){
+//					System.out.println("LEVEL "+(level-1)+" - " +x + " " + y + "," + coarserMesh.meshCells[x][y].multipoleExpansion);
+//					System.out.println("\t "+meshCells[topLeftX][topLeftY].multipoleExpansion.potential(Complex.zero));
+//					System.out.println("\t "+meshCells[topLeftX+1][topLeftY].multipoleExpansion.potential(Complex.zero));
+//					System.out.println("\t "+meshCells[topLeftX][topLeftY+1].multipoleExpansion.potential(Complex.zero));
+//					System.out.println("\t "+meshCells[topLeftX+1][topLeftY+1].multipoleExpansion.potential(Complex.zero));
+
+				}
+				if(level == 5 && x==1 && y==3)
+				{
+					//meshCells[topLeftX+1][topLeftY].multipoleExpansion.shift(newCenter).getNumerators().get(0).re() != 0.0 && 
+//					System.out.println("LEVEL "+level+" coarser mesh - " +x + " " + y + "," + meshCells[topLeftX+1][topLeftY].multipoleExpansion);
+//					System.out.println("LEVEL "+level+" coarser mesh - " +x + " " + y + "," + meshCells[topLeftX+1][topLeftY].multipoleExpansion.shift(newCenter));
+//					System.out.println(meshCells[topLeftX+1][topLeftY].multipoleExpansion.potential(Complex.zero));
+//					System.out.println(meshCells[topLeftX+1][topLeftY].multipoleExpansion.shift(newCenter).potential(Complex.zero));
+//					System.out.println(meshCells[topLeftX+1][topLeftY].multipoleExpansion.getCenter());
+//					System.out.println(newCenter);
+				}
+				
 			}
 		}
+//		for(int x=0; x < boxesOnSide; x++)
+//		{
+//			for(int y = 0; y < boxesOnSide; y++)
+//			{
+//				
+//			}
+//		}
 		
 		return coarserMesh;
 	}

@@ -14,8 +14,8 @@ import particles.ParticleList;
 import math.Complex;
 
 public class FastMultipoleList extends ParticleList{
-	static int EXPANSION_TERMS = 25;
-	static int LEVEL_COUNT = 5; //should be about log_4(N) (G&R)
+	public static int EXPANSION_TERMS = 20;
+	public static int LEVEL_COUNT = 5; //should be about log_4(N) (G&R)
 	SpaceSize windowSize;
 	Mesh lowestLevelMesh;
 	Mesh[] meshes = new Mesh[LEVEL_COUNT+1];
@@ -36,7 +36,7 @@ public class FastMultipoleList extends ParticleList{
 		int boxesOnSide = (int)Math.pow(2.0, LEVEL_COUNT);
 		
 		//Allocate each particle to it's appropriate lowest level box
-		lowestLevelMesh = new Mesh(boxesOnSide,LEVEL_COUNT,windowSize);
+		lowestLevelMesh = new Mesh(boxesOnSide,LEVEL_COUNT,EXPANSION_TERMS,windowSize);
 		for(Particle p : this)
 		{
 			lowestLevelMesh.add(p);
@@ -44,8 +44,17 @@ public class FastMultipoleList extends ParticleList{
 		
 		//Form multipole expansions
 		lowestLevelMesh.formMultipoleExpansions(EXPANSION_TERMS);
-		System.out.println(lowestLevelMesh.meshCells[14][11].multipoleExpansion);
+		//System.out.println(lowestLevelMesh.meshCells[14][11].multipoleExpansion);
 
+		
+//		for(int x = 0; x < meshes[LEVEL_COUNT-1].boxesOnSide; x++)
+//		{
+//			for(int y = 0; y < meshes[LEVEL_COUNT-1].boxesOnSide; y++)
+//			{
+//				
+//			}
+//		}
+		
 		//Save all the coarser meshes
 		int l = lowestLevelMesh.level;
 		meshes[l] = lowestLevelMesh;
@@ -56,14 +65,14 @@ public class FastMultipoleList extends ParticleList{
 		}
 		
 
-		
-		//Step 3 (G&R)
+//		if(c.multipoleExpansion.getNumerators().get(0).re() != 0.0)
+//			System.out.println(l+" sum: "+x + " "+y + " " + c.getX() + " "+ c.getY() + "| "+c.multipoleExpansion+",...");
 		
 		//Find the centers for each box
-		meshes[1].meshCells[0][0].psiBar = new LocalExpansion(EXPANSION_TERMS, meshes[l].getCellCenter(0, 0));
-		meshes[1].meshCells[0][1].psiBar = new LocalExpansion(EXPANSION_TERMS, meshes[l].getCellCenter(0, 1));
-		meshes[1].meshCells[1][0].psiBar = new LocalExpansion(EXPANSION_TERMS, meshes[l].getCellCenter(1, 0));
-		meshes[1].meshCells[1][1].psiBar = new LocalExpansion(EXPANSION_TERMS, meshes[l].getCellCenter(1, 1));
+		meshes[1].meshCells[0][0].psiBar = new LocalExpansion(EXPANSION_TERMS, meshes[1].getCellCenter(0, 0));
+		meshes[1].meshCells[0][1].psiBar = new LocalExpansion(EXPANSION_TERMS, meshes[1].getCellCenter(0, 1));
+		meshes[1].meshCells[1][0].psiBar = new LocalExpansion(EXPANSION_TERMS, meshes[1].getCellCenter(1, 0));
+		meshes[1].meshCells[1][1].psiBar = new LocalExpansion(EXPANSION_TERMS, meshes[1].getCellCenter(1, 1));
 		for(l = 1; l < LEVEL_COUNT; l++) //don't do == LEVEL_COUNT, the last one //reuse l
 		{
 			for(int x = 0; x < meshes[l].boxesOnSide; x++)
@@ -74,11 +83,23 @@ public class FastMultipoleList extends ParticleList{
 					ArrayList<Cell> interactionList = meshes[l].getInteractionList(x,y);
 					Complex thisCellCenter = meshes[l].getCellCenter(x, y);
 					LocalExpansion sum = new LocalExpansion(EXPANSION_TERMS,thisCellCenter);
+					
 					for(Cell c : interactionList)
 					{
-						sum = sum.add(new LocalExpansion(c.multipoleExpansion,thisCellCenter,EXPANSION_TERMS));
+						Complex cCenter = meshes[l].getCellCenter(c.getX(), c.getY());//meshes[l] meshes[LEVEL_COUNT]
+						LocalExpansion cLocalExpand = new LocalExpansion(c.multipoleExpansion,cCenter.sub(thisCellCenter),EXPANSION_TERMS);
+						sum = sum.add(cLocalExpand);//was thisCellCenter (20/9/12) TODO: check this line. Copied like Step 4
+						if(x==3 && y==0 && l==2) //1,0 lvl 1 | 3,0 lvl 2 | 6,0 lvl 3| 12,1 lvl 4 | 25,3 lvl 5
+						{
+							//System.out.println(cCenter);
+						}
 					}
+					
+					
+					
 					thisCell.psi = sum.add(thisCell.psiBar);
+					
+					
 				}
 			}
 			for(int x = 0; x < meshes[l].boxesOnSide; x++)
@@ -94,10 +115,19 @@ public class FastMultipoleList extends ParticleList{
 					childTopRight.psiBar = thisCell.psi.shift(meshes[l+1].getCellCenter(x*2+1,y*2));
 					childBotLeft.psiBar = thisCell.psi.shift(meshes[l+1].getCellCenter(x*2  ,y*2+1));
 					childBotRight.psiBar = thisCell.psi.shift(meshes[l+1].getCellCenter(x*2+1,y*2+1));
+					
+//					if(x==3 && y==0 && l==2) //1,0 lvl 1 | 3,0 lvl 2 | 6,0 lvl 3| 12,1 lvl 4 | 25,3 lvl 5
+//					{
+//						System.out.println(thisCell.psi);
+//						//System.out.println(meshes[l+1].meshCells[x*2][y*2+1].psiBar);
+//					}
+					
 				}
 			}
 			
 		}
+
+
 		//Step 4 (G&R)
 		//Compute interactions at the finest mesh level
 		for(int x = 0; x < meshes[LEVEL_COUNT].boxesOnSide; x++)
@@ -108,24 +138,26 @@ public class FastMultipoleList extends ParticleList{
 				ArrayList<Cell> interactionList = meshes[LEVEL_COUNT].getInteractionList(x,y);
 				Complex thisCellCenter = meshes[LEVEL_COUNT].getCellCenter(x, y);
 				LocalExpansion sum = new LocalExpansion(EXPANSION_TERMS,thisCellCenter);
+				
 				for(Cell c : interactionList)
 				{
 					Complex cCenter = meshes[LEVEL_COUNT].getCellCenter(c.getX(), c.getY());
-					sum = sum.add(new LocalExpansion(c.multipoleExpansion,cCenter,EXPANSION_TERMS));//was thisCellCenter
+					LocalExpansion cLocalExpansion = new LocalExpansion(c.multipoleExpansion,cCenter.sub(thisCellCenter),EXPANSION_TERMS);//was thisCellCenter
+					sum = sum.add(cLocalExpansion);
 				}
 				sum = sum.add(thisCell.psiBar);
 				thisCell.psi = sum;
+
 			}
 		}
-		
-		//Print the psi expansions
-		for(int x = 0; x < meshes[LEVEL_COUNT].boxesOnSide; x++)
-		{
-			for(int y = 0; y < meshes[LEVEL_COUNT].boxesOnSide; y++)
-			{
-					System.out.println("X: "+x+" Y: "+y+"   "+meshes[LEVEL_COUNT].meshCells[x][y].psi.getExpansionTerm(0)+",...");
-			}
-		}
+		//DEBUG
+//		for(int x = 0; x < meshes[LEVEL_COUNT].boxesOnSide; x++)
+//		{
+//			for(int y = 0; y < meshes[LEVEL_COUNT].boxesOnSide; y++)
+//			{
+//				//System.out.println("X: "+x+"Y: "+y+" "+meshes[LEVEL_COUNT].meshCells[x][y].psi.potential(new Complex(1.0,1.1)));
+//			}
+//		}
 	}
 	
 	public void debugDraw(Graphics g)
@@ -147,8 +179,8 @@ public class FastMultipoleList extends ParticleList{
 	public double charge(Complex position) {
 		double x = position.re();
 		double y = position.im();
-		int xIndex = (int) Math.floor(x / (double)(meshes[LEVEL_COUNT].boxesOnSide * meshes[LEVEL_COUNT].meshSize.getWidth()));
-		int yIndex = (int) Math.floor(y / (double)(meshes[LEVEL_COUNT].boxesOnSide* meshes[LEVEL_COUNT].meshSize.getHeight()));
+		int xIndex = (int) Math.floor(meshes[LEVEL_COUNT].boxesOnSide* (x / (double)(meshes[LEVEL_COUNT].meshSize.getWidth())));
+		int yIndex = (int) Math.floor(meshes[LEVEL_COUNT].boxesOnSide* (y / (double)(meshes[LEVEL_COUNT].meshSize.getHeight())));
 		Cell positionCell = meshes[LEVEL_COUNT].meshCells[xIndex][yIndex];
 		double charge = positionCell.psi.potential(position);
 		//Do all the near ones manually

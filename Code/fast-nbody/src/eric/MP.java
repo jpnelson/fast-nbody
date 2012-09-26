@@ -1,11 +1,5 @@
 package eric;
 
-import java.util.ArrayList;
-
-import particles.Particle;
-
-import math.Complex;
-
 public class MP {
 	
 	Complex a[];  // a[0] is the sum of the charges
@@ -20,19 +14,19 @@ public class MP {
 		}
 	}
 	
-	public MP(ArrayList<Particle> pts, int p, Complex center) {
+	public MP(Particles pts, int p, Complex center) {
 		
 		this.p = p;
 		a = new Complex[p+1];
 		double q = 0.0;
 		for (Particle pt : pts) {
-			q += pt.getCharge();
+			q += pt.q;
 		}
 		a[0] = new Complex(q,0.0);
 		for (int i = 1; i <= p; i++) {
 			Complex sum = Complex.zero;
 			for (Particle pa : pts) {
-				sum = sum.add(pa.getPosition().sub(center).power(i).scale(-pa.getCharge()/(i*1.0)));
+				sum = sum.add(pa.pos.sub(center).power(i).scale(-pa.q/(i*1.0)));
 			}
 			a[i] = sum;
 		}

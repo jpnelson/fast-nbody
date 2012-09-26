@@ -13,11 +13,13 @@ import particles.NSquaredList;
 import particles.Particle;
 import eric.MP;
 import eric.PS;
+import eric.Particles;
 import fma.LocalExpansion;
 import fma.MultipoleExpansion;
 
 public class LocalExpansionJUnit {
 	ArrayList<Particle> pts, pts2;
+	eric.Particles ericPts;
 	Complex center, pos;
 	MultipoleExpansion mp1,mp2;
 	NSquaredList pl1;
@@ -34,6 +36,12 @@ public class LocalExpansionJUnit {
 		pts2.add(new Particle(4,2,3.0,1.5));
 		pts2.add(new Particle(5,1,3.0,-2.5));
 
+		ericPts = new eric.Particles();
+		for(Particle p : pts)
+		{
+			ericPts.add(new eric.Particle(new eric.Complex(p.getPosition().re(),p.getPosition().im()),p.getCharge(),p.getMass()));
+		}
+		
 		mp1 = new MultipoleExpansion(pts,center,25);
 		mp2 = new MultipoleExpansion(pts2,center,25);
 		pl1 = new NSquaredList(pts);
@@ -43,8 +51,9 @@ public class LocalExpansionJUnit {
 	public void testCreation()
 	{
 		LocalExpansion psi = new LocalExpansion(mp1,center,25);
-		MP mp = new MP(pts,25,center);
-		PS PSpsi = new PS(mp,center,25);
+		
+		eric.MP mp = new eric.MP(ericPts,25,complexToEricComplex(center));
+		eric.PS PSpsi = new eric.PS(mp,complexToEricComplex(center),25);
 		for(int i = 0; i < 25; i++)
 		{
 			//System.out.println(psi.getExpansionTerm(i));
@@ -57,9 +66,27 @@ public class LocalExpansionJUnit {
 	{
 		mp1 = new MultipoleExpansion(pts,center,26);
 		LocalExpansion psi = new LocalExpansion(mp1,center,26);
-		MP mp = new MP(pts,25,center);
-		PS PSpsi = new PS(mp,center,25);
-		assertTrue(Math.abs(PSpsi.charge(pos.sub(center)) - psi.potential(pos)) <= 0.00001);
+		
+		eric.MP mp = new eric.MP(ericPts,25,new eric.Complex(center.re(),center.im()));
+		eric.PS PSpsi = new eric.PS(mp,new eric.Complex(center.re(),center.im()),25);
+		System.out.println(PSpsi.charge(complexToEricComplex(pos.sub(center))));
+		System.out.println(psi.potential(pos));
+		System.out.println("----------------");
+		assertTrue(Math.abs(PSpsi.charge(complexToEricComplex(pos.sub(center))) - psi.potential(pos)) <= 0.00001);
+		
+		
+		Complex shiftedCenter = new Complex(23.0,14.0);
+		PSpsi = PSpsi.shift(complexToEricComplex(center.sub(shiftedCenter)));
+		psi = psi.shift(shiftedCenter);
+		System.out.println(PSpsi.charge(complexToEricComplex(pos.sub(shiftedCenter))));
+		System.out.println(psi.potential(pos));
+		assertTrue(Math.abs(PSpsi.charge(complexToEricComplex(pos.sub(shiftedCenter))) - psi.potential(pos)) <= 0.00001);
+
+	}
+	
+	public eric.Complex complexToEricComplex(Complex c)
+	{
+		return new eric.Complex(c.re(),c.im());
 	}
 	
 	@Test

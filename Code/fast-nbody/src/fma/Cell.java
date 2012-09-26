@@ -2,6 +2,8 @@ package fma;
 
 import java.util.ArrayList;
 
+import math.Complex;
+
 import particles.NSquaredList;
 import particles.Particle;
 
@@ -14,12 +16,12 @@ public class Cell {
 	LocalExpansion psiBar; 
 	private final int x,y;
 	
-	public Cell(int x, int y)
-	{
+
+	public Cell(int x, int y, int cellExpansionTerms, Complex cellCenter) {
 		//Zero Local Expansions
 		//psi = new LocalExpansion();
 		//psiBar = new LocalExpansion();
-		multipoleExpansion = new MultipoleExpansion();
+		multipoleExpansion = new MultipoleExpansion(cellExpansionTerms,cellCenter);
 		particles = new NSquaredList();
 		this.x = x;
 		this.y = y;

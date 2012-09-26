@@ -1,10 +1,7 @@
 package eric;
 
-import math.Binomial;
-import math.Complex;
-
 public class PS {
-	public Complex b[];  
+	Complex b[];  
 	int p;
 	
 	
@@ -33,7 +30,7 @@ public class PS {
 		for (int l = 1; l <= p; l++) {
 			sum = Complex.zero;
 			for (int k = 1; k <= mp.p; k++) {
-				sum = sum.add(mp.a[k].div(z0.power(k)).scale(Binomial.binomial(l+k-1,k-1) * minusoneto(k) )  );
+				sum = sum.add(mp.a[k].div(z0.power(k)).scale(MP.binomial(l+k-1,k-1) * minusoneto(k) )  );
 			}
 			sum = sum.div(z0.power(l));
 			sum = sum.sub(mp.a[0].div(z0.power(l).scale(l)));
@@ -64,7 +61,7 @@ public class PS {
 		for (int l = 0; l <= res.p; l++) {
 			Complex sum = Complex.zero;
 			for (int k = l; k <= res.p; k++) {
-				sum = sum.add(z0.neg().power(k-l).mult(b[k]).scale(Binomial.binomial(k,l)));		
+				sum = sum.add(z0.neg().power(k-l).mult(b[k]).scale(MP.binomial(k,l)));		
 			}
 			res.b[l] = sum;
 		}
@@ -79,6 +76,14 @@ public class PS {
 			res.b[l] = b[l].add(ps.b[l]);
 		}
 		return res;
+	}
+	
+	public String toString() {
+		String res = "";
+		for (int i = 0; i < b.length; i++) {
+			res += (i==0? "": ", ") + b[i];
+		}
+		return "PS#  "  + "a [" + res + "]" ;
 	}
 	
 

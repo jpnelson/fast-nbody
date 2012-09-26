@@ -112,10 +112,10 @@ public class LocalExpansion {
 	
 	public String toString()
 	{
-		String s = "";
+		String s = "LocalExpansion: ";
 		for(int i = 0; i < numberOfTerms; i++)
 		{
-			s += terms[i] + "\n";
+			s += terms[i] + ",";
 		}
 		return s;
 	}
