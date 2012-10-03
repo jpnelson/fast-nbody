@@ -3,6 +3,8 @@ package gui;
 import java.awt.Toolkit;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.SwingWorker;
 
@@ -48,7 +50,10 @@ public class CalculationTask extends SwingWorker<Void,Void>{
     		particleList.debugDraw(gui.simulationCanvas.getGraphics());
     	}catch(Exception e)
     	{
-    		//Do nothing if it didn't work, when this procedure completes the error will be displayed in GUI propertyChange
+    		//Only handle debugDraw problems
+        	Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, e);  
+
+    		//Do nothing if it didn't work otherwise, when this procedure completes the error will be displayed in GUI propertyChange
     	}
     	System.out.println("Calculation worker completed");
         Toolkit.getDefaultToolkit().beep();

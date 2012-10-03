@@ -30,6 +30,7 @@ import fma.FastMultipoleList;
 import particles.NSquaredList;
 import particles.Particle;
 import particles.ParticleList;
+import pme.PMEList;
 
 public class GUI implements ActionListener, PropertyChangeListener{
 	//Window
@@ -40,6 +41,7 @@ public class GUI implements ActionListener, PropertyChangeListener{
 	JMenu particlesMenu;
 	JMenuItem calculateChargesItem;
 	JMenuItem calculateFMAItem;
+	JMenuItem calculatePMEItem;
 	JMenuItem clearParticlesItem;
 	JMenuItem distributeRandomlyItem;
 	JMenuItem distributeRegularlyItem;
@@ -69,6 +71,9 @@ public class GUI implements ActionListener, PropertyChangeListener{
 		calculateFMAItem = new JMenuItem("Calculate charges (Fast multipole algorithm)");
 		calculateFMAItem.addActionListener(this);
 		
+		calculatePMEItem = new JMenuItem("Calculate charges (Particle mesh ewald method)");
+		calculatePMEItem.addActionListener(this);
+		
 		distributeRandomlyItem = new JMenuItem("Distribute particles randomly");
 		distributeRandomlyItem.addActionListener(this);
 		
@@ -80,6 +85,8 @@ public class GUI implements ActionListener, PropertyChangeListener{
 
 		chargesMenu.add(calculateChargesItem);
 		chargesMenu.add(calculateFMAItem);
+		chargesMenu.add(calculatePMEItem);
+
 		particlesMenu.add(distributeRandomlyItem);
 		particlesMenu.add(distributeRegularlyItem);
 		particlesMenu.add(clearParticlesItem);
@@ -110,6 +117,8 @@ public class GUI implements ActionListener, PropertyChangeListener{
 			clearParticles();
 		if (e.getSource() == calculateFMAItem)
 			calculateFMA();
+		if (e.getSource() == calculatePMEItem)
+			calculatePME();
 		if (e.getSource() == distributeRandomlyItem)
 			distributeRandomly();
 		if (e.getSource() == distributeRegularlyItem)
@@ -131,6 +140,22 @@ public class GUI implements ActionListener, PropertyChangeListener{
 		
 		
 	}
+	
+	public void calculatePME()
+	{
+		//Copy the ParticleList list
+		PMEList pmeList = new PMEList(particles,new SpaceSize(simulationCanvas.canvasSize.width,simulationCanvas.canvasSize.height));
+		System.out.println("Calculating charges using particle mesh ewald method");
+		
+		int height = simulationCanvas.getHeight();
+		int width = simulationCanvas.getWidth();
+		
+		task = new CalculationTask(this,pmeList,width,height);
+		task.addPropertyChangeListener(this);
+		task.execute();
+		
+	}
+	
 	public void calculateFMA()
 	{
 		//Copy the ParticleList list
@@ -195,7 +220,9 @@ public class GUI implements ActionListener, PropertyChangeListener{
                 Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex.getCause());  
             } catch (InterruptedException ex) {  
                 Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);  
-            } 
+            } catch (Exception ex) {
+            	Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);  
+            }
         }
 	}
 	
