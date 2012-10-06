@@ -34,6 +34,10 @@ public class Complex {
 		return Math.hypot(re, im);
 	}
 	
+	public double mag() {
+		return Math.sqrt(re*re + im*im);
+	}
+	
 	public Complex add(Complex a) {
 		return new Complex(re+a.re,im+a.im);
 	}

@@ -1,0 +1,80 @@
+<!DOCTYPE html PUBLIC "-//W3O//DTD W3 HTML 2.0//EN">
+<!-- saved from url=(0053)http://people.ee.duke.edu/~ayt/ewaldpaper/node16.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title> Particle-Mesh Ewald</title>
+<style type="text/css"></style></head>
+<body>
+<meta name="description" value=" Particle-Mesh Ewald">
+<meta name="keywords" value="ewaldpaper">
+<meta name="resource-type" value="document">
+<meta name="distribution" value="global">
+<p>
+ <br> </p><hr><a name="tex2html204" href="http://people.ee.duke.edu/~ayt/ewaldpaper/node17.html"><img align="BOTTOM" alt="next" src="./Particle-Mesh Ewald_files/next_motif.gif"></a>   <a name="tex2html202" href="http://people.ee.duke.edu/~ayt/ewaldpaper/node14.html"><img align="BOTTOM" alt="up" src="./Particle-Mesh Ewald_files/up_motif.gif"></a>   <a name="tex2html196" href="http://people.ee.duke.edu/~ayt/ewaldpaper/node15.html"><img align="BOTTOM" alt="previous" src="./Particle-Mesh Ewald_files/previous_motif.gif"></a>         <br>
+<b> Next:</b> <a name="tex2html205" href="http://people.ee.duke.edu/~ayt/ewaldpaper/node17.html"> Fast Fourier Poisson </a>
+<b>Up:</b> <a name="tex2html203" href="http://people.ee.duke.edu/~ayt/ewaldpaper/node14.html"> Fourier-based Ewald Summation </a>
+<b> Previous:</b> <a name="tex2html197" href="http://people.ee.duke.edu/~ayt/ewaldpaper/node15.html"> Particle-Particle Particle-Mesh </a>
+<br> <hr> <p>
+</p><h2><a name="SECTION00042000000000000000"> Particle-Mesh Ewald</a></h2>
+<p>
+
+The Particle-Mesh Ewald method (<b> PME</b>) [<a href="http://people.ee.duke.edu/~ayt/ewaldpaper/node26.html#darden93">14</a>] is also inspired by Hockney and 
+Eastwood's particle-particle particle-mesh method (PPPM) [<a href="http://people.ee.duke.edu/~ayt/ewaldpaper/node26.html#hockeast">31</a>,<a href="http://people.ee.duke.edu/~ayt/ewaldpaper/node26.html#east">20</a>]. 
+Unlike PPPM, PME divides the potential energy into Ewald's standard direct and reciprocal
+sums and uses the conventional Gaussian charge distributions.
+The direct sum, Eq.(<a href="http://people.ee.duke.edu/~ayt/ewaldpaper/node3.html#potreal">3</a>), is evaluated explicitly using cutoffs while the reciprocal sum, 
+Eq.(<a href="http://people.ee.duke.edu/~ayt/ewaldpaper/node3.html#potimg">4</a>), is approximated using FFT with convolutions 
+on a grid where charges are interpolated to the grid points. 
+In addition, in contrast to particle-mesh methods, PME does not interpolate but rather evaluates
+the forces by analytically  differentiating the energies, thus reducing memory 
+requirements substantially.
+</p><p>
+This method is reported to be highly efficient incurring only <img align="MIDDLE" alt="" src="./Particle-Mesh Ewald_files/img176.gif"> overhead over
+conventional truncated list-based (i.e. non-Ewald) methods at a  relative force accuracy around
+<img align="BOTTOM" alt="" src="./Particle-Mesh Ewald_files/img177.gif">. PME is also capable of achieving higher accuracy (<img align="BOTTOM" alt="" src="./Particle-Mesh Ewald_files/img178.gif"> relative force error)
+with relatively little increase in computational cost.
+</p><p>
+In computing the direct sum, the Ewald parameter <img align="BOTTOM" alt="" src="./Particle-Mesh Ewald_files/img179.gif"> is chosen large enough so that a fixed 
+cutoff radius can be applied thus reducing the complexity of the direct sum from <img align="MIDDLE" alt="" src="./Particle-Mesh Ewald_files/img180.gif"> 
+to <img align="MIDDLE" alt="" src="./Particle-Mesh Ewald_files/img181.gif">. To compensate for the truncation
+in evaluating the direct sum, the number of reciprocal vectors is increased proportionally to <b>N</b> to 
+bound errors.
+</p><p>
+The reciprocal sum is computed using 3D-FFT with an overhead that grows as 
+<img align="MIDDLE" alt="" src="./Particle-Mesh Ewald_files/img182.gif">. PME is therefore an <img align="MIDDLE" alt="" src="./Particle-Mesh Ewald_files/img183.gif"> method.
+The reciprocal sum, Eq.(<a href="http://people.ee.duke.edu/~ayt/ewaldpaper/node3.html#potimg">4</a>), is given by:
+</p><p><a name="pme_recip">&nbsp;</a><img align="BOTTOM" alt="" src="./Particle-Mesh Ewald_files/img184.gif"></p><p>
+where <img align="MIDDLE" alt="" src="./Particle-Mesh Ewald_files/img185.gif"> is defined in Eq.(<a href="http://people.ee.duke.edu/~ayt/ewaldpaper/node8.html#strucfactor">15</a>).
+The structure factor  can be approximated by:
+</p><p><a name="structure">&nbsp;</a><img align="BOTTOM" alt="" src="./Particle-Mesh Ewald_files/img186.gif"></p><p>
+where <img align="MIDDLE" alt="" src="./Particle-Mesh Ewald_files/img187.gif"> is the 3D FFT of <b>Q</b>, the charge matrix. The <b>Q</b> matrix is a  three dimensional matrix
+that is obtained by interpolating the point charges to a uniform grid of dimensions 
+<img align="MIDDLE" alt="" src="./Particle-Mesh Ewald_files/img188.gif"> that fills the simulation cell. 
+By combining Eq.(<a href="http://people.ee.duke.edu/~ayt/ewaldpaper/node16.html#structure">25</a>) with Eq.(<a href="http://people.ee.duke.edu/~ayt/ewaldpaper/node16.html#pme_recip">24</a>), the reciprocal energy can be also approximated by:	
+</p><p><img align="BOTTOM" alt="" src="./Particle-Mesh Ewald_files/img189.gif"></p><p>
+The above equation is rewritten, after some manipulation, as a convolution:
+</p><p><a name="pme_recip2">&nbsp;</a><img align="BOTTOM" alt="" src="./Particle-Mesh Ewald_files/img190.gif"></p><p>
+where <img align="MIDDLE" alt="" src="./Particle-Mesh Ewald_files/img191.gif"> is the reciprocal pair potential and ``<img align="BOTTOM" alt="" src="./Particle-Mesh Ewald_files/img192.gif">'' indicates a convolution.
+To evaluate the reciprocal sum, the <b>Q</b> matrix is first computed  over a 3D uniform grid 
+and then transformed using inverse 3D FFT to obtain the structure factors. 
+The reciprocal energy is then calculated using  Eq.(<a href="http://people.ee.duke.edu/~ayt/ewaldpaper/node16.html#pme_recip2">27</a>) 
+with the aid of FFT to compute the convolution <img align="MIDDLE" alt="" src="./Particle-Mesh Ewald_files/img193.gif">.
+</p><p>
+The charge  interpolation function used originally in PME was Lagrange interpolation [<a href="http://people.ee.duke.edu/~ayt/ewaldpaper/node26.html#darden93">14</a>].
+However, an enhanced PME [<a href="http://people.ee.duke.edu/~ayt/ewaldpaper/node26.html#darden95">15</a>] utilizes the B-spline  interpolation function,
+which is  smoother and allows 
+higher accuracy by simply increasing the order of interpolation.
+The smoothness of B-spline interpolation allows the force expressions to be evaluated analytically, with high accuracy, by differentiating the real and
+reciprocal energy equations  rather than using finite differencing techniques.
+
+<br> </p><hr><a name="tex2html204" href="http://people.ee.duke.edu/~ayt/ewaldpaper/node17.html"><img align="BOTTOM" alt="next" src="./Particle-Mesh Ewald_files/next_motif.gif"></a>   <a name="tex2html202" href="http://people.ee.duke.edu/~ayt/ewaldpaper/node14.html"><img align="BOTTOM" alt="up" src="./Particle-Mesh Ewald_files/up_motif.gif"></a>   <a name="tex2html196" href="http://people.ee.duke.edu/~ayt/ewaldpaper/node15.html"><img align="BOTTOM" alt="previous" src="./Particle-Mesh Ewald_files/previous_motif.gif"></a>         <br>
+<b> Next:</b> <a name="tex2html205" href="http://people.ee.duke.edu/~ayt/ewaldpaper/node17.html"> Fast Fourier Poisson </a>
+<b>Up:</b> <a name="tex2html203" href="http://people.ee.duke.edu/~ayt/ewaldpaper/node14.html"> Fourier-based Ewald Summation </a>
+<b> Previous:</b> <a name="tex2html197" href="http://people.ee.duke.edu/~ayt/ewaldpaper/node15.html"> Particle-Particle Particle-Mesh </a>
+<br> <hr> <p>
+<br> </p><hr>
+<p></p><address>
+<i>Abdulnour Y. Toukmaji <br>
+Mon Jan 22 12:05:30 EST 1996</i>
+</address>
+
+</body></html>

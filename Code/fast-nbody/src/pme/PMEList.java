@@ -1,31 +1,137 @@
 package pme;
-//JChemPhys_103_3668.pdf
+/*REFEREFENCES:
+ * -JChemPhys_103_3668.pdf: http://dx.doi.org/10.1063/1.470043			Petersen[95]
+ * -JChemPhys_98_10089.pdf: http://dx.doi.org/10.1063/1.464397			Darden[93]
+ * -9807099.pdf:			http://arxiv.org/pdf/cond-mat/9807099.pdf	Deserno[98]
+*/
+//
 import gui.SpaceSize;
 
 import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
 
+import jtransforms.DoubleFFT_2D;
+
 import math.Complex;
 import particles.Particle;
 import particles.ParticleList;
 
 public class PMEList extends ParticleList{
-	final SpaceSize windowSize;
-	static int CELL_COUNT = 32; //N = 32
-	final double meshWidth; //H
+	static int CELL_SIDE_COUNT = 32; //N = 32
 	static int ASSIGNMENT_SCHEME_ORDER = 2;
-	//Records the Q_H ^(p) results
-	double[][] chargeAssignments;
+	static double BETA = 90; //Beta from Darden[93], describes the ratio of direct : reciprocal
+	
+	double[][] chargeAssignments; //Records the Q_H ^(p) results Petersen[95]
+	Complex[][] recPairPotentialMatrix; //\Phi_{rec} from Darden[93]
+	
+	final double meshWidth; //H (Petersen[95])
+	final double inverseMeshWidth; //H^-1 (required for the reciprocal lattice)
+	final SpaceSize windowSize;
+	
+	private static double squared(double x){
+		return x*x;
+	}
+	
+	//Equation 3 of Darden[93]
+	private Complex recPairPotentialFunction(double fractionalX, double fractionalY)
+	{
+		Complex returnValue = Complex.zero;
+		double volume = windowSize.getWidth() * windowSize.getHeight();//FIXME: volume in two dimensions?
+		double c = 1.0/(Math.PI * volume); 
+		for(int x = 0; x < CELL_SIDE_COUNT; x++)
+		{
+			for(int y = 0; y < CELL_SIDE_COUNT; y++)
+			{
+				if(!(x==0 && y==0)){
+					Complex thisTerm = Complex.zero;
+					//Together these make m (Equation 3 Darden[93]) FIXME: is this really what it means by exp(-pi^2m^2/b^2)?
+					double recXCoord = inverseMeshWidth * x; //We're dealing with reciprocal space, so we use the inverse mesh width. 
+					double recYCoord = inverseMeshWidth * y;
+					double mSquared = squared(recXCoord) + squared(recYCoord);
+					thisTerm = thisTerm.add(new Complex(c * Math.exp(-squared(Math.PI) * mSquared / squared(BETA))/mSquared, 0));
+					Complex part2 = new Complex(0,2 * Math.PI *(x*fractionalX + y*fractionalY));
+					thisTerm = thisTerm.mult(part2);
+					returnValue = returnValue.add(thisTerm);
+				}
+			}
+		}
+		return returnValue.scale(c);
+	}
+	//Eq. 3 of Darden[93]
+	private void initPairPotentialMatrix()
+	{
+		recPairPotentialMatrix = new Complex[CELL_SIDE_COUNT][CELL_SIDE_COUNT];
+		for(int x = 0; x < CELL_SIDE_COUNT; x++)
+		{
+			for(int y = 0; y < CELL_SIDE_COUNT; y++)
+			{
+				recPairPotentialMatrix[x][y] = recPairPotentialFunction((double)(x)/(double)(CELL_SIDE_COUNT),(double)(y)/(double)(CELL_SIDE_COUNT));
+				System.out.print(recPairPotentialMatrix[x][y] + " ");
+			}
+			System.out.print("\n");
+		}
+	}
+	
+	private void initChargeMatrix()
+	{
+		chargeAssignments = new double[CELL_SIDE_COUNT][CELL_SIDE_COUNT];
+		//Set up the chargeAssignments array, as per Step 1 of Petersen[95]
+		for(int i = 0; i < CELL_SIDE_COUNT; i++)
+		{
+			for(int j = 0; j < CELL_SIDE_COUNT; j++)
+			{
+				chargeAssignments[i][j] = 0;
+				for(Particle p : this)
+				{
+					chargeAssignments[i][j] += chargeContribution(p,i,j);
+				}
+			}
+		}
+	}
+	
+	private void init()
+	{
+		initChargeMatrix();
+		initPairPotentialMatrix();
+		
+		//Direct (DEBUG)
+		double directEnergy = 0;
+		for(Particle p : this)
+		{
+			for(Particle other : this)
+			{
+				if(!p.equals(other))
+				{
+					directEnergy += 0.5*p.getCharge() * other.getCharge() / (p.getPosition().sub(other.getPosition()).abs());
+				}
+			}
+		}
+		System.out.println("Direct energy: "+directEnergy);
+				
+		//Debug
+		//DoubleFFT_2D fft = new DoubleFFT_2D(CELL_SIDE_COUNT,CELL_SIDE_COUNT);
+		//fft.realForward(chargeAssignments);
+//		for(int i = 0; i < CELL_SIDE_COUNT; i++)
+//		{
+//			for(int j = 0; j < CELL_SIDE_COUNT; j++)
+//			{
+//				System.out.print(chargeAssignments[i][j]+" ");
+//			}
+//			System.out.print("\n");
+//		}
+	}
+	
 	public PMEList(ArrayList<Particle> particles, SpaceSize windowSize) {
 		super(particles);
 		this.windowSize = windowSize;
-		this.meshWidth = windowSize.getWidth() / CELL_COUNT;
+		this.meshWidth = windowSize.getWidth() / CELL_SIDE_COUNT;
+		this.inverseMeshWidth = 1.0 / this.meshWidth;
 		init();
 
 	}
 	
-	//P=3 from Appendix E of http://arxiv.org/pdf/cond-mat/9807099.pdf
+	//P=3 from Appendix E of Deserno[98]
 	double[][] getChargeAssignmentPolynomials()
 	{
 		double[][] polynomialArray = new double[3][3];
@@ -33,6 +139,7 @@ public class PMEList extends ParticleList{
 		polynomialArray[1] = new double[]{1,0,-1.0/(meshWidth*meshWidth)};
 		polynomialArray[2] = new double[]{0,1.0/(2*meshWidth),1.0/(2.0*meshWidth*meshWidth)};
 		return polynomialArray;
+		
 	}
 	
 	double evaluatePolynomial(double[] p, double x)
@@ -45,7 +152,7 @@ public class PMEList extends ParticleList{
 		return sum;
 	}
 	
-	//S^p_H  in 3 of Peterson
+	//S^p_H  in 3 of Petersen[95]
 	private double[] nearestMeshPoints1D(double x, int points)
 	{
 		double[] nearestPoints = new double[points+1];
@@ -68,6 +175,7 @@ public class PMEList extends ParticleList{
 				currentLowIndex--;
 			}
 		}
+		
 		
 		//Make sure they're all in bounds
 		for(int i = 0; i < (points+1); i++)
@@ -155,22 +263,7 @@ public class PMEList extends ParticleList{
 		return particle.getCharge() * assignmentX * assignmentY;
 	}
 	
-	public void init()
-	{
-		chargeAssignments = new double[CELL_COUNT][CELL_COUNT];
-		//Set up the chargeAssignments array, as per Step 1
-		for(int i = 0; i < CELL_COUNT; i++)
-		{
-			for(int j = 0; j < CELL_COUNT; j++)
-			{
-				chargeAssignments[i][j] = 0;
-				for(Particle p : this)
-				{
-					chargeAssignments[i][j] += chargeContribution(p,i,j);
-				}
-			}
-		}
-	}
+	
 	@Override
 	public double charge(Complex position) {
 		int i = (int)(position.re() / meshWidth);
@@ -183,10 +276,11 @@ public class PMEList extends ParticleList{
 		}
 		if(contribution != 0)
 		{
-			System.out.println("!");
+			//System.out.println("!");
 		}
-
-		return contribution;
+		return chargeAssignments[i][j];
+		
+		//return contribution;
 	}
 
 	@Override
@@ -222,9 +316,10 @@ public class PMEList extends ParticleList{
 		
 		
 	}
-//	public static void main(String[] args)
+	
+//	public  void main(String[] args)
 //	{
-//		PMEList p = new PMEList(new ArrayList<Particle>(), new SpaceSize(512,512));
+//		//PMEList p = new PMEList(new ArrayList<Particle>(), new SpaceSize(512,512));
 //		
 //	}
 }
