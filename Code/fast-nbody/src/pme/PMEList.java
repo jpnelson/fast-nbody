@@ -3,6 +3,7 @@ package pme;
  * -JChemPhys_103_3668.pdf: http://dx.doi.org/10.1063/1.470043			Petersen[95]
  * -JChemPhys_98_10089.pdf: http://dx.doi.org/10.1063/1.464397			Darden[93]
  * -9807099.pdf:			http://arxiv.org/pdf/cond-mat/9807099.pdf	Deserno[98]
+ * -JChemPhys_103_8577		http://dx.doi.org/10.1063/1.470117			Essman[95]
 */
 //
 import gui.SpaceSize;
@@ -10,20 +11,21 @@ import gui.SpaceSize;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import jtransforms.DoubleFFT_2D;
 
 import math.Complex;
+import math.MatrixMultiply;
 import particles.Particle;
 import particles.ParticleList;
 
 public class PMEList extends ParticleList{
 	static int CELL_SIDE_COUNT = 32; //N = 32
 	static int ASSIGNMENT_SCHEME_ORDER = 2;
-	static double BETA = 90; //Beta from Darden[93], describes the ratio of direct : reciprocal
-	
+	static double BETA = 90;
 	double[][] chargeAssignments; //Records the Q_H ^(p) results Petersen[95]
-	Complex[][] recPairPotentialMatrix; //\Phi_{rec} from Darden[93]
+	Complex[][] cMatrix; //C from Essman[95]
 	
 	final double meshWidth; //H (Petersen[95])
 	final double inverseMeshWidth; //H^-1 (required for the reciprocal lattice)
@@ -33,45 +35,6 @@ public class PMEList extends ParticleList{
 		return x*x;
 	}
 	
-	//Equation 3 of Darden[93]
-	private Complex recPairPotentialFunction(double fractionalX, double fractionalY)
-	{
-		Complex returnValue = Complex.zero;
-		double volume = windowSize.getWidth() * windowSize.getHeight();//FIXME: volume in two dimensions?
-		double c = 1.0/(Math.PI * volume); 
-		for(int x = 0; x < CELL_SIDE_COUNT; x++)
-		{
-			for(int y = 0; y < CELL_SIDE_COUNT; y++)
-			{
-				if(!(x==0 && y==0)){
-					Complex thisTerm = Complex.zero;
-					//Together these make m (Equation 3 Darden[93]) FIXME: is this really what it means by exp(-pi^2m^2/b^2)?
-					double recXCoord = inverseMeshWidth * x; //We're dealing with reciprocal space, so we use the inverse mesh width. 
-					double recYCoord = inverseMeshWidth * y;
-					double mSquared = squared(recXCoord) + squared(recYCoord);
-					thisTerm = thisTerm.add(new Complex(c * Math.exp(-squared(Math.PI) * mSquared / squared(BETA))/mSquared, 0));
-					Complex part2 = new Complex(0,2 * Math.PI *(x*fractionalX + y*fractionalY));
-					thisTerm = thisTerm.mult(part2);
-					returnValue = returnValue.add(thisTerm);
-				}
-			}
-		}
-		return returnValue.scale(c);
-	}
-	//Eq. 3 of Darden[93]
-	private void initPairPotentialMatrix()
-	{
-		recPairPotentialMatrix = new Complex[CELL_SIDE_COUNT][CELL_SIDE_COUNT];
-		for(int x = 0; x < CELL_SIDE_COUNT; x++)
-		{
-			for(int y = 0; y < CELL_SIDE_COUNT; y++)
-			{
-				recPairPotentialMatrix[x][y] = recPairPotentialFunction((double)(x)/(double)(CELL_SIDE_COUNT),(double)(y)/(double)(CELL_SIDE_COUNT));
-				System.out.print(recPairPotentialMatrix[x][y] + " ");
-			}
-			System.out.print("\n");
-		}
-	}
 	
 	private void initChargeMatrix()
 	{
@@ -89,12 +52,74 @@ public class PMEList extends ParticleList{
 			}
 		}
 	}
+	//Eq 3.9 Essman[95]
+	private void initCMatrix()
+	{
+		cMatrix = new Complex[CELL_SIDE_COUNT][CELL_SIDE_COUNT];
+		double V = windowSize.getWidth() * windowSize.getHeight();
+		double c = 1.0 / (Math.PI * V);
+		cMatrix[0][0] = Complex.zero;
+
+		for(int x = 0; x < CELL_SIDE_COUNT; x++)
+		{
+			for(int y = 0; y < CELL_SIDE_COUNT; y++)
+			{
+				if(!(x==0 && y==0))
+				{
+					double mXPrime = (0 <= x && x <= CELL_SIDE_COUNT/2)? x : x - CELL_SIDE_COUNT;
+					double mYPrime = (0 <= y && y <= CELL_SIDE_COUNT/2)? y : y - CELL_SIDE_COUNT;
+					double m = mXPrime * inverseMeshWidth + mYPrime * inverseMeshWidth;
+					if(m != 0){ //FIXME: What to do if m==0?
+						cMatrix[x][y] = new Complex(c * (Math.exp(-squared(Math.PI)* squared(m) / squared(BETA))) / squared(m),0);
+					}else{
+						cMatrix[x][y] = Complex.zero;
+					}
+				}
+				System.out.print(cMatrix[x][y] + " ");
+			}
+			System.out.print("\n");
+		}
+	}
+	
+	//TODO: testing on this
+	//Copies a matrix and possibly extends it's width
+	public static double[][] copyMatrix(double[][] M, int newWidth)
+	{
+		double[][] newMatrix = new double[M[0].length][newWidth];
+		for(int i = 0; i < M.length; i++)
+		{
+			newMatrix[i] = Arrays.copyOf(M[i], newWidth);
+		}
+		return newMatrix;
+	}
+	
+	//Equation 3.10 Essman[95]
+	private double getReciprocalEnergy()
+	{
+		DoubleFFT_2D fft = new DoubleFFT_2D(CELL_SIDE_COUNT,CELL_SIDE_COUNT);
+		double[][] chargeAssignmentsIFT = copyMatrix(chargeAssignments,CELL_SIDE_COUNT*2);
+		fft.realInverseFull(chargeAssignmentsIFT, false);
+		Complex[][] chargeAssignmentsIFTComplex = Complex.doubleToComplexArray(chargeAssignmentsIFT);
+		Complex[][] convolutedMatrix = MatrixMultiply.multiply(cMatrix, chargeAssignmentsIFTComplex);
+		fft.complexForward(Complex.complexToDoubleArray(convolutedMatrix));
+		double sum = 0;
+		//Get the reciprocal energy
+		for(int x = 0; x < CELL_SIDE_COUNT; x++)
+		{
+			for(int y = 0; y < CELL_SIDE_COUNT; y++)
+			{
+				sum += chargeAssignments[x][y] * convolutedMatrix[x][y].re();
+			}
+		}
+		return 0.5*sum;
+	}
 	
 	private void init()
 	{
 		initChargeMatrix();
-		initPairPotentialMatrix();
-		
+		initCMatrix();
+		double recEnergy = getReciprocalEnergy();
+		System.out.println("Reciprocal energy: "+recEnergy);
 		//Direct (DEBUG)
 		double directEnergy = 0;
 		for(Particle p : this)

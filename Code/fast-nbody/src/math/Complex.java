@@ -119,5 +119,41 @@ public class Complex {
 		
 		return new Complex(-re,-im);
 	}
+	
+	//Takes a rectangular matrix which has the format of the output from a jtransforms FFT
+	//Returns a width halved complex matrix
+	public static Complex[][] doubleToComplexArray(double[][] in)
+	{
+		int width = in[0].length;
+		int height = in.length;
+
+		Complex[][] out = new Complex[height][width/2];
+		for(int y = 0; y < height; y++)
+		{
+			for(int x = 0; x <= width/2-1; x++) // -1 here since we look ahead once
+			{
+				out[y][x] = new Complex(in[y][2*x],in[y][2*x+1]);
+			}
+		}
+		return out;
+	}
+	
+	//Opposite of the above
+	public static double[][] complexToDoubleArray(Complex[][] in)
+	{
+		int width = in[0].length;
+		int height = in.length;
+
+		double[][] out = new double[height][width*2];
+		for(int y = 0; y < height; y++)
+		{
+			for(int x = 0; x < width; x++) // -1 here since we look ahead once
+			{
+				out[y][2*x] = in[y][x].re();
+				out[y][2*x+1] = in[y][x].im();
+			}
+		}
+		return out;
+	}
 
 }

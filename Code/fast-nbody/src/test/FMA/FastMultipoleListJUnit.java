@@ -1,4 +1,4 @@
-package test;
+package test.FMA;
 
 import java.awt.Dimension;
 import java.util.ArrayList;
