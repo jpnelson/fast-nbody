@@ -6,7 +6,7 @@ import math.Vector;
 
 import org.junit.Test;
 
-public class vectorTest {
+public class VectorTest {
 	@Test
 	public void testCrossProduct()
 	{
