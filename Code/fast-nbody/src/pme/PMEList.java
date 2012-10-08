@@ -17,7 +17,7 @@ import jtransforms.DoubleFFT_2D;
 
 import math.Complex;
 import math.ErrorFunction;
-import math.MatrixMultiply;
+import math.MatrixOperations;
 import particles.Particle;
 import particles.ParticleList;
 
@@ -92,25 +92,16 @@ public class PMEList extends ParticleList{
 		}
 	}
 	
-	//Copies a matrix and possibly extends it's width
-	public static double[][] copyMatrix(double[][] M, int newWidth)
-	{
-		double[][] newMatrix = new double[M[0].length][newWidth];
-		for(int i = 0; i < M.length; i++)
-		{
-			newMatrix[i] = Arrays.copyOf(M[i], newWidth);
-		}
-		return newMatrix;
-	}
+	
 	
 	//Equation 3.10 Essman[95]
 	private double getReciprocalEnergy()
 	{
 		DoubleFFT_2D fft = new DoubleFFT_2D(CELL_SIDE_COUNT,CELL_SIDE_COUNT);
-		double[][] chargeAssignmentsIFT = copyMatrix(chargeAssignments,CELL_SIDE_COUNT*2);
+		double[][] chargeAssignmentsIFT = MatrixOperations.copyMatrix(chargeAssignments,CELL_SIDE_COUNT*2);
 		fft.realInverseFull(chargeAssignmentsIFT, false);
 		Complex[][] chargeAssignmentsIFTComplex = Complex.doubleToComplexArray(chargeAssignmentsIFT);
-		Complex[][] convolutedMatrix = MatrixMultiply.multiply(cMatrix, chargeAssignmentsIFTComplex);
+		Complex[][] convolutedMatrix = MatrixOperations.multiply(cMatrix, chargeAssignmentsIFTComplex);
 		fft.complexForward(Complex.complexToDoubleArray(convolutedMatrix));
 		double sum = 0;
 		deltaXS = new double[CELL_SIDE_COUNT][CELL_SIDE_COUNT];

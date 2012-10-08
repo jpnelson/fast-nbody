@@ -7,6 +7,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 import math.Complex;
+import math.MatrixOperations;
 import particles.NSquaredList;
 import particles.Particle;
 import pme.PMEList;
@@ -58,7 +59,7 @@ public class MatrixOperationsJUnit {
 	{
 		double[][] testMatrix = new double[3][3];
 		testMatrix[1][2] = 1.0;
-		double[][] testMatrixCopy = PMEList.copyMatrix(testMatrix, 6);
+		double[][] testMatrixCopy = MatrixOperations.copyMatrix(testMatrix, 6);
 		assertTrue(testMatrix[1][2] == testMatrixCopy[1][2]);
 		assertTrue(testMatrixCopy[0].length == 6);
 	}

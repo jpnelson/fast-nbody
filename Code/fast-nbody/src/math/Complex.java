@@ -155,5 +155,22 @@ public class Complex {
 		}
 		return out;
 	}
+	
+	//Just makes imaginary parts zero
+	public static Complex[][] doubleToComplexNoImaginaryPart(double[][] in)
+	{
+		int width = in[0].length;
+		int height = in.length;
+
+		Complex[][] out = new Complex[height][width];
+		for(int y = 0; y < height; y++)
+		{
+			for(int x = 0; x < width; x++) // -1 here since we look ahead once
+			{
+				out[x][y] = new Complex(in[x][y],0);
+			}
+		}
+		return out;
+	}
 
 }
