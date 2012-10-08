@@ -9,7 +9,6 @@ import jtransforms.DoubleFFT_2D;
 
 import math.Complex;
 import math.MatrixOperations;
-import math.MatrixOperations;
 import math.Vector;
 import particles.Particle;
 import particles.ParticleList;
@@ -18,9 +17,9 @@ public class SPMEList extends ParticleList {
 	static int PADDING = 1; //Make the space size this many times larger to reduce period issues
 	static int CELL_SIDE_COUNT = 32; //K (Essman[95])
 	static int ASSIGNMENT_SCHEME_ORDER = 6;
-	static int DIRECT_RANGE = 4; //The number of cells we will calculate directly for
-	final double BETA;
-	
+	static double BETA = 0.0225; //The ewald coefficient
+	final int DIRECT_RANGE; //will be DIRECT_RANGE * meshWidth
+
 	ArrayList<Particle> cellList[][];
 	
 	double[][] Q; //the charge assignment matrix
@@ -33,7 +32,6 @@ public class SPMEList extends ParticleList {
 	final double meshWidth; //H (Petersen[95])
 	final double inverseMeshWidth; //H^-1 (required for the reciprocal lattice)
 	final SpaceSize windowSize;
-	final double cutoffDistance; //will be DIRECT_RANGE * meshWidth
 	Vector[] reciprocalLatticeVectors; //Reciprocal lattice vectors
 	
 	//We have an array of 2D particles, but we assume the z component is 0
@@ -42,8 +40,7 @@ public class SPMEList extends ParticleList {
 		this.windowSize = windowSize.scale(PADDING); //we make it empty around to help with period problems
 		this.meshWidth = (double)(windowSize.getWidth()) / CELL_SIDE_COUNT;
 		this.inverseMeshWidth = 1.0 / this.meshWidth;
-		this.cutoffDistance = DIRECT_RANGE * meshWidth;
-		this.BETA = 3.0 / cutoffDistance;
+		this.DIRECT_RANGE = (int)Math.floor((3.0 / BETA) / meshWidth); //FIXME 3.0 chosen just so that erfc would be close to 0
 		init();
 	}
 	
@@ -56,11 +53,11 @@ public class SPMEList extends ParticleList {
 		initCMatrix();
 		
 		//Starting Eq 4.7 Essman[95]
-		double[][] BC = MatrixOperations.multiply(B, C);
+		double[][] BC = MatrixOperations.straightMultiply(B, C);
 		DoubleFFT_2D fft = new DoubleFFT_2D(CELL_SIDE_COUNT,CELL_SIDE_COUNT);
 		double[][] qInverseFT = MatrixOperations.copyMatrix(Q, 2*CELL_SIDE_COUNT);
 		fft.realInverseFull(qInverseFT, false);
-		Complex[][] product = MatrixOperations.multiply(Complex.doubleToComplexNoImaginaryPart(BC), Complex.doubleToComplexArray(qInverseFT));
+		Complex[][] product = MatrixOperations.straightMultiply(Complex.doubleToComplexNoImaginaryPart(BC), Complex.doubleToComplexArray(qInverseFT));
 		double[][] wideProduct = Complex.complexToDoubleArray(product);
 		fft.complexForward(wideProduct);
 		convolution = Complex.doubleToComplexArray(wideProduct);
@@ -242,7 +239,7 @@ public class SPMEList extends ParticleList {
 	public double charge(Complex position) {
 		int i = (int)(position.re() / meshWidth);
 		int j = (int)(position.im() / meshWidth);
-		return Q[i][j];
+		return complexTheta[i][j].re();
 	}
 
 	@Override

@@ -57,6 +57,48 @@ public class MatrixOperations {
 		  return resultant;
 	}
 	
+	public static double[][] straightMultiply(double a[][], double b[][]) {
+		   
+		  int aRows = a.length,
+		      aColumns = a[0].length,
+		      bRows = b.length,
+		      bColumns = b[0].length;
+		   
+		  if ( aColumns != bRows ) {
+		    throw new IllegalArgumentException("A:Rows: " + aColumns + " did not match B:Columns " + bRows + ".");
+		  }
+		   
+		  double[][] resultant = new double[aRows][bColumns];
+		  for(int i = 0; i < aRows; i++) { // aRow
+		    for(int j = 0; j < bColumns; j++) { // bColumn
+		      resultant[i][j] = a[i][j]*b[i][j];
+		    }  
+		  }
+		   
+		  return resultant;
+	}
+	
+	public static Complex[][] straightMultiply(Complex a[][], Complex b[][]) {
+		   
+		  int aRows = a.length,
+		      aColumns = a[0].length,
+		      bRows = b.length,
+		      bColumns = b[0].length;
+		   
+		  if ( aColumns != bRows ) {
+		    throw new IllegalArgumentException("A:Rows: " + aColumns + " did not match B:Columns " + bRows + ".");
+		  }
+		   
+		  Complex[][] resultant = new Complex[aRows][bColumns];
+		  for(int i = 0; i < aRows; i++) { // aRow
+		    for(int j = 0; j < bColumns; j++) { // bColumn
+		      resultant[i][j] = a[i][j].mult(b[i][j]);
+		    }  
+		  }
+		   
+		  return resultant;
+	}
+	
 	
 	
 	//Copies a matrix and possibly extends it's width
