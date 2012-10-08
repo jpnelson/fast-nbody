@@ -16,20 +16,33 @@ import java.util.Arrays;
 import jtransforms.DoubleFFT_2D;
 
 import math.Complex;
+import math.ErrorFunction;
 import math.MatrixMultiply;
 import particles.Particle;
 import particles.ParticleList;
 
 public class PMEList extends ParticleList{
-	static int CELL_SIDE_COUNT = 32; //N = 32
+	static int PADDING = 1; //Make the space size this many times larger to reduce period issues
+	static int CELL_SIDE_COUNT = 32; //N
 	static int ASSIGNMENT_SCHEME_ORDER = 2;
 	static double BETA = 90;
 	double[][] chargeAssignments; //Records the Q_H ^(p) results Petersen[95]
 	Complex[][] cMatrix; //C from Essman[95]
 	
+	double[][] recEnergyAtGridpoints;
+	double[][] deltaXS;
 	final double meshWidth; //H (Petersen[95])
 	final double inverseMeshWidth; //H^-1 (required for the reciprocal lattice)
 	final SpaceSize windowSize;
+	
+	public PMEList(ArrayList<Particle> particles, SpaceSize windowSize) {
+		super(particles);
+		this.windowSize = windowSize.scale(PADDING); //we make it empty around to help with period problems
+		this.meshWidth = windowSize.getWidth() / CELL_SIDE_COUNT;
+		this.inverseMeshWidth = 1.0 / this.meshWidth;
+		init();
+
+	}
 	
 	private static double squared(double x){
 		return x*x;
@@ -75,13 +88,10 @@ public class PMEList extends ParticleList{
 						cMatrix[x][y] = Complex.zero;
 					}
 				}
-				System.out.print(cMatrix[x][y] + " ");
 			}
-			System.out.print("\n");
 		}
 	}
 	
-	//TODO: testing on this
 	//Copies a matrix and possibly extends it's width
 	public static double[][] copyMatrix(double[][] M, int newWidth)
 	{
@@ -103,15 +113,47 @@ public class PMEList extends ParticleList{
 		Complex[][] convolutedMatrix = MatrixMultiply.multiply(cMatrix, chargeAssignmentsIFTComplex);
 		fft.complexForward(Complex.complexToDoubleArray(convolutedMatrix));
 		double sum = 0;
+		deltaXS = new double[CELL_SIDE_COUNT][CELL_SIDE_COUNT];
 		//Get the reciprocal energy
 		for(int x = 0; x < CELL_SIDE_COUNT; x++)
 		{
 			for(int y = 0; y < CELL_SIDE_COUNT; y++)
 			{
+				deltaXS[x][y] = (convolutedMatrix[(x+1)%CELL_SIDE_COUNT][y].re() - convolutedMatrix[x][y].re()) / meshWidth;
 				sum += chargeAssignments[x][y] * convolutedMatrix[x][y].re();
 			}
 		}
 		return 0.5*sum;
+	}
+	
+	//FIXME: this is O(n^2)
+	//Equation 2.4 Essman[95]
+	private double getDirectEnergy()
+	{
+		double sum = 0;
+		for(Particle p : this){
+			for(Particle q : this){
+				if(!p.equals(q))
+				{
+					double term=0;
+					double distance = p.getPosition().sub(q.getPosition()).mag();
+					term += p.getCharge() * q.getCharge() * ErrorFunction.erfc(BETA * distance);
+					term = term / distance;
+					sum += term;
+				}
+			}
+		}
+		return sum;
+	}
+	//Equation 2.5 Essman[95]
+	private double getCorrectedEnergy()
+	{
+		double chargeSquaredSum = 0;
+		for(Particle p : this)
+		{
+			chargeSquaredSum += squared(p.getCharge());
+		}
+		return -(BETA / Math.sqrt(Math.PI)) * chargeSquaredSum;
 	}
 	
 	private void init()
@@ -119,42 +161,28 @@ public class PMEList extends ParticleList{
 		initChargeMatrix();
 		initCMatrix();
 		double recEnergy = getReciprocalEnergy();
-		System.out.println("Reciprocal energy: "+recEnergy);
+		double dirEnergy = getDirectEnergy();
+		double corrEnergy = getCorrectedEnergy();
+		System.out.println("Reciprocal energy:\t"+recEnergy);
+		System.out.println("Direct energy:\t\t"+dirEnergy);
+		System.out.println("Corrected energy:\t"+corrEnergy);
+		System.out.println("PME energy:\t\t"+(recEnergy+dirEnergy+corrEnergy));
 		//Direct (DEBUG)
-		double directEnergy = 0;
+		double actualEnergy = 0;
 		for(Particle p : this)
 		{
 			for(Particle other : this)
 			{
 				if(!p.equals(other))
 				{
-					directEnergy += 0.5*p.getCharge() * other.getCharge() / (p.getPosition().sub(other.getPosition()).abs());
+					actualEnergy += 0.5*p.getCharge() * other.getCharge() / (p.getPosition().sub(other.getPosition()).abs());
 				}
 			}
 		}
-		System.out.println("Direct energy: "+directEnergy);
-				
-		//Debug
-		//DoubleFFT_2D fft = new DoubleFFT_2D(CELL_SIDE_COUNT,CELL_SIDE_COUNT);
-		//fft.realForward(chargeAssignments);
-//		for(int i = 0; i < CELL_SIDE_COUNT; i++)
-//		{
-//			for(int j = 0; j < CELL_SIDE_COUNT; j++)
-//			{
-//				System.out.print(chargeAssignments[i][j]+" ");
-//			}
-//			System.out.print("\n");
-//		}
+		System.out.println("Actual energy: "+actualEnergy);
 	}
 	
-	public PMEList(ArrayList<Particle> particles, SpaceSize windowSize) {
-		super(particles);
-		this.windowSize = windowSize;
-		this.meshWidth = windowSize.getWidth() / CELL_SIDE_COUNT;
-		this.inverseMeshWidth = 1.0 / this.meshWidth;
-		init();
-
-	}
+	
 	
 	//P=3 from Appendix E of Deserno[98]
 	double[][] getChargeAssignmentPolynomials()
@@ -293,17 +321,8 @@ public class PMEList extends ParticleList{
 	public double charge(Complex position) {
 		int i = (int)(position.re() / meshWidth);
 		int j = (int)(position.im() / meshWidth);
-		double contribution = 0;
-
-		for(Particle p : this)
-		{
-			contribution += chargeContribution(p,i,j);
-		}
-		if(contribution != 0)
-		{
-			//System.out.println("!");
-		}
-		return chargeAssignments[i][j];
+		
+		return deltaXS[i][j];
 		
 		//return contribution;
 	}

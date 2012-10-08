@@ -31,6 +31,7 @@ import particles.NSquaredList;
 import particles.Particle;
 import particles.ParticleList;
 import pme.PMEList;
+import pme.SPME3DList;
 
 public class GUI implements ActionListener, PropertyChangeListener{
 	//Window
@@ -108,6 +109,11 @@ public class GUI implements ActionListener, PropertyChangeListener{
 		jFrame.pack();
 		jFrame.setVisible(true);
 	}
+	
+	private static void printSeparator()
+	{
+		System.out.println("-------------");
+	}
     
     //Button presses
 	public void actionPerformed(ActionEvent e) {
@@ -128,6 +134,7 @@ public class GUI implements ActionListener, PropertyChangeListener{
 	//Button actions
 	public void calculateCharges()
 	{
+		printSeparator();
 		NSquaredList nsquaredList = new NSquaredList(particles);
 		System.out.println("Calculating charges");
 		
@@ -144,11 +151,12 @@ public class GUI implements ActionListener, PropertyChangeListener{
 	public void calculatePME()
 	{
 		//Copy the ParticleList list
-		PMEList pmeList = new PMEList(particles,new SpaceSize(simulationCanvas.canvasSize.width,simulationCanvas.canvasSize.height));
-		System.out.println("Calculating charges using particle mesh ewald method");
+		printSeparator();
+		SPME3DList pmeList = new SPME3DList(particles,new SpaceSize(simulationCanvas.canvasSize.width,simulationCanvas.canvasSize.height));
+		System.out.println("Calculating charges using smooth particle mesh ewald 3D method");
 		
 		int height = simulationCanvas.getHeight();
-		int width = simulationCanvas.getWidth();
+		int width = simulationCanvas.getWidth(); 
 		
 		task = new CalculationTask(this,pmeList,width,height);
 		task.addPropertyChangeListener(this);
@@ -158,6 +166,7 @@ public class GUI implements ActionListener, PropertyChangeListener{
 	
 	public void calculateFMA()
 	{
+		printSeparator();
 		//Copy the ParticleList list
 		FastMultipoleList fmList = new FastMultipoleList(particles,new SpaceSize(simulationCanvas.canvasSize.width,simulationCanvas.canvasSize.height));
 		System.out.println("Calculating charges using Fast Multipole Algorithm");

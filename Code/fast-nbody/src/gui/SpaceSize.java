@@ -3,20 +3,25 @@ package gui;
 import fma.Pair;
 
 public class SpaceSize {
-	Pair<Double,Double> size;
+	Pair<Integer,Integer> size;
 	public SpaceSize(int width, int height) {
-		size = new Pair<Double,Double>((double)width,(double)height);
+		size = new Pair<Integer,Integer>((int)width,(int)height);
 	}
-	public void Space(Double w, Double h)
+	public void Space(Integer w, Integer h)
 	{
-		size = new Pair<Double,Double>(w,h);
+		size = new Pair<Integer,Integer>(w,h);
 	}
-	public Double getWidth()
+	public Integer getWidth()
+	{
+		return size.getFirst();
+	}
+	public Integer getHeight()
 	{
 		return size.getFirst();
 	}
-	public Double getHeight()
+	
+	public SpaceSize scale(int c)
 	{
-		return size.getFirst();
+		return new SpaceSize(size.getFirst() * c, size.getSecond() * c);
 	}
 }

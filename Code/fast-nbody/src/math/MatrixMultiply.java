@@ -14,7 +14,13 @@ public static Complex[][] multiply(Complex a[][], Complex b[][]) {
 	  }
 	   
 	  Complex[][] resultant = new Complex[aRows][bColumns];
-	   
+	  for(int i = 0; i < aRows; i++)
+	  {
+		  for(int j=0;j<bColumns;j++)
+		  {
+			  resultant[i][j] = Complex.zero;
+		  }
+	  }
 	  for(int i = 0; i < aRows; i++) { // aRow
 	    for(int j = 0; j < bColumns; j++) { // bColumn
 	      for(int k = 0; k < aColumns; k++) { // aColumn
@@ -24,5 +30,28 @@ public static Complex[][] multiply(Complex a[][], Complex b[][]) {
 	  }
 	   
 	  return resultant;
-	}
+}
+
+public static double[][] multiply(double a[][], double b[][]) {
+	   
+	  int aRows = a.length,
+	      aColumns = a[0].length,
+	      bRows = b.length,
+	      bColumns = b[0].length;
+	   
+	  if ( aColumns != bRows ) {
+	    throw new IllegalArgumentException("A:Rows: " + aColumns + " did not match B:Columns " + bRows + ".");
+	  }
+	   
+	  double[][] resultant = new double[aRows][bColumns];
+	  for(int i = 0; i < aRows; i++) { // aRow
+	    for(int j = 0; j < bColumns; j++) { // bColumn
+	      for(int k = 0; k < aColumns; k++) { // aColumn
+	        resultant[i][j] += (a[i][k]*(b[k][j]));
+	      }
+	    }  
+	  }
+	   
+	  return resultant;
+}
 }
