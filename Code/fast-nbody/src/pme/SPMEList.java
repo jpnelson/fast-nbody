@@ -96,14 +96,14 @@ public class SPMEList extends ParticleList {
 		//Starting Eq 4.7 Essman[95]
 		double[] BC = MatrixOperations.makeRowMajorVector(MatrixOperations.straightMultiply(B, C));
 		DoubleFFT_1D fft = new DoubleFFT_1D(CELL_SIDE_COUNT*CELL_SIDE_COUNT);
-		double[] qInverseFT = MatrixOperations.copyVector(MatrixOperations.makeRowMajorVector(Q), 2*CELL_SIDE_COUNT);
+		double[] qInverseFT = MatrixOperations.copyVector(MatrixOperations.makeRowMajorVector(Q), 2*CELL_SIDE_COUNT*CELL_SIDE_COUNT);
 		fft.realInverseFull(qInverseFT, false);
 		Complex[] product = MatrixOperations.straightMultiply(Complex.doubleToComplexVectorNoImaginaryPart(BC), Complex.doubleToComplexVector(qInverseFT));
 		double[] wideProduct = Complex.complexToDoubleVector(product);
 		fft.complexForward(wideProduct);
 		convolution = Complex.doubleToComplexVector(wideProduct);
 		
-		theta = MatrixOperations.copyVector(BC, 2*CELL_SIDE_COUNT);
+		theta = MatrixOperations.copyVector(BC, 2*CELL_SIDE_COUNT*CELL_SIDE_COUNT);
 		fft.realForwardFull(theta);
 		complexTheta = Complex.doubleToComplexVector(theta);
 		convolutionMatrix = MatrixOperations.make2DMatrix(convolution, CELL_SIDE_COUNT);
