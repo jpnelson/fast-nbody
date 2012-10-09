@@ -5,7 +5,6 @@ import gui.SpaceSize;
 import java.awt.Graphics;
 import java.util.ArrayList;
 
-import jtransforms.DoubleFFT_1D;
 import jtransforms.DoubleFFT_2D;
 
 import math.Complex;
@@ -19,28 +18,27 @@ public class SPMEList extends ParticleList {
 	static int PADDING = 1; //Make the space size this many times larger to reduce period issues
 	static int CELL_SIDE_COUNT = 64; //K (Essman[95])
 	static int ASSIGNMENT_SCHEME_ORDER = 6;
-	
+
 	final double ewaldCoefficient; //The ewald coefficient
 	static double TOLERANCE = 1e-8;//Used to calculate ewaldCoefficient
 	static double CUTOFF_DISTANCE = 64;//Used to calculate ewaldCoefficient. In spaceSize dimensions
 	final int directRange; //will be CUTOFF_DISTANCE / meshWidth. In mesh cells
-	
+
 
 	ArrayList<Particle> cellList[][];
-	
+
 	double[][] Q; //the charge assignment matrix
 	double[][] B; //The B Matrix (Essman[95])
 	double[][] C; //The C Matrix (Essman[95])
-	Complex[] convolution;
-	Complex[][] convolutionMatrix;
-	double[] theta;
-	Complex[] complexTheta;
+	Complex[][] convolution;
+	double[][] theta;
+	Complex[][] complexTheta;
 	BSpline M;		//Order ASSIGNMENT_SCHEME_ORDER B spline
 	final double meshWidth; //H (Petersen[95])
 	final double inverseMeshWidth; //H^-1 (required for the reciprocal lattice)
 	final SpaceSize windowSize;
 	Vector[] reciprocalLatticeVectors; //Reciprocal lattice vectors
-	
+
 	//We have an array of 2D particles, but we assume the z component is 0
 	public SPMEList(ArrayList<Particle> particles, SpaceSize windowSize) {
 		super(particles);
@@ -51,7 +49,7 @@ public class SPMEList extends ParticleList {
 		this.ewaldCoefficient = calculateEwaldCoefficient(CUTOFF_DISTANCE,TOLERANCE);
 		init();
 	}
-	
+
 	//subroutine ewaldcof from http://chem.skku.ac.kr/~wkpark/tutor/chem/tinker/source/kewald.f
 	private double calculateEwaldCoefficient(double cutoffDistance, double tolerance)
 	{
@@ -84,7 +82,7 @@ public class SPMEList extends ParticleList {
 		}
 		return x;
 	}
-	
+
 	private void init()
 	{
 		initCellList();
@@ -92,22 +90,22 @@ public class SPMEList extends ParticleList {
 		initQMatrix();
 		initBMatrix();
 		initCMatrix();
-		
+
 		//Starting Eq 4.7 Essman[95]
-		double[] BC = MatrixOperations.makeRowMajorVector(MatrixOperations.straightMultiply(B, C));
-		DoubleFFT_1D fft = new DoubleFFT_1D(CELL_SIDE_COUNT*CELL_SIDE_COUNT);
-		double[] qInverseFT = MatrixOperations.copyVector(MatrixOperations.makeRowMajorVector(Q), 2*CELL_SIDE_COUNT*CELL_SIDE_COUNT);
+		double[][] BC = MatrixOperations.straightMultiply(B, C);
+		DoubleFFT_2D fft = new DoubleFFT_2D(CELL_SIDE_COUNT,CELL_SIDE_COUNT);
+		double[][] qInverseFT = MatrixOperations.copyMatrix(Q, 2*CELL_SIDE_COUNT);
 		fft.realInverseFull(qInverseFT, false);
-		Complex[] product = MatrixOperations.straightMultiply(Complex.doubleToComplexVectorNoImaginaryPart(BC), Complex.doubleToComplexVector(qInverseFT));
-		double[] wideProduct = Complex.complexToDoubleVector(product);
+		Complex[][] product = MatrixOperations.straightMultiply(Complex.doubleToComplexArrayNoImaginaryPart(BC), Complex.doubleToComplexArray(qInverseFT));
+		double[][] wideProduct = Complex.complexToDoubleArray(product);
 		fft.complexForward(wideProduct);
-		convolution = Complex.doubleToComplexVector(wideProduct);
-		
-		theta = MatrixOperations.copyVector(BC, 2*CELL_SIDE_COUNT*CELL_SIDE_COUNT);
+		convolution = Complex.doubleToComplexArray(wideProduct);
+
+		theta = MatrixOperations.copyMatrix(BC, 2*CELL_SIDE_COUNT);
 		fft.realForwardFull(theta);
-		complexTheta = Complex.doubleToComplexVector(theta);
-		convolutionMatrix = MatrixOperations.make2DMatrix(convolution, CELL_SIDE_COUNT);
-		
+		complexTheta = Complex.doubleToComplexArray(theta);
+
+
 		System.out.println("Reciprocal energy: "+getRecEnergy());
 		System.out.println("Direct energy: "+getDirEnergy());
 		System.out.println("Corrected energy: "+getCorEnergy());
@@ -115,7 +113,7 @@ public class SPMEList extends ParticleList {
 
 	}
 
-	
+
 	//Eq 4.6 Essman[95]
 	private void initQMatrix()
 	{
@@ -139,11 +137,11 @@ public class SPMEList extends ParticleList {
 						sum += p.getCharge() * a * b;
 					}
 					Q[x][y] = sum;
-					
+
 				}
 			}
 	}
-	
+
 	//Eq 4.8 Essman[95]
 	private void initBMatrix()
 	{
@@ -156,7 +154,7 @@ public class SPMEList extends ParticleList {
 			}
 		}
 	}
-	
+
 	//Eq 3.9 Essman[95]
 	private void initCMatrix()
 	{
@@ -185,7 +183,7 @@ public class SPMEList extends ParticleList {
 			}
 		}
 	}
-	
+
 	private void initCellList(){
 		cellList = new ArrayList[CELL_SIDE_COUNT][CELL_SIDE_COUNT];
 		for(int i = 0; i < CELL_SIDE_COUNT; i++)
@@ -202,24 +200,24 @@ public class SPMEList extends ParticleList {
 			cellList[cellX][cellY].add(p);
 		}
 	}
-	
-	
+
+
 	private static double squared(double x){
 		return x*x;
 	}
-	
+
 	private double getRecEnergy(){
 		double sum = 0;
 		for(int x = 0; x < CELL_SIDE_COUNT; x++)
 		{
 			for(int y = 0; y < CELL_SIDE_COUNT; y++)
 			{
-				sum += 0.5*Q[x][y]*convolutionMatrix[x][y].re();
+				sum += 0.5*Q[x][y]*convolution[x][y].re();
 			}
 		}
 		return sum;
 	}
-	
+
 	private double getDirEnergy(){
 		double sum = 0;
 		for(Particle p : this)
@@ -234,7 +232,7 @@ public class SPMEList extends ParticleList {
 		}
 		return 0.5*sum;
 	}
-	
+
 	private double getCorEnergy(){
 		double sum = 0;
 		for(Particle p : this)
@@ -243,7 +241,7 @@ public class SPMEList extends ParticleList {
 		}
 		return -ewaldCoefficient/Math.sqrt(Math.PI) * sum;
 	}
-	
+
 	private double getActualEnergy(){
 		double sum = 0;
 		for(Particle p : this)
@@ -258,7 +256,7 @@ public class SPMEList extends ParticleList {
 		}
 		return 0.5*sum;
 	}
-	
+
 	//Uses a cell list method
 	public ArrayList<Particle> getNearParticles(Particle p, int range)
 	{
@@ -275,24 +273,25 @@ public class SPMEList extends ParticleList {
 			}
 		}
 		return nearParticles;
-		
-	}
-	
 
-	
-	
+	}
+
+
+
+
 	@Override
 	public double charge(Complex position) {
 		int i = (int)(position.re() / meshWidth);
 		int j = (int)(position.im() / meshWidth);
-		return 0.5*Q[i][j]*convolutionMatrix[i][j].re();
+		return 0.5*Q[i][j]*convolution[i][j].re();
 	}
 
 	@Override
 	public void debugDraw(Graphics g) {
-		
+
 	}
-	
-	
+
+
 
 }
+
