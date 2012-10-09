@@ -99,6 +99,19 @@ public class MatrixOperations {
 		  return resultant;
 	}
 	
+	public static Complex[] straightMultiply(Complex a[], Complex b[]) {
+		   
+		  int length = a.length;
+		   
+		   
+		  Complex[] resultant = new Complex[length];
+		  for(int i = 0; i < length; i++) {
+			  resultant[i] = a[i].mult(b[i]);
+		  }
+		   
+		  return resultant;
+	}
+	
 	
 	
 	//Copies a matrix and possibly extends it's width
@@ -133,5 +146,10 @@ public class MatrixOperations {
 			M[(i-i%rowLength)/rowLength][i%rowLength] = vector[i];
 		}
 		return M;
+	}
+	
+	public static double[] copyVector(double[] vector, int newWidth)
+	{
+		return Arrays.copyOf(vector, newWidth);
 	}
 }

@@ -157,7 +157,7 @@ public class Complex {
 	}
 	
 	//Just makes imaginary parts zero
-	public static Complex[][] doubleToComplexNoImaginaryPart(double[][] in)
+	public static Complex[][] doubleToComplexArrayNoImaginaryPart(double[][] in)
 	{
 		int width = in[0].length;
 		int height = in.length;
@@ -172,6 +172,41 @@ public class Complex {
 		}
 		return out;
 	}
+	
+	public static double[] complexToDoubleVector(Complex[] in)
+	{
+		double[] vector = new double[in.length*2];
+		for(int i = 0; i < in.length; i++)
+		{
+			vector[2*i] = in[i].re();
+			vector[2*i+1] = in[i].im();
+		}
+		return vector;
+	}
+	
+	//The in format is [re,im,re,im,re,...]
+	public static Complex[] doubleToComplexVector(double[] in)
+	{
+		Complex[] vector = new Complex[in.length/2];
+		for(int i = 0; i < in.length/2; i++)
+		{
+			vector[i] = new Complex(in[2*i],in[2*i+1]);
+		}
+		return vector;
+	}
+	
+	//Just makes imaginary parts zero
+		public static Complex[] doubleToComplexVectorNoImaginaryPart(double[] in)
+		{
+			int length = in.length;
+
+			Complex[] out = new Complex[length];
+			for(int i = 0; i < length; i++)
+			{
+				out[i] = new Complex(in[i],0);
+			}
+			return out;
+		}
 	
 
 

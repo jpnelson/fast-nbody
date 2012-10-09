@@ -5,6 +5,7 @@ import gui.SpaceSize;
 import java.awt.Graphics;
 import java.util.ArrayList;
 
+import jtransforms.DoubleFFT_1D;
 import jtransforms.DoubleFFT_2D;
 
 import math.Complex;
@@ -30,9 +31,9 @@ public class SPMEList extends ParticleList {
 	double[][] Q; //the charge assignment matrix
 	double[][] B; //The B Matrix (Essman[95])
 	double[][] C; //The C Matrix (Essman[95])
-	Complex[][] convolution;
+	Complex[] convolution;
 	double[][] theta;
-	Complex[][] complexTheta;
+	Complex[] complexTheta;
 	BSpline M;		//Order ASSIGNMENT_SCHEME_ORDER B spline
 	final double meshWidth; //H (Petersen[95])
 	final double inverseMeshWidth; //H^-1 (required for the reciprocal lattice)
@@ -92,16 +93,16 @@ public class SPMEList extends ParticleList {
 		initCMatrix();
 		
 		//Starting Eq 4.7 Essman[95]
-		double[][] BC = MatrixOperations.straightMultiply(B, C);
-		DoubleFFT_2D fft = new DoubleFFT_2D(CELL_SIDE_COUNT,CELL_SIDE_COUNT);
-		double[][] qInverseFT = MatrixOperations.copyMatrix(Q, 2*CELL_SIDE_COUNT);
+		double[] BC = MatrixOperations.makeRowMajorVector(MatrixOperations.straightMultiply(B, C));
+		DoubleFFT_1D fft = new DoubleFFT_1D(CELL_SIDE_COUNT*CELL_SIDE_COUNT);
+		double[] qInverseFT = MatrixOperations.copyVector(MatrixOperations.makeRowMajorVector(Q), 2*CELL_SIDE_COUNT);
 		fft.realInverseFull(qInverseFT, false);
-		Complex[][] product = MatrixOperations.straightMultiply(Complex.doubleToComplexNoImaginaryPart(BC), Complex.doubleToComplexArray(qInverseFT));
-		double[][] wideProduct = Complex.complexToDoubleArray(product);
+		Complex[] product = MatrixOperations.straightMultiply(Complex.doubleToComplexVectorNoImaginaryPart(BC), Complex.doubleToComplexVector(qInverseFT));
+		double[] wideProduct = Complex.complexToDoubleVector(product);
 		fft.complexForward(wideProduct);
-		convolution = Complex.doubleToComplexArray(wideProduct);
+		convolution = Complex.doubleToComplexVector(wideProduct);
 		
-		theta = MatrixOperations.copyMatrix(BC, 2*CELL_SIDE_COUNT);
+		theta = MatrixOperations.copyVector(BC, 2*CELL_SIDE_COUNT);
 		fft.realForwardFull(theta);
 		complexTheta = Complex.doubleToComplexArray(theta);
 		
