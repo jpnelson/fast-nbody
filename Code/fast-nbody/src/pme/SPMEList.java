@@ -32,7 +32,8 @@ public class SPMEList extends ParticleList {
 	double[][] B; //The B Matrix (Essman[95])
 	double[][] C; //The C Matrix (Essman[95])
 	Complex[] convolution;
-	double[][] theta;
+	Complex[][] convolutionMatrix;
+	double[] theta;
 	Complex[] complexTheta;
 	BSpline M;		//Order ASSIGNMENT_SCHEME_ORDER B spline
 	final double meshWidth; //H (Petersen[95])
@@ -104,8 +105,8 @@ public class SPMEList extends ParticleList {
 		
 		theta = MatrixOperations.copyVector(BC, 2*CELL_SIDE_COUNT);
 		fft.realForwardFull(theta);
-		complexTheta = Complex.doubleToComplexArray(theta);
-		
+		complexTheta = Complex.doubleToComplexVector(theta);
+		convolutionMatrix = MatrixOperations.make2DMatrix(convolution, CELL_SIDE_COUNT);
 		
 		System.out.println("Reciprocal energy: "+getRecEnergy());
 		System.out.println("Direct energy: "+getDirEnergy());
@@ -213,7 +214,7 @@ public class SPMEList extends ParticleList {
 		{
 			for(int y = 0; y < CELL_SIDE_COUNT; y++)
 			{
-				sum += 0.5*Q[x][y]*convolution[x][y].re();
+				sum += 0.5*Q[x][y]*convolutionMatrix[x][y].re();
 			}
 		}
 		return sum;
@@ -284,7 +285,7 @@ public class SPMEList extends ParticleList {
 	public double charge(Complex position) {
 		int i = (int)(position.re() / meshWidth);
 		int j = (int)(position.im() / meshWidth);
-		return 0.5*Q[i][j]*convolution[i][j].re();
+		return 0.5*Q[i][j]*convolutionMatrix[i][j].re();
 	}
 
 	@Override

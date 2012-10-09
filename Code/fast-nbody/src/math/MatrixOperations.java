@@ -152,4 +152,19 @@ public class MatrixOperations {
 	{
 		return Arrays.copyOf(vector, newWidth);
 	}
+	
+	public static Complex[][] make2DMatrix(Complex[] vector, int rowLength)
+	{
+		Complex[][] M = new Complex[vector.length / rowLength][rowLength];
+		for(int i = 0; i < vector.length; i++)
+		{
+			M[(i-i%rowLength)/rowLength][i%rowLength] = vector[i];
+		}
+		return M;
+	}
+	
+	public static Complex[] copyVector(Complex[] vector, int newWidth)
+	{
+		return Arrays.copyOf(vector, newWidth);
+	}
 }
