@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import jtransforms.DoubleFFT_2D;
 
 import math.Complex;
+import math.ErrorFunction;
 import math.MatrixOperations;
 import math.Vector;
 import particles.Particle;
@@ -15,10 +16,14 @@ import particles.ParticleList;
 
 public class SPMEList extends ParticleList {
 	static int PADDING = 1; //Make the space size this many times larger to reduce period issues
-	static int CELL_SIDE_COUNT = 32; //K (Essman[95])
+	static int CELL_SIDE_COUNT = 64; //K (Essman[95])
 	static int ASSIGNMENT_SCHEME_ORDER = 6;
-	static double BETA = 0.0225; //The ewald coefficient
-	final int DIRECT_RANGE; //will be DIRECT_RANGE * meshWidth
+	
+	final double ewaldCoefficient; //The ewald coefficient
+	static double TOLERANCE = 1e-8;//Used to calculate ewaldCoefficient
+	static double CUTOFF_DISTANCE = 64;//Used to calculate ewaldCoefficient. In spaceSize dimensions
+	final int directRange; //will be CUTOFF_DISTANCE / meshWidth. In mesh cells
+	
 
 	ArrayList<Particle> cellList[][];
 	
@@ -40,8 +45,42 @@ public class SPMEList extends ParticleList {
 		this.windowSize = windowSize.scale(PADDING); //we make it empty around to help with period problems
 		this.meshWidth = (double)(windowSize.getWidth()) / CELL_SIDE_COUNT;
 		this.inverseMeshWidth = 1.0 / this.meshWidth;
-		this.DIRECT_RANGE = (int)Math.floor((3.0 / BETA) / meshWidth); //FIXME 3.0 chosen just so that erfc would be close to 0
+		this.directRange = (int)Math.ceil(CUTOFF_DISTANCE/meshWidth);
+		this.ewaldCoefficient = calculateEwaldCoefficient(CUTOFF_DISTANCE,TOLERANCE);
 		init();
+	}
+	
+	//subroutine ewaldcof from http://chem.skku.ac.kr/~wkpark/tutor/chem/tinker/source/kewald.f
+	private double calculateEwaldCoefficient(double cutoffDistance, double tolerance)
+	{
+		int i,k;
+		double x,xlo,xhi,y;
+		double ratio;
+		ratio = tolerance + 1.0;
+		x = 0.5;
+		i = 0;
+		while (ratio >= tolerance){
+			i = i + 1;
+			x = 2.0 * x;
+			y = x * cutoffDistance;
+			ratio = ErrorFunction.erfc(y) / cutoffDistance;
+		}
+		//use a binary search to refine the coefficient
+		k = i + 60;
+		xlo = 0.0;
+		xhi = x;
+		for(i=0;i<k;i++){
+			x = (xlo+xhi) / 2.0;
+			y = x * cutoffDistance;
+			ratio = ErrorFunction.erfc(y) / cutoffDistance;
+			if (ratio >= tolerance){
+				xlo = x;
+			}
+			else{
+				xhi = x;
+			}
+		}
+		return x;
 	}
 	
 	private void init()
@@ -73,6 +112,8 @@ public class SPMEList extends ParticleList {
 		System.out.println("Actual energy: "+getActualEnergy());
 
 	}
+
+	
 	//Eq 4.6 Essman[95]
 	private void initQMatrix()
 	{
@@ -133,7 +174,7 @@ public class SPMEList extends ParticleList {
 					double mYPrime = (0 <= y && y <= CELL_SIDE_COUNT/2)? y : y - CELL_SIDE_COUNT;
 					double m = mXPrime * inverseMeshWidth + mYPrime * inverseMeshWidth;
 					if(m != 0){ //FIXME: What to do if m==0?
-						C[x][y] = c * (Math.exp(-squared(Math.PI)* squared(m) / squared(BETA))) / squared(m);
+						C[x][y] = c * (Math.exp(-squared(Math.PI)* squared(m) / squared(ewaldCoefficient))) / squared(m);
 					}else{
 						C[x][y] = 0;
 					}
@@ -160,6 +201,11 @@ public class SPMEList extends ParticleList {
 		}
 	}
 	
+	
+	private static double squared(double x){
+		return x*x;
+	}
+	
 	private double getRecEnergy(){
 		double sum = 0;
 		for(int x = 0; x < CELL_SIDE_COUNT; x++)
@@ -176,7 +222,7 @@ public class SPMEList extends ParticleList {
 		double sum = 0;
 		for(Particle p : this)
 		{
-			for(Particle q : getNearParticles(p,DIRECT_RANGE))
+			for(Particle q : getNearParticles(p,directRange))
 			{
 				if(!p.equals(q)){
 					double d = p.getPosition().sub(q.getPosition()).mag();
@@ -193,7 +239,7 @@ public class SPMEList extends ParticleList {
 		{
 			sum += squared(p.getCharge());
 		}
-		return -BETA/Math.sqrt(Math.PI) * sum;
+		return -ewaldCoefficient/Math.sqrt(Math.PI) * sum;
 	}
 	
 	private double getActualEnergy(){
@@ -230,16 +276,14 @@ public class SPMEList extends ParticleList {
 		
 	}
 	
-	private static double squared(double x){
-		return x*x;
-	}
+
 	
 	
 	@Override
 	public double charge(Complex position) {
 		int i = (int)(position.re() / meshWidth);
 		int j = (int)(position.im() / meshWidth);
-		return complexTheta[i][j].re();
+		return 0.5*Q[i][j]*convolution[i][j].re();
 	}
 
 	@Override
