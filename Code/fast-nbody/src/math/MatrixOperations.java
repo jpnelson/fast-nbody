@@ -111,4 +111,27 @@ public class MatrixOperations {
 		}
 		return newMatrix;
 	}
+	
+	public static double[] makeRowMajorVector(double[][] M)
+	{
+		double[] vector = new double[M.length * M[0].length];
+		for(int row = 0; row < M.length; row++)
+		{
+			for(int col=0; col < M[0].length; col++)
+			{
+				vector[row*M.length + col] = M[row][col];
+			}
+		}
+		return vector;
+	}
+	
+	public static double[][] make2DMatrix(double[] vector, int rowLength)
+	{
+		double[][] M = new double[vector.length / rowLength][rowLength];
+		for(int i = 0; i < vector.length; i++)
+		{
+			M[(i-i%rowLength)/rowLength][i%rowLength] = vector[i];
+		}
+		return M;
+	}
 }

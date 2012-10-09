@@ -26,6 +26,13 @@ public class MatrixOperationsJUnit {
 			System.out.print("\n");
 		}
 	}
+	private static <T> void printArray(T[] array)
+	{
+		for(int i=0; i < array.length; i++)
+		{
+			System.out.print(array[i]+" ");
+		}
+	}
 	@Test
 	public void testDoubleToComplexArray()
 	{
@@ -62,6 +69,22 @@ public class MatrixOperationsJUnit {
 		double[][] testMatrixCopy = MatrixOperations.copyMatrix(testMatrix, 6);
 		assertTrue(testMatrix[1][2] == testMatrixCopy[1][2]);
 		assertTrue(testMatrixCopy[0].length == 6);
+	}
+	
+	@Test
+	public void toFromRowMajor()
+	{
+		double[][] testMatrix = new double[3][3];
+		for(int i=0;i<9;i++){
+			testMatrix[i/3][i%3] = 0.0;
+		}
+		testMatrix[0][0] = 1.0;
+		testMatrix[1][1] = 2.0;
+		testMatrix[2][2] = 3.0;
+		for(int i=0;i<9;i++){
+			assertTrue(testMatrix[i/3][i%3] == MatrixOperations.make2DMatrix(MatrixOperations.makeRowMajorVector(testMatrix), 3)[i/3][i%3]);
+		}
+
 	}
 	
 }
