@@ -35,15 +35,18 @@ public class BSpline {
 	}
 	
 	//Eq 4.4 Essman[95]
+	//3.2.2 Lee[05]
+	//Replace with DFTmod from http://chem.skku.ac.kr/~wkpark/tutor/chem/tinker/source/kewald.f ?
+	//Page 157 of Lee[05]
 	public Complex b(int i, double mi, int K)
 	{
 		if(order%2==1 && (int)(2*mi) == K)
 		{
 			return Complex.zero;
 		}
-		Complex part1 = new Complex(0,2*Math.PI*(order-1)*mi / K);
+		Complex part1 = new Complex(0,2*Math.PI*(order-1)*mi / K).exp();
 		Complex part2 = Complex.zero;
-		for(int j = 0; j < order-2; j++)
+		for(int j = 0; j <= order-2; j++)
 		{
 			double splinePart = evaluate(j+1);
 			Complex expPart = new Complex(0,2*Math.PI*mi*j/K).exp();

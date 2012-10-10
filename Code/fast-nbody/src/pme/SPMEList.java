@@ -3,6 +3,7 @@ package pme;
 import gui.SpaceSize;
 
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.util.ArrayList;
 
 import jtransforms.DoubleFFT_2D;
@@ -15,22 +16,21 @@ import particles.Particle;
 import particles.ParticleList;
 
 public class SPMEList extends ParticleList {
-	static int PADDING = 1; //Make the space size this many times larger to reduce period issues
 	static int CELL_SIDE_COUNT = 64; //K (Essman[95])
 	static int ASSIGNMENT_SCHEME_ORDER = 6;
 
 	final double ewaldCoefficient; //The ewald coefficient
-	static double TOLERANCE = 1e-8;//Used to calculate ewaldCoefficient
-	static double CUTOFF_DISTANCE = 64;//Used to calculate ewaldCoefficient. In spaceSize dimensions
+	static double TOLERANCE = 1e-6;//Used to calculate ewaldCoefficient
+	static double CUTOFF_DISTANCE = 0.25;//Used to calculate ewaldCoefficient. In unit cell dimensions
 	final int directRange; //will be CUTOFF_DISTANCE / meshWidth. In mesh cells
 
+	final ArrayList<Particle> nonUnitParticles; //We keep a copy of this for drawing
 
 	ArrayList<Particle> cellList[][];
 
 	double[][] Q; //the charge assignment matrix
 	double[][] B; //The B Matrix (Essman[95])
-	double[][] C; //The C Matrix (Essman[95])
-	Complex[][] convolution;
+	double[][] debugMatrix;
 	double[][] theta;
 	Complex[][] complexTheta;
 	BSpline M;		//Order ASSIGNMENT_SCHEME_ORDER B spline
@@ -41,9 +41,19 @@ public class SPMEList extends ParticleList {
 
 	//We have an array of 2D particles, but we assume the z component is 0
 	public SPMEList(ArrayList<Particle> particles, SpaceSize windowSize) {
-		super(particles);
-		this.windowSize = windowSize.scale(PADDING); //we make it empty around to help with period problems
-		this.meshWidth = (double)(windowSize.getWidth()) / CELL_SIDE_COUNT;
+
+		//We work within the unit square
+		ArrayList<Particle> unitParticles = new ArrayList<Particle>();
+		for(Particle p : particles)
+		{
+			unitParticles.add(new Particle(p.getPosition().re() / (double)(windowSize.getWidth()),p.getPosition().im() / (double)(windowSize.getHeight()),
+					p.getMass(),p.getCharge()));
+		}
+		this.addAll(unitParticles);
+		
+		this.nonUnitParticles = particles;
+		this.windowSize = windowSize;
+		this.meshWidth = 1.0 / (double)(CELL_SIDE_COUNT); //Working in the unit cell
 		this.inverseMeshWidth = 1.0 / this.meshWidth;
 		this.directRange = (int)Math.ceil(CUTOFF_DISTANCE/meshWidth);
 		this.ewaldCoefficient = calculateEwaldCoefficient(CUTOFF_DISTANCE,TOLERANCE);
@@ -80,6 +90,7 @@ public class SPMEList extends ParticleList {
 				xhi = x;
 			}
 		}
+		System.out.println("Chose ewald coefficient of "+x);
 		return x;
 	}
 
@@ -89,21 +100,21 @@ public class SPMEList extends ParticleList {
 		M = new BSpline(ASSIGNMENT_SCHEME_ORDER);
 		initQMatrix();
 		initBMatrix();
-		initCMatrix();
+		//initCMatrix();
 
 		//Starting Eq 4.7 Essman[95]
-		double[][] BC = MatrixOperations.straightMultiply(B, C);
-		DoubleFFT_2D fft = new DoubleFFT_2D(CELL_SIDE_COUNT,CELL_SIDE_COUNT);
-		double[][] qInverseFT = MatrixOperations.copyMatrix(Q, 2*CELL_SIDE_COUNT);
-		fft.realInverseFull(qInverseFT, false);
-		Complex[][] product = MatrixOperations.straightMultiply(Complex.doubleToComplexArrayNoImaginaryPart(BC), Complex.doubleToComplexArray(qInverseFT));
-		double[][] wideProduct = Complex.complexToDoubleArray(product);
-		fft.complexForward(wideProduct);
-		convolution = Complex.doubleToComplexArray(wideProduct);
-
-		theta = MatrixOperations.copyMatrix(BC, 2*CELL_SIDE_COUNT);
-		fft.realForwardFull(theta);
-		complexTheta = Complex.doubleToComplexArray(theta);
+//		double[][] BC = MatrixOperations.straightMultiply(B, C);
+//		DoubleFFT_2D fft = new DoubleFFT_2D(CELL_SIDE_COUNT,CELL_SIDE_COUNT);
+//		double[][] qInverseFT = MatrixOperations.copyMatrix(Q, 2*CELL_SIDE_COUNT);
+//		fft.realInverseFull(qInverseFT, false);
+//		Complex[][] product = MatrixOperations.straightMultiply(Complex.doubleToComplexArrayNoImaginaryPart(BC), Complex.doubleToComplexArray(qInverseFT));
+//		double[][] wideProduct = Complex.complexToDoubleArray(product);
+//		fft.complexForward(wideProduct);
+//		convolution = Complex.doubleToComplexArray(wideProduct);
+//
+//		theta = MatrixOperations.copyMatrix(BC, 2*CELL_SIDE_COUNT);
+//		fft.realForwardFull(theta);
+//		complexTheta = Complex.doubleToComplexArray(theta);
 
 
 		System.out.println("Reciprocal energy: "+getRecEnergy());
@@ -129,8 +140,8 @@ public class SPMEList extends ParticleList {
 						particleX = p.getPosition().re();
 						particleY = p.getPosition().im();
 						//Just before Eq 3.1 Essman[95]
-						double uX = (CELL_SIDE_COUNT) * (particleX / (double)(windowSize.getWidth()));
-						double uY = (CELL_SIDE_COUNT) * (particleY / (double)(windowSize.getWidth()));
+						double uX = (CELL_SIDE_COUNT) * (particleX / 1.0);//Unit cell already in fractional coordinates
+						double uY = (CELL_SIDE_COUNT) * (particleY / 1.0);
 						//Removed periodic images? Seems to be off by a grid cell in x/y? FIXME?
 						double a = M.evaluate(uX-x);
 						double b = M.evaluate(uY-y);
@@ -150,36 +161,7 @@ public class SPMEList extends ParticleList {
 		{
 			for(int y = 0; y < CELL_SIDE_COUNT; y++)
 			{
-				B[x][y] = squared(M.b(1, x, CELL_SIDE_COUNT).abs())*squared(M.b(2, y, CELL_SIDE_COUNT).abs());
-			}
-		}
-	}
-
-	//Eq 3.9 Essman[95]
-	private void initCMatrix()
-	{
-		C = new double[CELL_SIDE_COUNT][CELL_SIDE_COUNT];
-		double V = windowSize.getWidth() * windowSize.getHeight();
-		double c = 1.0 / (Math.PI * V);
-		C[0][0] = 0;
-
-		for(int x = 0; x < CELL_SIDE_COUNT; x++)
-		{
-			for(int y = 0; y < CELL_SIDE_COUNT; y++)
-			{
-
-				if(!(x==0 && y==0))
-				{
-					double mXPrime = (0 <= x && x <= CELL_SIDE_COUNT/2)? x : x - CELL_SIDE_COUNT;
-					double mYPrime = (0 <= y && y <= CELL_SIDE_COUNT/2)? y : y - CELL_SIDE_COUNT;
-					double m = mXPrime * inverseMeshWidth + mYPrime * inverseMeshWidth;
-					if(m != 0){ //FIXME: What to do if m==0?
-						C[x][y] = c * (Math.exp(-squared(Math.PI)* squared(m) / squared(ewaldCoefficient))) / squared(m);
-					}else{
-						C[x][y] = 0;
-					}
-				}
-
+				B[x][y] = squared(M.b(1, x, CELL_SIDE_COUNT).mag())*squared(M.b(2, y, CELL_SIDE_COUNT).mag());
 			}
 		}
 	}
@@ -205,17 +187,39 @@ public class SPMEList extends ParticleList {
 	private static double squared(double x){
 		return x*x;
 	}
-
+	
+	//Requires B and Q to be initialised. C is implicitly calculated in here (part of eterm)
+	//Refer to page 191 of Lee[05]
 	private double getRecEnergy(){
+		//Make IFTQ ourselves
+		DoubleFFT_2D fft = new DoubleFFT_2D(CELL_SIDE_COUNT,CELL_SIDE_COUNT);
+		double[][] inverseFTQDoubles = MatrixOperations.copyMatrix(Q, CELL_SIDE_COUNT*2);
+		fft.realInverseFull(inverseFTQDoubles, false);
+		Complex[][] inverseFTQComplex = Complex.doubleToComplexArray(inverseFTQDoubles); //IFT of Q
+		debugMatrix = new double[CELL_SIDE_COUNT][CELL_SIDE_COUNT];
+		
+		//Eq 19 Lee[05]
+		//Also Eq 3.9 Essman[95]
 		double sum = 0;
 		for(int x = 0; x < CELL_SIDE_COUNT; x++)
 		{
 			for(int y = 0; y < CELL_SIDE_COUNT; y++)
 			{
-				sum += 0.5*Q[x][y]*convolution[x][y].re();
+				double mXPrime = (0 <= x && x <= CELL_SIDE_COUNT/2)? x : x - CELL_SIDE_COUNT;
+				double mYPrime = (0 <= y && y <= CELL_SIDE_COUNT/2)? y : y - CELL_SIDE_COUNT;
+				double m = mXPrime * 1.0 + mYPrime * 1.0; //Was inverseMeshWidth - theory is reciprocal lattice vectors are for the entire cell U rather than one cell
+				double mSquared = squared(mXPrime * 1.0) + squared(mYPrime * 1.0);
+				if(m!=0){
+					double V = 1; //working in the unit mesh
+					double eterm = Math.exp(-squared(Math.PI/ewaldCoefficient)*mSquared) * B[x][y] / (Math.PI * V * mSquared);
+					//Section 3.2.8 Lee[05]
+					double thisContribution = eterm * (squared(inverseFTQComplex[x][y].re())+squared(inverseFTQComplex[x][y].im()));
+					sum += thisContribution; //from the argument that F(Q(M))*F(Q(-M))-F-1(Q)^2
+					debugMatrix[x][y] = thisContribution ;
+				}
 			}
 		}
-		return sum;
+		return 0.5*sum;
 	}
 
 	private double getDirEnergy(){
@@ -267,9 +271,11 @@ public class SPMEList extends ParticleList {
 		{
 			for(int dy= -range; dy < range; dy++)
 			{
-				int thisX = (cellX + dx + CELL_SIDE_COUNT)% CELL_SIDE_COUNT;
-				int thisY = (cellY + dy + CELL_SIDE_COUNT)% CELL_SIDE_COUNT;
-				nearParticles.addAll(cellList[thisX][thisY]);
+				int thisX = (cellX + dx);
+				int thisY = (cellY + dy);
+				if(thisX >= 0 && thisY >= 0 && thisX < CELL_SIDE_COUNT && thisY < CELL_SIDE_COUNT){
+					nearParticles.addAll(cellList[thisX][thisY]);
+				}
 			}
 		}
 		return nearParticles;
@@ -281,14 +287,24 @@ public class SPMEList extends ParticleList {
 
 	@Override
 	public double charge(Complex position) {
-		int i = (int)(position.re() / meshWidth);
-		int j = (int)(position.im() / meshWidth);
-		return 0.5*Q[i][j]*convolution[i][j].re();
+		int i = (int)((position.re() / windowSize.getWidth()) / meshWidth); //Need to translate into unit coordinates, then find it's grid coordinate
+		int j = (int)((position.im() / windowSize.getHeight()) / meshWidth);
+		return debugMatrix[i][j];
 	}
 
 	@Override
 	public void debugDraw(Graphics g) {
 
+	}
+	
+	@Override
+	public void draw(Graphics2D g)
+	{
+		
+		for(Particle p : nonUnitParticles)
+		{
+			p.draw(g);
+		}
 	}
 
 
