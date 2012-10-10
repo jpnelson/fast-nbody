@@ -2,6 +2,7 @@ package pme;
 
 import gui.SpaceSize;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
@@ -298,7 +299,16 @@ public class SPMEList extends ParticleList {
 
 	@Override
 	public void debugDraw(Graphics g) {
-
+		//Draw grid
+		//Called once at the end of calculation
+		for(int i = 0; i < CELL_SIDE_COUNT; i++)
+		{
+			for(int j = 0; j < CELL_SIDE_COUNT; j++)
+			{
+				g.setColor(Color.gray);
+				g.drawRect((int)(i*512.0/CELL_SIDE_COUNT), (int)(j*512.0/CELL_SIDE_COUNT), (int)512.0/CELL_SIDE_COUNT, (int)512.0/CELL_SIDE_COUNT);
+			}
+		}
 	}
 	
 	@Override

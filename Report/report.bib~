@@ -1,0 +1,8 @@
+@ONLINE{MilleniumRun,
+author = {Max Planck institute of Astrophysics},
+title = {This is a test entry of type {@ONLINE}},
+month = oct,
+year = {2012},
+url = {http://www.mpa-garching.mpg.de/galform/virgo/millennium/}
+}
+

@@ -1,0 +1,47 @@
+This is BibTeX, Version 0.99c (TeX Live 2009/Debian)
+The top-level auxiliary file: report.aux
+The style file: plain.bst
+Database file #1: references.bib
+Warning--empty journal in lee05
+You've used 6 entries,
+            2118 wiz_defined-function locations,
+            534 strings with 4886 characters,
+and the built_in function-call counts, 1851 in all, are:
+= -- 175
+> -- 85
+< -- 0
++ -- 37
+- -- 28
+* -- 125
+:= -- 319
+add.period$ -- 20
+call.type$ -- 6
+change.case$ -- 32
+chr.to.int$ -- 0
+cite$ -- 7
+duplicate$ -- 57
+empty$ -- 151
+format.name$ -- 28
+if$ -- 380
+int.to.chr$ -- 0
+int.to.str$ -- 6
+missing$ -- 4
+newline$ -- 35
+num.names$ -- 12
+pop$ -- 40
+preamble$ -- 1
+purify$ -- 26
+quote$ -- 0
+skip$ -- 39
+stack$ -- 0
+substring$ -- 120
+swap$ -- 5
+text.length$ -- 0
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 24
+warning$ -- 1
+while$ -- 15
+width$ -- 7
+write$ -- 66
+(There was 1 warning)

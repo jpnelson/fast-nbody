@@ -1,0 +1,38 @@
+\begin{thebibliography}{1}
+
+\bibitem{darden:10089}
+Tom Darden, Darrin York, and Lee Pedersen.
+\newblock Particle mesh ewald: An n [center-dot] log(n) method for ewald sums
+  in large systems.
+\newblock {\em The Journal of Chemical Physics}, 98(12):10089--10092, 1993.
+
+\bibitem{essmann:8577}
+Ulrich Essmann, Lalith Perera, Max~L. Berkowitz, Tom Darden, Hsing Lee, and
+  Lee~G. Pedersen.
+\newblock A smooth particle mesh ewald method.
+\newblock {\em The Journal of Chemical Physics}, 103(19):8577--8593, 1995.
+
+\bibitem{MilleniumRun}
+Max~Planck institute~of Astrophysics.
+\newblock The millennium simulation project.
+\newblock \url{http://www.mpa-garching.mpg.de/galform/virgo/millennium/}.
+\newblock Accessed: 10/10/2012.
+
+\bibitem{lee05}
+Sam Lee.
+\newblock An fpga implementation of the smooth particle mesh ewald reciprocal
+  sum compute engine (rsce).
+\newblock 2005.
+
+\bibitem{petersen:3668}
+Henrik~G. Petersen.
+\newblock Accuracy and efficiency of the particle mesh ewald method.
+\newblock {\em The Journal of Chemical Physics}, 103(9):3668--3679, 1995.
+
+\bibitem{NAMD}
+Theoretical and Computational~Biophysics group.
+\newblock Namd scalable molecular dynamics.
+\newblock \url{http://www.ks.uiuc.edu/Research/namd/}.
+\newblock Accessed: 10/10/2012.
+
+\end{thebibliography}
