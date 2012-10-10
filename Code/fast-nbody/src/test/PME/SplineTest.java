@@ -12,7 +12,8 @@ public class SplineTest {
 	{
 		BSpline spline1 = new BSpline(2);
 		BSpline spline2 = new BSpline(4);
-		System.out.println(spline2.evaluate(2));
+		spline2.fillBSPMod(64);
+		//System.out.println(spline2.bspmod[1]);
 		assertTrue(spline1.evaluate(1)==1);
 	}
 

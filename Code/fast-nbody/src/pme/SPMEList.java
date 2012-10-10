@@ -99,7 +99,7 @@ public class SPMEList extends ParticleList {
 		initCellList();
 		M = new BSpline(ASSIGNMENT_SCHEME_ORDER);
 		initQMatrix();
-		initBMatrix();
+		//initBMatrix();
 		//initCMatrix();
 
 		//Starting Eq 4.7 Essman[95]
@@ -188,9 +188,12 @@ public class SPMEList extends ParticleList {
 		return x*x;
 	}
 	
-	//Requires B and Q to be initialised. C is implicitly calculated in here (part of eterm)
+	//Requires Q to be initialised. C is implicitly calculated in here (part of eterm)
+	//B matrix is also calculated elsewhere, in BSpline at the moment
 	//Refer to page 191 of Lee[05]
 	private double getRecEnergy(){
+		//Fill the bspmod array
+		M.fillBSPMod(CELL_SIDE_COUNT);
 		//Make IFTQ ourselves
 		DoubleFFT_2D fft = new DoubleFFT_2D(CELL_SIDE_COUNT,CELL_SIDE_COUNT);
 		double[][] inverseFTQDoubles = MatrixOperations.copyMatrix(Q, CELL_SIDE_COUNT*2);
@@ -211,11 +214,12 @@ public class SPMEList extends ParticleList {
 				double mSquared = squared(mXPrime * 1.0) + squared(mYPrime * 1.0);
 				if(m!=0){
 					double V = 1; //working in the unit mesh
-					double eterm = Math.exp(-squared(Math.PI/ewaldCoefficient)*mSquared) * B[x][y] / (Math.PI * V * mSquared);
+					double bterm = M.bspmod[x]*M.bspmod[y];
+					double eterm = Math.exp(-squared(Math.PI/ewaldCoefficient)*mSquared) / (bterm * Math.PI * V * mSquared);
 					//Section 3.2.8 Lee[05]
 					double thisContribution = eterm * (squared(inverseFTQComplex[x][y].re())+squared(inverseFTQComplex[x][y].im()));
 					sum += thisContribution; //from the argument that F(Q(M))*F(Q(-M))-F-1(Q)^2
-					debugMatrix[x][y] = thisContribution ;
+					debugMatrix[x][y] = Q[x][y];
 				}
 			}
 		}
@@ -226,7 +230,7 @@ public class SPMEList extends ParticleList {
 		double sum = 0;
 		for(Particle p : this)
 		{
-			for(Particle q : getNearParticles(p,directRange))
+			for(Particle q : getNearParticles(p.getPosition(),directRange))
 			{
 				if(!p.equals(q)){
 					double d = p.getPosition().sub(q.getPosition()).mag();
@@ -262,10 +266,10 @@ public class SPMEList extends ParticleList {
 	}
 
 	//Uses a cell list method
-	public ArrayList<Particle> getNearParticles(Particle p, int range)
+	public ArrayList<Particle> getNearParticles(Complex p, int range)
 	{
-		int cellX = (int)Math.floor(p.getPosition().re() / meshWidth);
-		int cellY = (int)Math.floor(p.getPosition().im() / meshWidth);
+		int cellX = (int)Math.floor(p.re() / meshWidth);
+		int cellY = (int)Math.floor(p.im() / meshWidth);
 		ArrayList<Particle> nearParticles = new ArrayList<Particle>();
 		for(int dx= -range; dx < range; dx++)
 		{

@@ -3,7 +3,8 @@ package pme;
 import math.Complex;
 
 public class BSpline {
-	int order;
+	final int order;
+	public double[] bspmod;
 	public BSpline(int order)
 	{
 		this.order = order;
@@ -53,5 +54,37 @@ public class BSpline {
 			part2 = part2.add(expPart.scale(splinePart));
 		}
 		return part1.mult(part2.reciprocal());
+	}
+	
+	//From dftmod in Lee[05] (Pg 156)
+	public void fillBSPMod(int K)
+	{
+		bspmod = new double[K+1];
+	    /* Computes the modulus of the discrete fourier transform of bsp_arr, */
+	    /* storing it into bsp_mod */
+		double tiny = 1e-7;
+		for(int i = 0; i <= K; i++)
+		{
+			double sum1=0;
+			double sum2=0;
+			for(int j=1; j <= K; j++)
+			{
+				double arg = Math.PI * 2 * (i-1) * (j-1) / K;
+				sum1 += evaluate(j) * Math.cos(arg);
+				sum2 += evaluate(j) * Math.sin(arg);
+			}
+			bspmod[i] = sum1*sum1+sum2*sum2;
+		}
+		for(int i = 1; i <= K; i++)
+		{
+			if(bspmod[i] < tiny)
+			{
+				bspmod[i] = (bspmod[i-1] + bspmod[i+1])*0.5;
+			}
+		}
+//		for(int i = 0; i <= K; i++)
+//		{
+//			System.out.println("bsp_mod["+i+"]="+bspmod[i]);
+//		}
 	}
 }

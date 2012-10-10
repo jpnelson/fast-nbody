@@ -1,0 +1,132 @@
+% The command to run latex:
+%   pdflatex SOCSthesis
+%
+% The command to run the bibtex:
+%   bibtex SOCSthesis
+
+\documentclass[pdftex,twoside,a4paper]{report}
+\usepackage[pdftex]{graphicx}
+
+
+\begin{document}
+
+\begin{titlepage}
+ 
+\begin{center}
+
+\includegraphics[width=0.8\textwidth]{logoWhite.png}\\[0.5cm]
+\textsc{\Large School of Computer Science}\\[0.5cm]
+\textsc{\Large College of Engineering and}\\[0.2cm]
+\textsc{\Large Computer Science}\\[0.5cm]
+
+
+ 
+\vspace{1.4cm}
+
+\hrule
+
+\vspace{1.4cm}
+
+{ \huge \bfseries Title Of Your Project} \\
+
+\vspace{0.4cm}
+
+{ \LARGE \bfseries Jonh \textsc{Smith} - u1234567} \\
+
+\vspace{1.4cm}
+
+
+\hrule
+
+\vspace{1.0cm}
+
+\textsc{\large COMPXXXX - Name of course}\\
+
+\vspace{1.0cm}
+
+\hrule
+
+\vspace{1.4cm}
+
+
+
+\emph{Supervisor: } 
+Dr Jane \textsc{Jones} \\
+
+ 
+\vfill
+ 
+% Bottom of the page
+{\large \today}
+ 
+\end{center}
+ 
+\end{titlepage}
+
+
+
+\begin{abstract}
+\end{abstract}
+
+
+\section*{Declaration}
+
+Except where otherwise indicated, this thesis is my own original work.
+
+\section*{Acknowledgements}
+
+I would like to thank ...
+
+
+\section*{Dedication}
+
+\begin{center}
+dedication 
+\end{center}
+
+\tableofcontents
+
+
+\chapter{Introduction}
+
+\section{The Problem}
+\section{Overview}
+\section{Contribution}
+\section{Limitation}
+
+
+Fred \cite{Fred10} found that .... 
+
+\chapter{Background}
+
+Figure~\ref{anulog} on page~\pageref{anulog} shows including a jpg.   
+
+\begin{figure}
+\begin{center}
+\includegraphics[width=0.5\textwidth]{logo.png}
+\end{center}
+\caption{The ANU Logo} \label{anulog}
+\end{figure}
+
+
+One can also include a formula in a line of the text $e=mc^2$.  Or they can be done on a new line:
+\[ s = \sum x_i \]
+
+
+
+\chapter{Main Chapter - Design or Theory}
+
+\chapter{Implementation or Execution}
+
+\chapter{Evaluation}
+
+\chapter{Conclusion}
+
+\bibliographystyle{plain}	
+\bibliography{references}	
+
+\appendix
+\chapter{First Appendix}
+
+
+\end{document}
