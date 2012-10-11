@@ -198,12 +198,17 @@ The ewald coefficient, $\beta$, is a number describing the ratio between the rea
 \frac{\text{erfc}(\beta r_{\text{cut}})}{r_\text{cut}} \leq \epsilon_\text{tol}
 \label{eq:ewald_coeff}
 \end{equation}
-Where erfc is the complimentary error function, a function that tends quickly to zero, depending on it's argument. The relation means that for $r > r_{cut}$, we have $\frac{\text{erfc}(\beta r_{\text{cut}})}{r_\text{cut}} \leq \epsilon_\text{tol}$, and for all $r > r_\text{cut}$ we can ignore the direct energy contribution, given by\\
+Where erfc is the complimentary error function, a function that tends quickly to zero, depending on it's argument. The relation means that for $r > r_{cut}$, we have $\frac{\text{erfc}(\beta r_{\text{cut}})}{r_\text{cut}} \leq \epsilon_\text{tol}$, and for all $r > r_\text{cut}$ we can ignore the direct energy contribution, given by equation \ref{eq:energy_dir} \cite{essmann:8577}\\
 \begin{equation}
 E_\text{dir} = \frac{1}{2} \sum_{n} \sum_{i,j = 1} ^N \frac{q_i q_j \text{erfc}{\beta |r_j - r_i|}}{|r_j - r_i|}
 \label{eq:energy_dir}
 \end{equation}
-(Equation from  \cite{essmann:8577})
+Which becomes
+\begin{equation}
+E_\text{dir} = \frac{1}{2} \sum_{n} \sum_{i,j = 1} ^{\overset{*}{N}} \frac{q_i q_j}{|r_j - r_i|}
+\label{eq:energy_dir_noerfc}
+\end{equation}
+Where the $*$ indicates terms with $|r_j - r_i| > r_{\text{cut}}$ are left out of the sum
 \subsection{The algorithm}
 \subsubsection{Main particle mesh ewald flow}
 The basic flow of the algorithm is given below\\ \newline
@@ -243,8 +248,79 @@ After this, the array closeParticles[x][y] contains all particles within $r_cut$
 
 \section{The Fast multipole algorithm}
 \subsection{Background}
+The \fma is similar to the \pmem in that both use a grid structure, and bounded approximations, to speed up computation. However, they are different in the ways they use the mesh, and the approximations that are made.
+\subsubsection{Complex plane}
+It should be noted that for this algorithm, it is simplest to implement in two dimensions. It is possible to to implement in three dimensions, with Spherical Harmonics, however this is not discussed in this paper. Instead, we work in two dimensions, on the complex plane. We give a point $(x,y)$ on the Real plane the value $z = x + yi$ on the Complex plane. This way, we can represent each point as a single number, and use complex versions of functions while calculating the multipole expansions.
+
+\subsubsection{Multipole expansions}
+A multipole expansion is a function which is a sum of a series of terms, which converges to some other function (in this case, the potential energy function). This convergence is fast, which makes it a good approximation to use in the \fma. These multipole expansions are centered on one point, and are valid for points within a certain distance of this center, but may be shifted and combined to gain more general multipole expansions. \cite{greengard:315}
+
+\subsubsection{The mesh}
+The mesh is similar to the one used in the \pmem. We say that the mesh has $n$ levels, and at each level we split each cell into quarters, starting with level $0$, which is the simulation cell.
+%%%%%%%%FIGURE%%%%%%%%%%%%%
+\begin{figure}[h]
+\bcen \includegraphics[width=0.35\textwidth]{figures/fma_mesh.pdf} \ecen
+\caption{A simulation cell, with meshes up to level 2 displayed, giving $2^n = 2^2 = 4$ boxes per side}
+\end{figure}
+
 \subsection{Mathematical description}
+\subsubsection{Potential and the multipole expansion approximation}
+We describe the potential at a point $x_0 \in \mathbb{C}$ from the charge $q$ at $x \in \mathbb{C}$ by
+\begin{equation}
+\phi_{x_0} = -q\text{log}{|x - x_0|}
+\label{eq:potential}
+\end{equation}
+A multipole expansion for this function is derived in \cite{greengard:315}. Suppose that $m$ charges of strength $\{q_i,i=1,...,m\}$ are located at points $\{z_i, i=1,...,m\}$, with $|z_i| < r$. Then for any $z \in \mathbb{C}$ with $|z| > r$, the potential $\phi(z)$ is given by
+\begin{equation}
+\phi(z) = Q \text{log}(z) + \sum_{k=1} ^{\infty} \frac{a_k}{z^k}
+\label{eq:multipole_expansion}
+\end{equation}
+Where
+\begin{equation}
+Q = \sum_{i=1} ^m q_i 
+\hspace{0.5cm} \text{and} \hspace{0.5cm}
+a_k = \sum_{i=1} ^m \frac{-q_i z^k _i}{k}
+\end{equation}
+While this is exact for an infinite sum of terms, we can truncate the series at term $p$, and if $p$ is large enough, this approximation is close to the actual potential $\phi(z)$. A description of how close can be found in \cite{greengard:315}
+\subsubsection{Shifting multipole expansions}
+A multipole expansion's center may be shifted, which is necessary for the \fma. Suppose that
+\begin{equation}
+\phi(z) = a_0 \text{log}(z-z_0) + \sum_{k=1} ^{\infty} \frac{a_k}{(z-z_0)^k}
+\label{eq:pre_shift_multipole}
+\end{equation}
+Describes a multipole expansion which is centered on $z_0$. We can then shift this multipole expansion to be centered at the origin,
+\begin{equation}
+\phi(z) = a_0 \text{log}(z) + \sum_{l=1} ^{\infty} \frac{b_l}{z^l}
+\label{eq:shifted_multipole}
+\end{equation}
+Where
+\begin{equation}
+b_l = \left(\sum_{k=1} ^l a_k z_0^{l-k} \binom{l-1}{k-1} - \frac{a_0 z_0^l}{l} \right)
+\label{eq:b_descr}
+\end{equation}
+Note that this procedure of shifting to the origin is equivalent to shifting from any point $a$ to point $b$, if we treaet point $b$ as the origin, and $a-b$ as our previous multipole expansion center.
+\subsubsection{Local expansions}
+We can find a local expansion about the origin due to a set of charges within radius $R$ of $z_0$, with $|z_0| > (c+1)R, \hs c > 1$. This local expansion is based on the multipole expansion at the same point.
+\begin{equation}
+\phi(z) = \sum _{l=0} ^{\infty} b_l * z^l
+\label{local_expansion}
+\end{equation}
+Where
+\begin{equation}
+b_0 = \sum_{k=1} ^{\infty} \frac{a^k}{z^k_0} (-1)^k + a_0 \log(-z_0)
+\label{where_local_expansion}
+\end{equation}
+
+
 \subsection{The algorithm}
+The basic flow of the algorithm is given below\\
+%%%%%PSEUDOCODE%%%%%%%%%
+\begin{algorithm}[H]
+\SetLine
+\KwData{level-count: the number of mesh levels we create}
+\For{i=0 to level-count}{Initialise mesh[i]}
+\end{algorithm}
+
 \subsection{The implementation}
 \subsection{Analysis of the implementation}
 

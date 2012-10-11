@@ -48,3 +48,35 @@ keywords = {BIOLOGY; MACROMOLECULES; STRUCTURE FACTORS; POTENTIALS; INTERPOLATIO
 url = {http://link.aip.org/link/?JCP/103/8577/1},
 doi = {10.1063/1.470117}
 }
+
+@article{greengard:315,
+author = {L. Greengard and V. Rokhlin},
+collaboration = {},
+title = {A fast algorithm for particle simulations},
+journal = {Journal of Computational Physics},
+year = {1987}
+volume = {73},
+number = {},
+pages = {325-348}
+}
+
+
+
+
+@article{darden:10089,
+author = {Tom Darden and Darrin York and Lee Pedersen},
+collaboration = {},
+title = {Particle mesh Ewald: An N [center-dot] log(N) method for Ewald sums in large systems},
+publisher = {AIP},
+year = {1993},
+journal = {The Journal of Chemical Physics},
+volume = {98},
+number = {12},
+pages = {10089-10092},
+keywords = {CALCULATION METHODS; COULOMB FIELD; INTERPOLATION; FOURIER TRANSFORMATION; ACCURACY; IONIC CRYSTALS; VECTORS; EUCLIDEAN SPACE; CARTESIAN COORDINATES; ERRORS; FUNCTIONS; FORCES},
+url = {http://link.aip.org/link/?JCP/98/10089/1},
+doi = {10.1063/1.464397}
+}
+
+
+
