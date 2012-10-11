@@ -29,4 +29,9 @@ public class Vector {
 	public Vector scale(double c){
 		return new Vector(x*c,y*c,z*c);
 	}
+	
+	@Override
+	public String toString(){
+		return "("+x+", "+y+", "+z+")";
+	}
 }

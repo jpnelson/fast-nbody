@@ -28,8 +28,8 @@ public class NearParticlesJUnit {
 		list.add(new Particle(0, 222, 1, 1));
 		list.add(new Particle(313, 0, 1, 1));
 		SPMEList p = new SPMEList(list, new SpaceSize(512,512));
-		assertTrue(p.getNearParticles(p1, 3).size()==3);
-		assertTrue(p.getNearParticles(p2, 3).size()==2);
+		assertTrue(p.getNearParticles(p1.getPosition(), 3).size()==3);
+		assertTrue(p.getNearParticles(p2.getPosition(), 3).size()==2);
 
 	}
 }

@@ -35,7 +35,7 @@ import pme.SPMEList;
 
 public class GUI implements ActionListener, PropertyChangeListener{
 	//Window
-	static Dimension windowSize = new Dimension(512,512);
+	static Dimension windowSize = new Dimension(1024,1024);
 	JFrame jFrame;
 	JMenuBar jMenuBar;
 	JMenu chargesMenu;
@@ -53,6 +53,7 @@ public class GUI implements ActionListener, PropertyChangeListener{
 	//Simulation
 	public ArrayList<Particle> particles = new ArrayList<Particle>(); //This lists job is to keep track of mouse clicks and charges
 	CalculationTask task;
+
 	
 	public GUI()
 	{
@@ -154,7 +155,6 @@ public class GUI implements ActionListener, PropertyChangeListener{
 		printSeparator();
 		SPMEList pmeList = new SPMEList(particles,new SpaceSize(simulationCanvas.canvasSize.width,simulationCanvas.canvasSize.height));
 		System.out.println("Calculating charges using smooth particle mesh ewald method");
-		
 		int height = simulationCanvas.getHeight();
 		int width = simulationCanvas.getWidth(); 
 		

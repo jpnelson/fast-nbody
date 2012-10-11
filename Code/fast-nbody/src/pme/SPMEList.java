@@ -19,7 +19,6 @@ import particles.ParticleList;
 public class SPMEList extends ParticleList {
 	static int CELL_SIDE_COUNT = 64; //K (Essman[95])
 	static int ASSIGNMENT_SCHEME_ORDER = 6;
-
 	final double ewaldCoefficient; //The ewald coefficient
 	static double TOLERANCE = 1e-6;//Used to calculate ewaldCoefficient
 	static double CUTOFF_DISTANCE = 0.25;//Used to calculate ewaldCoefficient. In unit cell dimensions
@@ -35,29 +34,31 @@ public class SPMEList extends ParticleList {
 	Complex[][] convolutedMatrix;
 	
 	BSpline M;		//Order ASSIGNMENT_SCHEME_ORDER B spline
+	
 	final double meshWidth; //H (Petersen[95])
 	final double inverseMeshWidth; //H^-1 (required for the reciprocal lattice)
 	final SpaceSize windowSize;
 	Vector[] reciprocalLatticeVectors; //Reciprocal lattice vectors
 
-	//We have an array of 2D particles, but we assume the z component is 0
 	public SPMEList(ArrayList<Particle> particles, SpaceSize windowSize) {
-
+		this.nonUnitParticles = particles;
+		this.meshWidth = 1.0 / (double)(CELL_SIDE_COUNT); //Working in the unit cell
+		this.windowSize = windowSize;
+		this.inverseMeshWidth = 1.0 / this.meshWidth;
+		this.directRange = (int)Math.ceil(CUTOFF_DISTANCE/meshWidth);
+		this.ewaldCoefficient = calculateEwaldCoefficient(CUTOFF_DISTANCE,TOLERANCE);
+		
 		//We work within the unit square
 		ArrayList<Particle> unitParticles = new ArrayList<Particle>();
 		for(Particle p : particles)
 		{
-			unitParticles.add(new Particle(p.getPosition().re() / (double)(windowSize.getWidth()),p.getPosition().im() / (double)(windowSize.getHeight()),
+			unitParticles.add(new Particle(
+					p.getPosition().re() / (double)(windowSize.getWidth()),
+					p.getPosition().im() / (double)(windowSize.getHeight()),
 					p.getMass(),p.getCharge()));
 		}
 		this.addAll(unitParticles);
-		
-		this.nonUnitParticles = particles;
-		this.windowSize = windowSize;
-		this.meshWidth = 1.0 / (double)(CELL_SIDE_COUNT); //Working in the unit cell
-		this.inverseMeshWidth = 1.0 / this.meshWidth;
-		this.directRange = (int)Math.ceil(CUTOFF_DISTANCE/meshWidth);
-		this.ewaldCoefficient = calculateEwaldCoefficient(CUTOFF_DISTANCE,TOLERANCE);
+
 		init();
 	}
 
@@ -124,7 +125,7 @@ public class SPMEList extends ParticleList {
 		System.out.println("Actual energy: "+getActualEnergy());
 		
 		//Forces
-		calculateForces();
+		calculateRecForces();
 
 	}
 
@@ -194,7 +195,7 @@ public class SPMEList extends ParticleList {
 	
 	
 	//Requires getRecEnergy to have been called, which fills the convolutedMatrix
-	public void calculateForces(){
+	public void calculateRecForces(){
 		//Perform a FFT on convolutedMatrix to make theta * Q from B C F^-1(Q)
 		//Make IFTQ ourselves
 		DoubleFFT_2D fft = new DoubleFFT_2D(CELL_SIDE_COUNT,CELL_SIDE_COUNT);
@@ -203,7 +204,25 @@ public class SPMEList extends ParticleList {
 		convolutedMatrix = Complex.doubleToComplexArray(convolutedDoubles); //F(B C F^-1(Q)) Pg. 182 Lee[05]
 		
 		for(Particle p : this){
-			//TODO left off at uni here 183
+			//Pg 183 Lee[05]
+			//For each grid point that this particle has been interpolated to
+			for(int dx = -ASSIGNMENT_SCHEME_ORDER; dx < ASSIGNMENT_SCHEME_ORDER; dx++)
+			{
+				for(int dy = -ASSIGNMENT_SCHEME_ORDER; dy < ASSIGNMENT_SCHEME_ORDER; dy++)
+				{
+					int particleCellX = (int)Math.floor(p.getPosition().re()/1.0 * CELL_SIDE_COUNT);//Scaled fractional coordinate
+					int particleCellY = (int)Math.floor(p.getPosition().re()/1.0 * CELL_SIDE_COUNT);//Scaled fractional coordinate
+					int thisX = particleCellX + dx;
+					int thisY = particleCellY + dy;
+					if(thisX >= 0 && thisY >= 0 && thisX < CELL_SIDE_COUNT && thisY < CELL_SIDE_COUNT)
+					{
+						double dQdx = p.getCharge() * M.evaluateDerivative(thisX) * M.evaluate(thisY);
+						double dQdy = p.getCharge() * M.evaluate(thisX) * M.evaluateDerivative(thisY);
+						p.addToForce(-dQdx * convolutedMatrix[thisX][thisY].re(), -dQdy * convolutedMatrix[thisX][thisY].re()); //FIXME .re()?
+					}
+				}
+			}
+			System.out.println("Particle at "+p.getPosition()+" has force "+p.getForce());
 		}
 		
 	}
@@ -315,9 +334,9 @@ public class SPMEList extends ParticleList {
 
 
 	@Override
-	public double charge(Complex position) {
-		int i = (int)((position.re() / windowSize.getWidth()) / meshWidth); //Need to translate into unit coordinates, then find it's grid coordinate
-		int j = (int)((position.im() / windowSize.getHeight()) / meshWidth);
+	public double charge(Complex position) { //position is in coordinates out of the original dimensions given
+		int i = (int)(position.re() / (windowSize.getWidth()) / meshWidth); //Need to translate into unit coordinates, then find it's grid coordinate
+		int j = (int)(position.im() / (windowSize.getHeight()) / meshWidth);
 		return convolutedMatrix[i][j].mag();
 	}
 

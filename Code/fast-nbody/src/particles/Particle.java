@@ -39,6 +39,11 @@ public class Particle{
 		return mass;
 	}
 	
+	public void addToForce(double x, double y){
+		this.forceX += x;
+		this.forceY += y;
+	}
+	
 	public void setForce(double x, double y){
 		this.forceX = x;
 		this.forceY = y;
