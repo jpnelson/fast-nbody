@@ -9,6 +9,13 @@ public class Vector {
 		this.z = z;
 	}
 	
+	public Vector(double x, double y)
+	{
+		this.x = x;
+		this.y = y;
+		this.z = 0;
+	}
+	
 	public Vector cross(Vector other)
 	{
 		return new Vector(y*other.z - z*other.y,z*other.x - x*other.z,x*other.y - y*other.x);

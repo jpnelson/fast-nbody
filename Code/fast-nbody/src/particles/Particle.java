@@ -4,12 +4,16 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.Point2D;
 import math.Complex;
+import math.Vector;
 public class Particle{
 	public static int DEFAULT_CHARGE = 1;
 	public static int DEFAULT_MASS = 1;
 	Complex position;
 	double mass;
 	double charge;
+	private double forceX = 0;
+	private double forceY = 0;
+	
 	public Particle(double x, double y, double mass, double charge) {
 		position = new Complex(x,y);
 		this.mass = mass;
@@ -33,5 +37,14 @@ public class Particle{
 	}
 	public double getMass(){
 		return mass;
+	}
+	
+	public void setForce(double x, double y){
+		this.forceX = x;
+		this.forceY = y;
+	}
+	
+	public Vector getForce(){
+		return new Vector(forceX,forceY);
 	}
 }

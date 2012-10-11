@@ -32,8 +32,8 @@ public class SPMEList extends ParticleList {
 	double[][] Q; //the charge assignment matrix
 	double[][] B; //The B Matrix (Essman[95])
 	double[][] debugMatrix;
-	double[][] theta;
-	Complex[][] complexTheta;
+	Complex[][] convolutedMatrix;
+	
 	BSpline M;		//Order ASSIGNMENT_SCHEME_ORDER B spline
 	final double meshWidth; //H (Petersen[95])
 	final double inverseMeshWidth; //H^-1 (required for the reciprocal lattice)
@@ -122,6 +122,9 @@ public class SPMEList extends ParticleList {
 		System.out.println("Direct energy: "+getDirEnergy());
 		System.out.println("Corrected energy: "+getCorEnergy());
 		System.out.println("Actual energy: "+getActualEnergy());
+		
+		//Forces
+		calculateForces();
 
 	}
 
@@ -189,19 +192,37 @@ public class SPMEList extends ParticleList {
 		return x*x;
 	}
 	
+	
+	//Requires getRecEnergy to have been called, which fills the convolutedMatrix
+	public void calculateForces(){
+		//Perform a FFT on convolutedMatrix to make theta * Q from B C F^-1(Q)
+		//Make IFTQ ourselves
+		DoubleFFT_2D fft = new DoubleFFT_2D(CELL_SIDE_COUNT,CELL_SIDE_COUNT);
+		double[][] convolutedDoubles = Complex.complexToDoubleArray(convolutedMatrix);
+		fft.complexForward(convolutedDoubles);
+		convolutedMatrix = Complex.doubleToComplexArray(convolutedDoubles); //F(B C F^-1(Q)) Pg. 182 Lee[05]
+		
+		for(Particle p : this){
+			//TODO left off at uni here 183
+		}
+		
+	}
+	
 	//Requires Q to be initialised. C is implicitly calculated in here (part of eterm)
 	//B matrix is also calculated elsewhere, in BSpline at the moment
 	//Refer to page 191 of Lee[05]
 	private double getRecEnergy(){
 		//Fill the bspmod array
 		M.fillBSPMod(CELL_SIDE_COUNT);
+		
 		//Make IFTQ ourselves
 		DoubleFFT_2D fft = new DoubleFFT_2D(CELL_SIDE_COUNT,CELL_SIDE_COUNT);
 		double[][] inverseFTQDoubles = MatrixOperations.copyMatrix(Q, CELL_SIDE_COUNT*2);
 		fft.realInverseFull(inverseFTQDoubles, false);
 		Complex[][] inverseFTQComplex = Complex.doubleToComplexArray(inverseFTQDoubles); //IFT of Q
-		debugMatrix = new double[CELL_SIDE_COUNT][CELL_SIDE_COUNT];
 		
+		debugMatrix = new double[CELL_SIDE_COUNT][CELL_SIDE_COUNT];
+		convolutedMatrix = new Complex[CELL_SIDE_COUNT][CELL_SIDE_COUNT];
 		//Eq 19 Lee[05]
 		//Also Eq 3.9 Essman[95]
 		double sum = 0;
@@ -219,8 +240,11 @@ public class SPMEList extends ParticleList {
 					double eterm = Math.exp(-squared(Math.PI/ewaldCoefficient)*mSquared) / (bterm * Math.PI * V * mSquared);
 					//Section 3.2.8 Lee[05]
 					double thisContribution = eterm * (squared(inverseFTQComplex[x][y].re())+squared(inverseFTQComplex[x][y].im()));
+					convolutedMatrix[x][y] = inverseFTQComplex[x][y].scale(eterm); //Save this for the force calculation
 					sum += thisContribution; //from the argument that F(Q(M))*F(Q(-M))-F-1(Q)^2
-					debugMatrix[x][y] = Q[x][y];
+					debugMatrix[x][y] = Q[x][y]; //Save this for the force calculation
+				}else{
+					convolutedMatrix[x][y] = Complex.zero;
 				}
 			}
 		}
@@ -294,7 +318,7 @@ public class SPMEList extends ParticleList {
 	public double charge(Complex position) {
 		int i = (int)((position.re() / windowSize.getWidth()) / meshWidth); //Need to translate into unit coordinates, then find it's grid coordinate
 		int j = (int)((position.im() / windowSize.getHeight()) / meshWidth);
-		return debugMatrix[i][j];
+		return convolutedMatrix[i][j].mag();
 	}
 
 	@Override
@@ -305,8 +329,8 @@ public class SPMEList extends ParticleList {
 		{
 			for(int j = 0; j < CELL_SIDE_COUNT; j++)
 			{
-				g.setColor(Color.gray);
-				g.drawRect((int)(i*512.0/CELL_SIDE_COUNT), (int)(j*512.0/CELL_SIDE_COUNT), (int)512.0/CELL_SIDE_COUNT, (int)512.0/CELL_SIDE_COUNT);
+				//g.setColor(Color.gray);
+				//g.drawRect((int)(i*512.0/CELL_SIDE_COUNT), (int)(j*512.0/CELL_SIDE_COUNT), (int)512.0/CELL_SIDE_COUNT, (int)512.0/CELL_SIDE_COUNT);
 			}
 		}
 	}
