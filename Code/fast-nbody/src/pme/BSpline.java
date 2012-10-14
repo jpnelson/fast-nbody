@@ -32,7 +32,7 @@ public class BSpline {
 	public double evaluateDerivative(double x)
 	{
 		BSpline lowerOrderSpline = new BSpline(order-1);
-		return lowerOrderSpline.evaluate(x) - lowerOrderSpline.evaluate(x-1);
+		return (lowerOrderSpline.evaluate(x) - lowerOrderSpline.evaluate(x-1));
 	}
 	
 	//Eq 4.4 Essman[95]
@@ -63,7 +63,7 @@ public class BSpline {
 	    /* Computes the modulus of the discrete fourier transform of bsp_arr, */
 	    /* storing it into bsp_mod */
 		double tiny = 1e-7;
-		for(int i = 0; i <= K; i++)
+		for(int i = 1; i <= K; i++)
 		{
 			double sum1=0;
 			double sum2=0;
@@ -81,6 +81,10 @@ public class BSpline {
 			{
 				bspmod[i] = (bspmod[i-1] + bspmod[i+1])*0.5;
 			}
+		}
+		for(int i = 0; i < K; i++)
+		{
+			bspmod[i] = bspmod[i+1]; //Shift array back down
 		}
 //		for(int i = 0; i <= K; i++)
 //		{

@@ -16,5 +16,28 @@ public class SplineTest {
 		//System.out.println(spline2.bspmod[1]);
 		assertTrue(spline1.evaluate(1)==1);
 	}
+	
+	@Test
+	public void testBSPMOD()
+	{
+		BSpline spline = new BSpline(4);
+		spline.fillBSPMod(64);
+		//System.out.println(spline2.bspmod[1]);
+		System.out.println("--------");
+		for(int i=0; i<=64; i++)
+			System.out.println(spline.bspmod[i]);
+		System.out.println("--------");
+	}
+	
+	@Test
+	public void testBSplineDeriv()
+	{
+		BSpline spline2 = new BSpline(4);
+		spline2.fillBSPMod(64);
+		System.out.println(spline2.evaluateDerivative(3));
+		System.out.println(spline2.evaluate(3));
+
+		assertTrue(spline2.evaluateDerivative(3)==0.5);
+	}
 
 }

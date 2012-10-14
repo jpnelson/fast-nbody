@@ -17,10 +17,10 @@ import particles.Particle;
 import particles.ParticleList;
 
 public class SPMEList extends ParticleList {
-	static int CELL_SIDE_COUNT = 64; //K (Essman[95])
-	static int ASSIGNMENT_SCHEME_ORDER = 6;
+	static int CELL_SIDE_COUNT = 128; //K (Essman[95])
+	static int ASSIGNMENT_SCHEME_ORDER = 8;
 	final double ewaldCoefficient; //The ewald coefficient
-	static double TOLERANCE = 1e-6;//Used to calculate ewaldCoefficient
+	static double TOLERANCE = 1e-8;//Used to calculate ewaldCoefficient
 	static double CUTOFF_DISTANCE = 0.25;//Used to calculate ewaldCoefficient. In unit cell dimensions
 	final int directRange; //will be CUTOFF_DISTANCE / meshWidth. In mesh cells
 
@@ -126,7 +126,11 @@ public class SPMEList extends ParticleList {
 		
 		//Forces
 		calculateRecForces();
-
+		calculateDirForces();
+		System.out.println("-------");
+		System.out.println("Actual forces");
+		System.out.println("-------");
+		calculateActualForces();
 	}
 
 
@@ -210,21 +214,63 @@ public class SPMEList extends ParticleList {
 			{
 				for(int dy = -ASSIGNMENT_SCHEME_ORDER; dy < ASSIGNMENT_SCHEME_ORDER; dy++)
 				{
-					int particleCellX = (int)Math.floor(p.getPosition().re()/1.0 * CELL_SIDE_COUNT);//Scaled fractional coordinate
-					int particleCellY = (int)Math.floor(p.getPosition().re()/1.0 * CELL_SIDE_COUNT);//Scaled fractional coordinate
+					double uX = p.getPosition().re()/1.0 * CELL_SIDE_COUNT;//Scaled fractional coordinate
+					double uY = p.getPosition().im()/1.0 * CELL_SIDE_COUNT;//Scaled fractional coordinate
+					int particleCellX = (int)Math.round(p.getPosition().re()/1.0 * CELL_SIDE_COUNT);
+					int particleCellY = (int)Math.round(p.getPosition().im()/1.0 * CELL_SIDE_COUNT);
 					int thisX = particleCellX + dx;
 					int thisY = particleCellY + dy;
 					if(thisX >= 0 && thisY >= 0 && thisX < CELL_SIDE_COUNT && thisY < CELL_SIDE_COUNT)
 					{
-						double dQdx = p.getCharge() * M.evaluateDerivative(thisX) * M.evaluate(thisY);
-						double dQdy = p.getCharge() * M.evaluate(thisX) * M.evaluateDerivative(thisY);
+						double dQdx = p.getCharge() * M.evaluateDerivative(uX - thisX) * M.evaluate(uY - thisY);
+						double dQdy = p.getCharge() * M.evaluate(uX - thisX) * M.evaluateDerivative(uY - thisY);
 						p.addToForce(-dQdx * convolutedMatrix[thisX][thisY].re(), -dQdy * convolutedMatrix[thisX][thisY].re()); //FIXME .re()?
 					}
 				}
 			}
-			System.out.println("Particle at "+p.getPosition()+" has force "+p.getForce());
 		}
 		
+	}
+	
+	public void calculateDirForces(){
+		for(Particle p : this)
+		{
+			for(Particle q : getNearParticles(p.getPosition(),directRange))
+			{
+				if(!p.equals(q)){
+					Complex r = p.getPosition().sub(q.getPosition());
+					double d = r.mag();
+					double fac = q.getCharge() * p.getCharge() / (squared(d));
+					Complex rHat = r.scale(1.0/d);
+					Complex force = rHat.scale(fac);
+					p.addToForce(force.re(), force.im());
+				}
+			}
+			System.out.println("Particle at "+p.getPosition()+" has force "+p.getForce());
+		}
+	}
+	
+	private void calculateActualForces(){
+		Vector[] forces = new Vector[this.size()];
+		int i = 0;
+		for(Particle p : this)
+		{
+			forces[i] = new Vector(0,0);
+			for(Particle q : this)
+			{
+				if(!p.equals(q)){
+					Complex r = p.getPosition().sub(q.getPosition());
+					double d = r.mag();
+					double fac = q.getCharge() * p.getCharge() / (squared(d));
+					Complex rHat = r.scale(1.0/d);
+					Complex force = rHat.scale(fac);
+					forces[i].x+= force.re();
+					forces[i].y+= force.im();
+				}
+			}
+			System.out.println("Particle at "+p.getPosition()+" has force ("+forces[i].x + ","+forces[i].y+")");
+			i++;
+		}
 	}
 	
 	//Requires Q to be initialised. C is implicitly calculated in here (part of eterm)
@@ -260,8 +306,7 @@ public class SPMEList extends ParticleList {
 					//Section 3.2.8 Lee[05]
 					double thisContribution = eterm * (squared(inverseFTQComplex[x][y].re())+squared(inverseFTQComplex[x][y].im()));
 					convolutedMatrix[x][y] = inverseFTQComplex[x][y].scale(eterm); //Save this for the force calculation
-					sum += thisContribution; //from the argument that F(Q(M))*F(Q(-M))-F-1(Q)^2
-					debugMatrix[x][y] = Q[x][y]; //Save this for the force calculation
+					sum += thisContribution; //from the argument that F(Q(M))*F(Q(-M))=F-1(Q)^2
 				}else{
 					convolutedMatrix[x][y] = Complex.zero;
 				}
@@ -337,7 +382,7 @@ public class SPMEList extends ParticleList {
 	public double charge(Complex position) { //position is in coordinates out of the original dimensions given
 		int i = (int)(position.re() / (windowSize.getWidth()) / meshWidth); //Need to translate into unit coordinates, then find it's grid coordinate
 		int j = (int)(position.im() / (windowSize.getHeight()) / meshWidth);
-		return convolutedMatrix[i][j].mag();
+		return Q[i][j];
 	}
 
 	@Override

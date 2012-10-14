@@ -35,7 +35,7 @@ import pme.SPMEList;
 
 public class GUI implements ActionListener, PropertyChangeListener{
 	//Window
-	static Dimension windowSize = new Dimension(1024,1024);
+	static Dimension windowSize = new Dimension(512,512);
 	JFrame jFrame;
 	JMenuBar jMenuBar;
 	JMenu chargesMenu;
@@ -61,6 +61,7 @@ public class GUI implements ActionListener, PropertyChangeListener{
 		jFrame = new JFrame("Fast N body simulation");
 		jFrame.setSize(windowSize);
 		jFrame.setLayout(new BorderLayout());
+		jFrame.setResizable(false);
 		simulationCanvas = new SimulationCanvas(windowSize,this);
 		//Menu
 		jMenuBar = new JMenuBar();
@@ -109,6 +110,7 @@ public class GUI implements ActionListener, PropertyChangeListener{
 		jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		jFrame.pack();
 		jFrame.setVisible(true);
+		
 	}
 	
 	private static void printSeparator()
