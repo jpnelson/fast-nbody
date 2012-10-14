@@ -17,9 +17,9 @@ import particles.Particle;
 import particles.ParticleList;
 
 public class SPMEList extends ParticleList {
-	static int CELL_SIDE_COUNT = 128; //K (Essman[95])
-	static int ASSIGNMENT_SCHEME_ORDER = 8;
-	final double ewaldCoefficient; //The ewald coefficient
+	static int CELL_SIDE_COUNT = 64; //K (Essman[95])
+	static int ASSIGNMENT_SCHEME_ORDER = 6;
+	public final double ewaldCoefficient; //The ewald coefficient
 	static double TOLERANCE = 1e-8;//Used to calculate ewaldCoefficient
 	static double CUTOFF_DISTANCE = 0.25;//Used to calculate ewaldCoefficient. In unit cell dimensions
 	final int directRange; //will be CUTOFF_DISTANCE / meshWidth. In mesh cells
@@ -28,12 +28,12 @@ public class SPMEList extends ParticleList {
 
 	ArrayList<Particle> cellList[][];
 
-	double[][] Q; //the charge assignment matrix
+	public double[][] Q; //the charge assignment matrix
 	double[][] B; //The B Matrix (Essman[95])
 	double[][] debugMatrix;
 	Complex[][] convolutedMatrix;
 	
-	BSpline M;		//Order ASSIGNMENT_SCHEME_ORDER B spline
+	public BSpline M;		//Order ASSIGNMENT_SCHEME_ORDER B spline
 	
 	final double meshWidth; //H (Petersen[95])
 	final double inverseMeshWidth; //H^-1 (required for the reciprocal lattice)
@@ -58,7 +58,10 @@ public class SPMEList extends ParticleList {
 					p.getMass(),p.getCharge()));
 		}
 		this.addAll(unitParticles);
-
+		
+		//Initialize the bspline
+		M = new BSpline(ASSIGNMENT_SCHEME_ORDER);
+		M.fillBSPMod(CELL_SIDE_COUNT);
 		init();
 	}
 
@@ -99,7 +102,6 @@ public class SPMEList extends ParticleList {
 	private void init()
 	{
 		initCellList();
-		M = new BSpline(ASSIGNMENT_SCHEME_ORDER);
 		initQMatrix();
 		//initBMatrix();
 		//initCMatrix();
@@ -135,7 +137,7 @@ public class SPMEList extends ParticleList {
 
 
 	//Eq 4.6 Essman[95]
-	private void initQMatrix()
+	public void initQMatrix()
 	{
 		Q = new double[CELL_SIDE_COUNT][CELL_SIDE_COUNT];
 		for(int x = 0; x < CELL_SIDE_COUNT; x++)
@@ -175,7 +177,7 @@ public class SPMEList extends ParticleList {
 		}
 	}
 
-	private void initCellList(){
+	public void initCellList(){
 		cellList = new ArrayList[CELL_SIDE_COUNT][CELL_SIDE_COUNT];
 		for(int i = 0; i < CELL_SIDE_COUNT; i++)
 		{
@@ -240,7 +242,7 @@ public class SPMEList extends ParticleList {
 				if(!p.equals(q)){
 					Complex r = p.getPosition().sub(q.getPosition());
 					double d = r.mag();
-					double fac = q.getCharge() * p.getCharge() / (squared(d));
+					double fac = -q.getCharge() * p.getCharge() / (squared(d));
 					Complex rHat = r.scale(1.0/d);
 					Complex force = rHat.scale(fac);
 					p.addToForce(force.re(), force.im());
@@ -261,7 +263,7 @@ public class SPMEList extends ParticleList {
 				if(!p.equals(q)){
 					Complex r = p.getPosition().sub(q.getPosition());
 					double d = r.mag();
-					double fac = q.getCharge() * p.getCharge() / (squared(d));
+					double fac = -q.getCharge() * p.getCharge() / (squared(d));
 					Complex rHat = r.scale(1.0/d);
 					Complex force = rHat.scale(fac);
 					forces[i].x+= force.re();
@@ -288,29 +290,51 @@ public class SPMEList extends ParticleList {
 		
 		debugMatrix = new double[CELL_SIDE_COUNT][CELL_SIDE_COUNT];
 		convolutedMatrix = new Complex[CELL_SIDE_COUNT][CELL_SIDE_COUNT];
-		//Eq 19 Lee[05]
-		//Also Eq 3.9 Essman[95]
-		double sum = 0;
+		//initiliaze the whole convolutedMatrix array to zero
 		for(int x = 0; x < CELL_SIDE_COUNT; x++)
 		{
 			for(int y = 0; y < CELL_SIDE_COUNT; y++)
 			{
-				double mXPrime = (0 <= x && x <= CELL_SIDE_COUNT/2)? x : x - CELL_SIDE_COUNT;
-				double mYPrime = (0 <= y && y <= CELL_SIDE_COUNT/2)? y : y - CELL_SIDE_COUNT;
-				double m = mXPrime * 1.0 + mYPrime * 1.0; //Was inverseMeshWidth - theory is reciprocal lattice vectors are for the entire cell U rather than one cell
-				double mSquared = squared(mXPrime * 1.0) + squared(mYPrime * 1.0);
-				if(m!=0){
-					double V = 1; //working in the unit mesh
-					double bterm = M.bspmod[x]*M.bspmod[y];
-					double eterm = Math.exp(-squared(Math.PI/ewaldCoefficient)*mSquared) / (bterm * Math.PI * V * mSquared);
-					//Section 3.2.8 Lee[05]
-					double thisContribution = eterm * (squared(inverseFTQComplex[x][y].re())+squared(inverseFTQComplex[x][y].im()));
-					convolutedMatrix[x][y] = inverseFTQComplex[x][y].scale(eterm); //Save this for the force calculation
-					sum += thisContribution; //from the argument that F(Q(M))*F(Q(-M))=F-1(Q)^2
-				}else{
-					convolutedMatrix[x][y] = Complex.zero;
-				}
+				convolutedMatrix[x][y] = Complex.zero;
 			}
+		}
+		
+		//Pg. 180 Lee[05]
+		int indexTop = CELL_SIDE_COUNT * CELL_SIDE_COUNT;
+		//Eq 19 Lee[05]
+		//Also Eq 3.9 Essman[95]
+		double sum = 0;
+		int indtop = CELL_SIDE_COUNT * CELL_SIDE_COUNT;
+		int midPoint = CELL_SIDE_COUNT / 2;
+		if (midPoint << 1 < CELL_SIDE_COUNT) {
+			++midPoint;
+		}
+		
+		for (int ind = 1; ind <= (indtop - 1); ++ind) {
+			
+			int y = ind / CELL_SIDE_COUNT + 1;
+			int x = ind - (y - 1) * CELL_SIDE_COUNT + 1;
+//			double mXPrime = (0 <= x && x <= CELL_SIDE_COUNT/2)? x : x - CELL_SIDE_COUNT;
+//			double mYPrime = (0 <= y && y <= CELL_SIDE_COUNT/2)? y : y - CELL_SIDE_COUNT;
+			int mXPrime = x - 1;
+			if (x > midPoint) {
+				mXPrime = x - 1 - CELL_SIDE_COUNT;
+			}
+			int mYPrime = y - 1;
+			if (y > midPoint) {
+				mYPrime = y - 1 - CELL_SIDE_COUNT;
+			}
+			double m = mXPrime * 1.0 + mYPrime * 1.0; //Was inverseMeshWidth - theory is reciprocal lattice vectors are for the entire cell U rather than one cell
+			double mSquared = squared(mXPrime * 1.0) + squared(mYPrime * 1.0);
+			
+			double V = 1; //working in the unit mesh
+			double bterm = M.bspmod[x]*M.bspmod[y];
+			double eterm = Math.exp(-squared(Math.PI/ewaldCoefficient)*mSquared) / (bterm * Math.PI * V * mSquared);
+			//Section 3.2.8 Lee[05]
+			double inverseQPart = (squared(inverseFTQComplex[x-1][y-1].re())+squared(inverseFTQComplex[x-1][y-1].im())); //Lee[05]
+			double thisContribution = eterm * inverseQPart;
+			convolutedMatrix[x-1][y-1] = inverseFTQComplex[x-1][y-1].scale(eterm); //Save this for the force calculation
+			sum += thisContribution; //from the argument that F(Q(M))*F(Q(-M))=F-1(Q)^2
 		}
 		return 0.5*sum;
 	}
