@@ -12,11 +12,6 @@ Ulrich Essmann, Lalith Perera, Max~L. Berkowitz, Tom Darden, Hsing Lee, and
 \newblock A smooth particle mesh ewald method.
 \newblock {\em The Journal of Chemical Physics}, 103(19):8577--8593, 1995.
 
-\bibitem{greengard:315}
-L.~Greengard and V.~Rokhlin.
-\newblock A fast algorithm for particle simulations.
-\newblock {\em Journal of Computational Physics}, 1987.
-
 \bibitem{MilleniumRun}
 Max~Planck institute~of Astrophysics.
 \newblock The millennium simulation project.
@@ -28,6 +23,9 @@ Sam Lee.
 \newblock An fpga implementation of the smooth particle mesh ewald reciprocal
   sum compute engine (rsce).
 \newblock 2005.
+
+\bibitem{greengard:315}
+
 
 \bibitem{petersen:3668}
 Henrik~G. Petersen.

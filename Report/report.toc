@@ -14,14 +14,20 @@
 \contentsline {subsubsection}{The ewald coefficient}{7}{section*.7}
 \contentsline {subsection}{\numberline {2.2.3}The algorithm}{7}{subsection.2.2.3}
 \contentsline {subsubsection}{Main particle mesh ewald flow}{7}{section*.8}
-\contentsline {subsubsection}{Verlet list algorithm}{7}{section*.9}
+\contentsline {subsubsection}{Verlet list algorithm}{8}{section*.9}
 \contentsline {subsection}{\numberline {2.2.4}The implementation}{8}{subsection.2.2.4}
 \contentsline {subsection}{\numberline {2.2.5}Analysis of the implementation}{8}{subsection.2.2.5}
 \contentsline {section}{\numberline {2.3}The Fast multipole algorithm}{8}{section.2.3}
 \contentsline {subsection}{\numberline {2.3.1}Background}{8}{subsection.2.3.1}
-\contentsline {subsection}{\numberline {2.3.2}Mathematical description}{8}{subsection.2.3.2}
-\contentsline {subsection}{\numberline {2.3.3}The algorithm}{8}{subsection.2.3.3}
-\contentsline {subsection}{\numberline {2.3.4}The implementation}{8}{subsection.2.3.4}
-\contentsline {subsection}{\numberline {2.3.5}Analysis of the implementation}{8}{subsection.2.3.5}
-\contentsline {chapter}{\numberline {3}Comparison of the algorithms}{9}{chapter.3}
-\contentsline {chapter}{\numberline {4}Discussion}{10}{chapter.4}
+\contentsline {subsubsection}{Complex plane}{8}{section*.10}
+\contentsline {subsubsection}{Multipole expansions}{8}{section*.11}
+\contentsline {subsubsection}{The mesh}{8}{section*.12}
+\contentsline {subsection}{\numberline {2.3.2}Mathematical description}{9}{subsection.2.3.2}
+\contentsline {subsubsection}{Potential and the multipole expansion approximation}{9}{section*.13}
+\contentsline {subsubsection}{Shifting multipole expansions}{9}{section*.14}
+\contentsline {subsubsection}{Local expansions}{10}{section*.15}
+\contentsline {subsection}{\numberline {2.3.3}The algorithm}{10}{subsection.2.3.3}
+\contentsline {subsection}{\numberline {2.3.4}The implementation}{10}{subsection.2.3.4}
+\contentsline {subsection}{\numberline {2.3.5}Analysis of the implementation}{10}{subsection.2.3.5}
+\contentsline {chapter}{\numberline {3}Comparison of the algorithms}{11}{chapter.3}
+\contentsline {chapter}{\numberline {4}Discussion}{12}{chapter.4}
