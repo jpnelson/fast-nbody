@@ -318,7 +318,7 @@ The basic flow of the algorithm is given below\\
 \begin{algorithm}[H]
 \SetLine
 \KwData{level-count: the number of mesh levels we create}
-Test
+\For{i=0 to level-count}{Initialise mesh[i]}
 \end{algorithm}
 
 \subsection{The implementation}

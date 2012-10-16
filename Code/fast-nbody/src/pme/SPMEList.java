@@ -123,7 +123,7 @@ public class SPMEList extends ParticleList {
 
 		System.out.println("Reciprocal energy: "+getRecEnergy());
 		System.out.println("Direct energy: "+getDirEnergy());
-		System.out.println("Corrected energy: "+getCorEnergy());
+		System.out.println("Self energy: "+getSelfEnergy());
 		System.out.println("Actual energy: "+getActualEnergy());
 		
 		//Forces
@@ -241,14 +241,16 @@ public class SPMEList extends ParticleList {
 			{
 				if(!p.equals(q)){
 					Complex r = p.getPosition().sub(q.getPosition());
-					double d = r.mag();
-					double fac = -q.getCharge() * p.getCharge() / (squared(d));
-					Complex rHat = r.scale(1.0/d);
-					Complex force = rHat.scale(fac);
-					p.addToForce(force.re(), force.im());
+					if(r.mag() < CUTOFF_DISTANCE){ //in unit coordinates
+						double d = r.mag();
+						double fac = -q.getCharge() * p.getCharge() / (squared(d));
+						Complex rHat = r.scale(1.0/d);
+						Complex force = rHat.scale(fac);
+						p.addToForce(force.re(), force.im());
+					}
 				}
 			}
-			System.out.println("Particle at "+p.getPosition()+" has force "+p.getForce());
+			//System.out.println("Particle at "+p.getPosition()+" has force "+p.getForce());
 		}
 	}
 	
@@ -270,7 +272,7 @@ public class SPMEList extends ParticleList {
 					forces[i].y+= force.im();
 				}
 			}
-			System.out.println("Particle at "+p.getPosition()+" has force ("+forces[i].x + ","+forces[i].y+")");
+			//System.out.println("Particle at "+p.getPosition()+" has force ("+forces[i].x + ","+forces[i].y+")");
 			i++;
 		}
 	}
@@ -347,14 +349,14 @@ public class SPMEList extends ParticleList {
 			{
 				if(!p.equals(q)){
 					double d = p.getPosition().sub(q.getPosition()).mag();
-					sum += p.getCharge()*q.getCharge()/d;
+					sum += ErrorFunction.erfc(d * ewaldCoefficient)*p.getCharge()*q.getCharge()/d;
 				}
 			}
 		}
 		return 0.5*sum;
 	}
 
-	private double getCorEnergy(){
+	private double getSelfEnergy(){
 		double sum = 0;
 		for(Particle p : this)
 		{
@@ -398,6 +400,28 @@ public class SPMEList extends ParticleList {
 		return nearParticles;
 
 	}
+	
+	//Using b spline interpolation, take a point and return the interpolated matrix's values
+	private double interpolateMatrix(Complex fractionalCoordinate, Complex[][] Matrix)
+	{
+		int cellX = (int)(fractionalCoordinate.re() * CELL_SIDE_COUNT);
+		int cellY = (int)(fractionalCoordinate.im() * CELL_SIDE_COUNT);
+		double sum = 0;
+		for(int dx= -ASSIGNMENT_SCHEME_ORDER; dx < ASSIGNMENT_SCHEME_ORDER; dx++)
+		{
+			for(int dy= -ASSIGNMENT_SCHEME_ORDER; dy < ASSIGNMENT_SCHEME_ORDER; dy++)
+			{
+				int thisCellX = cellX+dx;
+				int thisCellY = cellY+dy;
+				if(thisCellX >= 0 && thisCellY >= 0 && thisCellX < CELL_SIDE_COUNT && thisCellY < CELL_SIDE_COUNT){
+					double xWeight = M.evaluate(fractionalCoordinate.re()*CELL_SIDE_COUNT - thisCellX);
+					double yWeight = M.evaluate(fractionalCoordinate.im()*CELL_SIDE_COUNT - thisCellY);
+					sum += Matrix[thisCellX][thisCellY].re() * xWeight * yWeight;
+				}
+			}
+		}
+		return sum;
+	}
 
 
 
@@ -406,7 +430,15 @@ public class SPMEList extends ParticleList {
 	public double charge(Complex position) { //position is in coordinates out of the original dimensions given
 		int i = (int)(position.re() / (windowSize.getWidth()) / meshWidth); //Need to translate into unit coordinates, then find it's grid coordinate
 		int j = (int)(position.im() / (windowSize.getHeight()) / meshWidth);
-		return Q[i][j];
+		Complex sum = Complex.zero;
+		Complex fracPosition = position.scale(1.0/windowSize.getWidth());
+		
+		for (Particle particle : getNearParticles(fracPosition,directRange)) {
+			Complex r = particle.getPosition().sub(fracPosition);
+			double erfTerm = ErrorFunction.erfc(ewaldCoefficient * r.mag());
+			sum = sum.add(r.ln().scale(erfTerm * particle.getCharge()));
+		}
+		return -interpolateMatrix(fracPosition,convolutedMatrix);
 	}
 
 	@Override
