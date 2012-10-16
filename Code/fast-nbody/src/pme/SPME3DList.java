@@ -49,8 +49,7 @@ public class SPME3DList extends ParticleList {
 		this.inverseMeshWidth = 1.0 / this.meshWidth;
 		this.directRange = (int)Math.ceil(CUTOFF_DISTANCE/meshWidth);
 		this.ewaldCoefficient = calculateEwaldCoefficient(CUTOFF_DISTANCE,TOLERANCE);
-		
-		//We work within the unit square
+		//We work within the unit cube
 		unitParticles = new ArrayList<Particle3D>();
 		for(Particle p : particles)
 		{
@@ -217,7 +216,7 @@ public class SPME3DList extends ParticleList {
 							double dQdy = p.getCharge() * M.evaluate(uX - thisX+1) * M.evaluateDerivative(uY - thisY+1) * M.evaluate(uZ - thisZ+1);
 							double dQdz = p.getCharge() * M.evaluate(uX - thisX+1) * M.evaluate(uY - thisY+1) * M.evaluateDerivative(uZ - thisZ+1);
 							double convValue = convolutedMatrix[thisX][thisY][thisZ].re();
-							p.addToForce(-dQdx * convValue, -dQdy * convValue,-dQdz * convValue); //FIXME .re()?
+							p.addToForce(-dQdx * convValue, -dQdy * convValue,-dQdz * convValue);
 						}
 					}
 				}
@@ -242,29 +241,31 @@ public class SPME3DList extends ParticleList {
 					}
 				}
 			}
-			//System.out.println("Particle at "+p.getPosition()+" has force "+p.getForce());
+			System.out.println("Particle at "+p.getPosition()+" has force "+p.getForce());
 		}
 	}
 	
 	private void calculateActualForces(){
-		Vector[] forces = new Vector[this.size()];
+		Vector[] forces = new Vector[unitParticles.size()];
 		int i = 0;
-		for(Particle p : this)
+		for(Particle3D q : unitParticles)
 		{
-			forces[i] = new Vector(0,0);
-			for(Particle q : this)
+			forces[i] = new Vector(0,0,0);
+			for(Particle3D p : unitParticles)
 			{
 				if(!p.equals(q)){
-					Complex r = p.getPosition().sub(q.getPosition());
+					Vector r = p.getPosition().sub(q.getPosition());
 					double d = r.mag();
 					double fac = -q.getCharge() * p.getCharge() / (squared(d));
-					Complex rHat = r.scale(1.0/d);
-					Complex force = rHat.scale(fac);
-					forces[i].x+= force.re();
-					forces[i].y+= force.im();
+					Vector rHat = r.scale(1.0/d);
+					Vector force = rHat.scale(fac);
+					forces[i].x+= force.x;
+					forces[i].y+= force.y;
+					forces[i].z+= force.z;
 				}
+
 			}
-			//System.out.println("Particle at "+p.getPosition()+" has force ("+forces[i].x + ","+forces[i].y+")");
+			System.out.println("Particle at "+q.getPosition()+" has force ("+forces[i].x + ","+forces[i].y+","+forces[i].z+")");
 			i++;
 		}
 	}
@@ -449,8 +450,16 @@ public class SPME3DList extends ParticleList {
 		int j = (int)(position.im() / (windowSize.getHeight()) / meshWidth);
 		Complex sum = Complex.zero;
 		Vector fracPosition = position.scale(1.0/windowSize.getWidth()).toVector();
+		double directEnergy=0;
 		
-		return interpolateMatrix(fracPosition,convolutedMatrix); //-interpolateMatrix(fracPosition,convolutedMatrix) + sum.re()
+		for (Particle3D particle : getNearParticles(fracPosition,directRange)) {
+			Vector r = particle.getPosition().sub(fracPosition);
+			double erfTerm = 1;//ErrorFunction.erfc(ewaldCoefficient * r.mag());
+			directEnergy += erfTerm * particle.getCharge()/(r.mag());
+		}
+		double potentialAtPosition = interpolateMatrix(fracPosition,convolutedMatrix)*1e6+directEnergy;
+		if(fracPosition.x==0.5 && fracPosition.y==0) System.out.println(fracPosition.x+" "+fracPosition.y+" "+fracPosition.z+" "+potentialAtPosition);
+		return potentialAtPosition; //-interpolateMatrix(fracPosition,convolutedMatrix) + sum.re()
 	}
 
 	@Override

@@ -1,19 +1,28 @@
 package pme;
 
+import java.util.Hashtable;
+
 import math.Complex;
 
 public class BSpline {
 	final int order;
 	public double[] bspmod;
+	Hashtable<Double, Double> evaluateValues = new Hashtable<Double, Double>(); //used to prevent re evaluation
+
 	public BSpline(int order)
 	{
 		this.order = order;
 	}
 	
+	
 	//TODO: this is pretty inefficient
 	//Eq 4.1 Essman[95]
 	public double evaluate(double x)
 	{
+		if(evaluateValues.containsKey(x))
+		{
+			return (Double) evaluateValues.get(x);
+		}
 		double u = (double)x;
 		double n = (double)order;
 		//Base case
@@ -25,7 +34,9 @@ public class BSpline {
 			}
 		}
 		BSpline lowerOrderSpline = new BSpline(order-1);
-		return (u / (n-1)) * lowerOrderSpline.evaluate(u) + ((n-u)/(n-1)) * lowerOrderSpline.evaluate(u-1);
+		double value = (u / (n-1)) * lowerOrderSpline.evaluate(u) + ((n-u)/(n-1)) * lowerOrderSpline.evaluate(u-1);
+		evaluateValues.put(x, value);
+		return value;
 	}
 	
 	//Eq 4.2 Essman[95]

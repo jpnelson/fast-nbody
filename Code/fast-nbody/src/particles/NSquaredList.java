@@ -26,6 +26,7 @@ public class NSquaredList extends ParticleList{
 		for (Particle particle : this) {
 			   sum = sum.add(position.sub(particle.getPosition()).ln().scale(particle.getCharge()));
 		}
+		
 		return sum.re();
 	}
 

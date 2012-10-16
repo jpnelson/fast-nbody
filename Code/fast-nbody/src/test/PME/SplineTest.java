@@ -38,7 +38,7 @@ public class SplineTest {
 		System.out.println(spline2.evaluateDerivative(3));
 		System.out.println(spline2.evaluate(3));
 
-		assertTrue(spline2.evaluateDerivative(3)==0.5);
+		assertTrue(spline2.evaluateDerivative(3)==-0.5);
 	}
 
 }
