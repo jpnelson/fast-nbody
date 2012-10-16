@@ -7,16 +7,18 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
 
-import jtransforms.DoubleFFT_2D;
+import jtransforms.DoubleFFT_3D;
 
 import math.Complex;
 import math.ErrorFunction;
 import math.MatrixOperations;
 import math.Vector;
 import particles.Particle;
+import particles.Particle3D;
 import particles.ParticleList;
 
-public class SPMEList extends ParticleList {
+//Same as SPMEList but simulation occurs in 3D
+public class SPME3DList extends ParticleList {
 	static int CELL_SIDE_COUNT = 64; //K (Essman[95])
 	static int ASSIGNMENT_SCHEME_ORDER = 6;
 	public final double ewaldCoefficient; //The ewald coefficient
@@ -25,13 +27,13 @@ public class SPMEList extends ParticleList {
 	final int directRange; //will be CUTOFF_DISTANCE / meshWidth. In mesh cells
 
 	final ArrayList<Particle> nonUnitParticles; //We keep a copy of this for drawing
+	ArrayList<Particle3D> unitParticles; //don't use our own array list of particles as we're doing it in 3D
+	
+	ArrayList<Particle3D> cellList[][][];
 
-	ArrayList<Particle> cellList[][];
-
-	public double[][] Q; //the charge assignment matrix
-	double[][] B; //The B Matrix (Essman[95])
-	double[][] debugMatrix;
-	Complex[][] convolutedMatrix;
+	public double[][][] Q; //the charge assignment matrix
+	double[][][] debugMatrix;
+	Complex[][][] convolutedMatrix;
 	
 	public BSpline M;		//Order ASSIGNMENT_SCHEME_ORDER B spline
 	
@@ -40,7 +42,7 @@ public class SPMEList extends ParticleList {
 	final SpaceSize windowSize;
 	Vector[] reciprocalLatticeVectors; //Reciprocal lattice vectors
 
-	public SPMEList(ArrayList<Particle> particles, SpaceSize windowSize) {
+	public SPME3DList(ArrayList<Particle> particles, SpaceSize windowSize) {
 		this.nonUnitParticles = particles;
 		this.meshWidth = 1.0 / (double)(CELL_SIDE_COUNT); //Working in the unit cell
 		this.windowSize = windowSize;
@@ -49,15 +51,16 @@ public class SPMEList extends ParticleList {
 		this.ewaldCoefficient = calculateEwaldCoefficient(CUTOFF_DISTANCE,TOLERANCE);
 		
 		//We work within the unit square
-		ArrayList<Particle> unitParticles = new ArrayList<Particle>();
+		unitParticles = new ArrayList<Particle3D>();
 		for(Particle p : particles)
 		{
-			unitParticles.add(new Particle(
+			unitParticles.add(new Particle3D(
 					p.getPosition().re() / (double)(windowSize.getWidth()),
 					p.getPosition().im() / (double)(windowSize.getHeight()),
+					0,
 					p.getMass(),p.getCharge()));
 		}
-		this.addAll(unitParticles);
+		//this.addAll(unitParticles); don't do this, use 3D particle list unitParticles from now on instead
 		
 		//Initialize the bspline
 		M = new BSpline(ASSIGNMENT_SCHEME_ORDER);
@@ -103,24 +106,8 @@ public class SPMEList extends ParticleList {
 	{
 		initCellList();
 		initQMatrix();
-		//initBMatrix();
-		//initCMatrix();
-
-		//Starting Eq 4.7 Essman[95]
-//		double[][] BC = MatrixOperations.straightMultiply(B, C);
-//		DoubleFFT_2D fft = new DoubleFFT_2D(CELL_SIDE_COUNT,CELL_SIDE_COUNT);
-//		double[][] qInverseFT = MatrixOperations.copyMatrix(Q, 2*CELL_SIDE_COUNT);
-//		fft.realInverseFull(qInverseFT, false);
-//		Complex[][] product = MatrixOperations.straightMultiply(Complex.doubleToComplexArrayNoImaginaryPart(BC), Complex.doubleToComplexArray(qInverseFT));
-//		double[][] wideProduct = Complex.complexToDoubleArray(product);
-//		fft.complexForward(wideProduct);
-//		convolution = Complex.doubleToComplexArray(wideProduct);
-//
-//		theta = MatrixOperations.copyMatrix(BC, 2*CELL_SIDE_COUNT);
-//		fft.realForwardFull(theta);
-//		complexTheta = Complex.doubleToComplexArray(theta);
-
-
+		
+		//Energies
 		System.out.println("Reciprocal energy: "+getRecEnergy());
 		System.out.println("Direct energy: "+getDirEnergy());
 		System.out.println("Self energy: "+getSelfEnergy());
@@ -139,58 +126,54 @@ public class SPMEList extends ParticleList {
 	//Eq 4.6 Essman[95]
 	public void initQMatrix()
 	{
-		Q = new double[CELL_SIDE_COUNT][CELL_SIDE_COUNT];
+		Q = new double[CELL_SIDE_COUNT][CELL_SIDE_COUNT][CELL_SIDE_COUNT];
 		for(int x = 0; x < CELL_SIDE_COUNT; x++)
 		{
 			for(int y = 0; y < CELL_SIDE_COUNT; y++)
 			{
+				for(int z = 0; z < CELL_SIDE_COUNT; z++)
+				{
 					double sum = 0;
-					for(Particle p : this)
+					for(Particle3D p : unitParticles)
 					{
 						double particleX,particleY,particleZ;
-						particleX = p.getPosition().re();
-						particleY = p.getPosition().im();
+						particleX = p.getPosition().x;
+						particleY = p.getPosition().y;
+						particleZ = p.getPosition().z;
 						//Just before Eq 3.1 Essman[95]
 						double uX = (CELL_SIDE_COUNT) * (particleX / 1.0);//Unit cell already in fractional coordinates
 						double uY = (CELL_SIDE_COUNT) * (particleY / 1.0);
+						double uZ = (CELL_SIDE_COUNT) * (particleZ / 1.0);
 						//Removed periodic images? Seems to be off by a grid cell in x/y? FIXME?
 						double a = M.evaluate(uX-x);
 						double b = M.evaluate(uY-y);
-						sum += p.getCharge() * a * b;
+						double c = M.evaluate(uZ-z);
+						sum += p.getCharge() * a * b * c;
 					}
-					Q[x][y] = sum;
-
+					Q[x][y][z] = sum;
 				}
-			}
-	}
-
-	//Eq 4.8 Essman[95]
-	private void initBMatrix()
-	{
-		B = new double[CELL_SIDE_COUNT][CELL_SIDE_COUNT];
-		for(int x = 0; x < CELL_SIDE_COUNT; x++)
-		{
-			for(int y = 0; y < CELL_SIDE_COUNT; y++)
-			{
-				B[x][y] = squared(M.b(1, x, CELL_SIDE_COUNT).mag())*squared(M.b(2, y, CELL_SIDE_COUNT).mag());
 			}
 		}
 	}
 
 	public void initCellList(){
-		cellList = new ArrayList[CELL_SIDE_COUNT][CELL_SIDE_COUNT];
+		cellList = new ArrayList[CELL_SIDE_COUNT][CELL_SIDE_COUNT][CELL_SIDE_COUNT];
 		for(int i = 0; i < CELL_SIDE_COUNT; i++)
 		{
 			for(int j = 0; j < CELL_SIDE_COUNT; j++)
 			{
-				cellList[i][j] = new ArrayList<Particle>();
+				for(int k = 0; k < CELL_SIDE_COUNT; k++)
+				{
+				cellList[i][j][k] = new ArrayList<Particle3D>();
+				}
 			}
 		}
-		for(Particle p : this)
+		for(Particle3D p : unitParticles)
 		{
-			int cellX = (int)Math.floor(p.getPosition().re() / meshWidth);
-			int cellY = (int)Math.floor(p.getPosition().im() / meshWidth);
-			cellList[cellX][cellY].add(p);
+			int cellX = (int)Math.floor(p.getPosition().x / meshWidth);
+			int cellY = (int)Math.floor(p.getPosition().y / meshWidth);
+			int cellZ = (int)Math.floor(p.getPosition().z / meshWidth);
+			cellList[cellX][cellY][cellZ].add(p);
 		}
 	}
 
@@ -204,29 +187,37 @@ public class SPMEList extends ParticleList {
 	public void calculateRecForces(){
 		//Perform a FFT on convolutedMatrix to make theta * Q from B C F^-1(Q)
 		//Make IFTQ ourselves
-		DoubleFFT_2D fft = new DoubleFFT_2D(CELL_SIDE_COUNT,CELL_SIDE_COUNT);
-		double[][] convolutedDoubles = Complex.complexToDoubleArray(convolutedMatrix);
+		DoubleFFT_3D fft = new DoubleFFT_3D(CELL_SIDE_COUNT,CELL_SIDE_COUNT,CELL_SIDE_COUNT);
+		double[][][] convolutedDoubles = Complex.complexToDoubleArray(convolutedMatrix);
 		fft.complexForward(convolutedDoubles);
 		convolutedMatrix = Complex.doubleToComplexArray(convolutedDoubles); //F(B C F^-1(Q)) Pg. 182 Lee[05]
 		
-		for(Particle p : this){
+		for(Particle3D p : unitParticles){
 			//Pg 183 Lee[05]
 			//For each grid point that this particle has been interpolated to
 			for(int dx = -ASSIGNMENT_SCHEME_ORDER; dx < ASSIGNMENT_SCHEME_ORDER; dx++)
 			{
 				for(int dy = -ASSIGNMENT_SCHEME_ORDER; dy < ASSIGNMENT_SCHEME_ORDER; dy++)
 				{
-					double uX = p.getPosition().re()/1.0 * CELL_SIDE_COUNT;//Scaled fractional coordinate
-					double uY = p.getPosition().im()/1.0 * CELL_SIDE_COUNT;//Scaled fractional coordinate
-					int particleCellX = (int)Math.round(p.getPosition().re()/1.0 * CELL_SIDE_COUNT);
-					int particleCellY = (int)Math.round(p.getPosition().im()/1.0 * CELL_SIDE_COUNT);
-					int thisX = particleCellX + dx;
-					int thisY = particleCellY + dy;
-					if(thisX >= 0 && thisY >= 0 && thisX < CELL_SIDE_COUNT && thisY < CELL_SIDE_COUNT)
+					for(int dz = -ASSIGNMENT_SCHEME_ORDER; dz < ASSIGNMENT_SCHEME_ORDER; dz++)
 					{
-						double dQdx = p.getCharge() * M.evaluateDerivative(uX - thisX) * M.evaluate(uY - thisY);
-						double dQdy = p.getCharge() * M.evaluate(uX - thisX) * M.evaluateDerivative(uY - thisY);
-						p.addToForce(-dQdx * convolutedMatrix[thisX][thisY].re(), -dQdy * convolutedMatrix[thisX][thisY].re()); //FIXME .re()?
+						double uX = p.getPosition().x/1.0 * CELL_SIDE_COUNT;//Scaled fractional coordinate
+						double uY = p.getPosition().y/1.0 * CELL_SIDE_COUNT;//Scaled fractional coordinate
+						double uZ = p.getPosition().z/1.0 * CELL_SIDE_COUNT;//Scaled fractional coordinate
+						int particleCellX = (int)Math.round(p.getPosition().x/1.0 * CELL_SIDE_COUNT);
+						int particleCellY = (int)Math.round(p.getPosition().y/1.0 * CELL_SIDE_COUNT);
+						int particleCellZ = (int)Math.round(p.getPosition().z/1.0 * CELL_SIDE_COUNT);
+						int thisX = particleCellX + dx;
+						int thisY = particleCellY + dy;
+						int thisZ = particleCellZ + dz;
+						if(thisX >= 0 && thisY >= 0 && thisX < CELL_SIDE_COUNT && thisY < CELL_SIDE_COUNT)
+						{
+							double dQdx = p.getCharge() * M.evaluateDerivative(uX - thisX) * M.evaluate(uY - thisY) * M.evaluate(uZ - thisZ);
+							double dQdy = p.getCharge() * M.evaluate(uX - thisX) * M.evaluateDerivative(uY - thisY) * M.evaluate(uZ - thisZ);
+							double dQdz = p.getCharge() * M.evaluate(uX - thisX) * M.evaluate(uY - thisY) * M.evaluateDerivative(uZ - thisZ);
+							double convValue = convolutedMatrix[thisX][thisY][thisZ].re();
+							p.addToForce(-dQdx * convValue, -dQdy * convValue,-dQdz * convValue); //FIXME .re()?
+						}
 					}
 				}
 			}
@@ -235,9 +226,9 @@ public class SPMEList extends ParticleList {
 	}
 	
 	public void calculateDirForces(){
-		for(Particle p : this)
+		for(Particle3D p : unitParticles)
 		{
-			for(Particle q : getNearParticles(p.getPosition(),directRange))
+			for(Particle3D q : getNearParticles(p.getPosition(),directRange))
 			{
 				if(!p.equals(q)){
 					Complex r = p.getPosition().sub(q.getPosition());
@@ -285,39 +276,43 @@ public class SPMEList extends ParticleList {
 		M.fillBSPMod(CELL_SIDE_COUNT);
 		
 		//Make IFTQ ourselves
-		DoubleFFT_2D fft = new DoubleFFT_2D(CELL_SIDE_COUNT,CELL_SIDE_COUNT);
-		double[][] inverseFTQDoubles = MatrixOperations.copyMatrix(Q, CELL_SIDE_COUNT*2);
+		DoubleFFT_3D fft = new DoubleFFT_3D(CELL_SIDE_COUNT,CELL_SIDE_COUNT,CELL_SIDE_COUNT);
+		double[][][] inverseFTQDoubles = MatrixOperations.copyMatrix(Q, CELL_SIDE_COUNT*2);
 		fft.realInverseFull(inverseFTQDoubles, false);
-		Complex[][] inverseFTQComplex = Complex.doubleToComplexArray(inverseFTQDoubles); //IFT of Q
+		Complex[][][] inverseFTQComplex = Complex.doubleToComplexArray(inverseFTQDoubles); //IFT of Q
 		
-		debugMatrix = new double[CELL_SIDE_COUNT][CELL_SIDE_COUNT];
-		convolutedMatrix = new Complex[CELL_SIDE_COUNT][CELL_SIDE_COUNT];
+		debugMatrix = new double[CELL_SIDE_COUNT][CELL_SIDE_COUNT][CELL_SIDE_COUNT];
+		convolutedMatrix = new Complex[CELL_SIDE_COUNT][CELL_SIDE_COUNT][CELL_SIDE_COUNT];
 		//initiliaze the whole convolutedMatrix array to zero
 		for(int x = 0; x < CELL_SIDE_COUNT; x++)
 		{
 			for(int y = 0; y < CELL_SIDE_COUNT; y++)
 			{
-				convolutedMatrix[x][y] = Complex.zero;
+				for(int z = 0; z < CELL_SIDE_COUNT; z++)
+				{
+					convolutedMatrix[x][y][z] = Complex.zero;
+				}
 			}
 		}
 		
 		//Pg. 180 Lee[05]
-		int indexTop = CELL_SIDE_COUNT * CELL_SIDE_COUNT;
+		int indexTop = CELL_SIDE_COUNT * CELL_SIDE_COUNT * CELL_SIDE_COUNT;
 		//Eq 19 Lee[05]
 		//Also Eq 3.9 Essman[95]
 		double sum = 0;
-		int indtop = CELL_SIDE_COUNT * CELL_SIDE_COUNT;
 		int midPoint = CELL_SIDE_COUNT / 2;
 		if (midPoint << 1 < CELL_SIDE_COUNT) {
 			++midPoint;
 		}
 		
-		for (int ind = 1; ind <= (indtop - 1); ++ind) {
-			
-			int y = ind / CELL_SIDE_COUNT + 1;
-			int x = ind - (y - 1) * CELL_SIDE_COUNT + 1;
-//			double mXPrime = (0 <= x && x <= CELL_SIDE_COUNT/2)? x : x - CELL_SIDE_COUNT;
-//			double mYPrime = (0 <= y && y <= CELL_SIDE_COUNT/2)? y : y - CELL_SIDE_COUNT;
+		for (int ind = 1; ind <= (indexTop - 1); ++ind) {
+			//ind = (k1-1) + (k2-1)*CSC + (k3-1)*CSC*CSC
+			int cscSquared = CELL_SIDE_COUNT*CELL_SIDE_COUNT;
+			int z = ind / cscSquared + 1;
+			int jnd = ind - (z-1)*cscSquared;
+			int y = jnd / CELL_SIDE_COUNT + 1;
+			int x = jnd - (y-1)*CELL_SIDE_COUNT + 1;
+
 			int mXPrime = x - 1;
 			if (x > midPoint) {
 				mXPrime = x - 1 - CELL_SIDE_COUNT;
@@ -326,16 +321,20 @@ public class SPMEList extends ParticleList {
 			if (y > midPoint) {
 				mYPrime = y - 1 - CELL_SIDE_COUNT;
 			}
-			double m = mXPrime * 1.0 + mYPrime * 1.0; //Was inverseMeshWidth - theory is reciprocal lattice vectors are for the entire cell U rather than one cell
-			double mSquared = squared(mXPrime * 1.0) + squared(mYPrime * 1.0);
+			int mZPrime = z - 1;
+			if (y > midPoint) {
+				mZPrime = z - 1 - CELL_SIDE_COUNT;
+			}
+			double m = mXPrime * 1.0 + mYPrime * 1.0 + mZPrime * 1.0; //Was inverseMeshWidth - theory is reciprocal lattice vectors are for the entire cell U rather than one cell
+			double mSquared = squared(mXPrime * 1.0) + squared(mYPrime * 1.0) + squared(mZPrime * 1.0);
 			
 			double V = 1; //working in the unit mesh
-			double bterm = M.bspmod[x]*M.bspmod[y];
+			double bterm = M.bspmod[x]*M.bspmod[y]*M.bspmod[z];
 			double eterm = Math.exp(-squared(Math.PI/ewaldCoefficient)*mSquared) / (bterm * Math.PI * V * mSquared);
 			//Section 3.2.8 Lee[05]
-			double inverseQPart = (squared(inverseFTQComplex[x-1][y-1].re())+squared(inverseFTQComplex[x-1][y-1].im())); //Lee[05]
+			double inverseQPart = (squared(inverseFTQComplex[x-1][y-1][z-1].re())+squared(inverseFTQComplex[x-1][y-1][z-1].im())); //Lee[05]
 			double thisContribution = eterm * inverseQPart;
-			convolutedMatrix[x-1][y-1] = inverseFTQComplex[x-1][y-1].scale(eterm); //Save this for the force calculation
+			convolutedMatrix[x-1][y-1][z-1] = inverseFTQComplex[x-1][y-1][z-1].scale(eterm); //Save this for the force calculation
 			sum += thisContribution; //from the argument that F(Q(M))*F(Q(-M))=F-1(Q)^2
 		}
 		return 0.5*sum;
@@ -372,9 +371,8 @@ public class SPMEList extends ParticleList {
 			for(Particle q : this)
 			{
 				if(!p.equals(q)){
-					Complex r = p.getPosition().sub(q.getPosition());
-					Complex s = r.ln().scale(p.getCharge() * q.getCharge());
-					sum += s.re();
+					double d = p.getPosition().sub(q.getPosition()).mag();
+					sum += p.getCharge()*q.getCharge()/d;
 				}
 			}
 		}
@@ -382,19 +380,25 @@ public class SPMEList extends ParticleList {
 	}
 
 	//Uses a cell list method
-	public ArrayList<Particle> getNearParticles(Complex p, int range)
+	public ArrayList<Particle3D> getNearParticles(Vector p, int range)
 	{
-		int cellX = (int)Math.floor(p.re() / meshWidth);
-		int cellY = (int)Math.floor(p.im() / meshWidth);
-		ArrayList<Particle> nearParticles = new ArrayList<Particle>();
+		int cellX = (int)Math.floor(p.x / meshWidth);
+		int cellY = (int)Math.floor(p.y / meshWidth);
+		int cellZ = (int)Math.floor(p.z / meshWidth);
+
+		ArrayList<Particle3D> nearParticles = new ArrayList<Particle3D>();
 		for(int dx= -range; dx < range; dx++)
 		{
 			for(int dy= -range; dy < range; dy++)
 			{
-				int thisX = (cellX + dx);
-				int thisY = (cellY + dy);
-				if(thisX >= 0 && thisY >= 0 && thisX < CELL_SIDE_COUNT && thisY < CELL_SIDE_COUNT){
-					nearParticles.addAll(cellList[thisX][thisY]);
+				for(int dz= -range; dz < range; dz++)
+				{
+					int thisX = (cellX + dx);
+					int thisY = (cellY + dy);
+					int thisZ = (cellZ + dz);
+					if(thisX >= 0 && thisY >= 0 && thisX < CELL_SIDE_COUNT && thisY < CELL_SIDE_COUNT){
+						nearParticles.addAll(cellList[thisX][thisY][thisZ]);
+					}
 				}
 			}
 		}

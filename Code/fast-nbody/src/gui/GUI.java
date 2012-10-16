@@ -31,6 +31,7 @@ import particles.NSquaredList;
 import particles.Particle;
 import particles.ParticleList;
 import pme.PMEList;
+import pme.SPME3DList;
 import pme.SPMEList;
 
 public class GUI implements ActionListener, PropertyChangeListener{
@@ -155,7 +156,7 @@ public class GUI implements ActionListener, PropertyChangeListener{
 	{
 		//Copy the ParticleList list
 		printSeparator();
-		SPMEList pmeList = new SPMEList(particles,new SpaceSize(simulationCanvas.canvasSize.width,simulationCanvas.canvasSize.height));
+		SPME3DList pmeList = new SPME3DList(particles,new SpaceSize(simulationCanvas.canvasSize.width,simulationCanvas.canvasSize.height));
 		System.out.println("Calculating charges using smooth particle mesh ewald method");
 		int height = simulationCanvas.getHeight();
 		int width = simulationCanvas.getWidth(); 

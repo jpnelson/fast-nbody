@@ -30,6 +30,10 @@ public class Vector {
 		return new Vector(x*c,y*c,z*c);
 	}
 	
+	public Vector sub(Vector other){
+		return new Vector(x-other.x,y-other.y,z-other.z);
+	}
+	
 	@Override
 	public String toString(){
 		return "("+x+", "+y+", "+z+")";

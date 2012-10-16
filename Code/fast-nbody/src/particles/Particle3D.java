@@ -12,6 +12,9 @@ public class Particle3D {
 	Vector position;
 	double mass;
 	double charge;
+	private double forceX = 0;
+	private double forceY = 0;
+	private double forceZ = 0;
 	public Particle3D(double x, double y,double z, double mass, double charge) {
 		position = new Vector(x,y,z);
 		this.mass = mass;
@@ -35,5 +38,15 @@ public class Particle3D {
 	}
 	public double getMass(){
 		return mass;
+	}
+
+	public void addToForce(double x, double y, double z) {
+		forceX += x;
+		forceY += y;
+		forceZ += z;
+	}
+	public Vector getForce()
+	{
+		return new Vector(forceX,forceY,forceZ);
 	}
 }

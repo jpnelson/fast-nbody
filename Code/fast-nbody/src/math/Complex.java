@@ -122,7 +122,7 @@ public class Complex {
 	
 	//Takes a rectangular matrix which has the format of the output from a jtransforms FFT
 	//Returns a width halved complex matrix
-	public static Complex[][] doubleToComplexArray(double[][] in)
+	public static Complex[][][] doubleToComplexArray(double[][][] in)
 	{
 		int width = in[0].length;
 		int height = in.length;
@@ -139,7 +139,7 @@ public class Complex {
 	}
 	
 	//Opposite of the above
-	public static double[][] complexToDoubleArray(Complex[][] in)
+	public static double[][][] complexToDoubleArray(Complex[][][] in)
 	{
 		int width = in[0].length;
 		int height = in.length;

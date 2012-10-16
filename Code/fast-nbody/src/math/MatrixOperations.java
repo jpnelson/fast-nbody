@@ -115,12 +115,12 @@ public class MatrixOperations {
 	
 	
 	//Copies a matrix and possibly extends it's width
-	public static double[][] copyMatrix(double[][] M, int newWidth)
+	public static double[][][] copyMatrix(double[][][] q, int newWidth)
 	{
-		double[][] newMatrix = new double[M[0].length][newWidth];
-		for(int i = 0; i < M.length; i++)
+		double[][] newMatrix = new double[q[0].length][newWidth];
+		for(int i = 0; i < q.length; i++)
 		{
-			newMatrix[i] = Arrays.copyOf(M[i], newWidth);
+			newMatrix[i] = Arrays.copyOf(q[i], newWidth);
 		}
 		return newMatrix;
 	}
