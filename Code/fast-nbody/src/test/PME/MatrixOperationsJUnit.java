@@ -36,39 +36,42 @@ public class MatrixOperationsJUnit {
 	@Test
 	public void testDoubleToComplexArray()
 	{
-		double[][] in = new double[4][8];
-		for(int y = 0; y < 4; y++)
+		double[][][] in = new double[4][4][8];
+		for(int z = 0; z < 8; z++)
 		{
-			for(int x = 0; x < 8; x++)
+			for(int y = 0; y < 4; y++)
 			{
-				in[y][x] = (double) (x+y*8); 
+				for(int x = 0; x < 4; x++)
+				{
+					in[x][y][z] = (double) (x+y*8 + z*2*8); 
+				}
 			}
 		}
-		Complex[][] out = Complex.doubleToComplexArray(in);
-		assertTrue(out[0][0].re() == in[0][0]);
-		assertTrue(out[0][0].im() == in[0][1]);
+		Complex[][][] out = Complex.doubleToComplexArray(in);
+		assertTrue(out[2][2][2].re() == in[2][2][4]);
+		assertTrue(out[0][0][0].im() == in[0][0][1]);
 
 	}
 	
 	@Test
 	public void testComplexToDoubleArray()
 	{
-		double[][] in = new double[4][8];
-		in[3][4] = 999;
+		double[][][] in = new double[4][4][8];
+		in[3][2][0] = 999;
 		for(int x = 0; x < 4; x++)
-			for(int y = 0; y < 8; y++)
-				assertTrue(in[x][y] == Complex.complexToDoubleArray(Complex.doubleToComplexArray(in))[x][y]);
-
+			for(int y = 0; y < 4; y++)
+				for(int z = 0; z < 8; z++)
+					assertTrue(in[x][y][z] == Complex.complexToDoubleArray(Complex.doubleToComplexArray(in))[x][y][z]);
 	}
 	
 	@Test
 	public void testCopyMatrix()
 	{
-		double[][] testMatrix = new double[3][3];
-		testMatrix[1][2] = 1.0;
-		double[][] testMatrixCopy = MatrixOperations.copyMatrix(testMatrix, 6);
-		assertTrue(testMatrix[1][2] == testMatrixCopy[1][2]);
-		assertTrue(testMatrixCopy[0].length == 6);
+		double[][][] testMatrix = new double[3][3][6];
+		testMatrix[1][2][3] = 1.0;
+		double[][][] testMatrixCopy = MatrixOperations.copyMatrix(testMatrix, 6);
+		assertTrue(testMatrix[1][2][3] == testMatrixCopy[1][2][3]);
+		assertTrue(testMatrixCopy[0][0].length == 6);
 	}
 	
 	@Test

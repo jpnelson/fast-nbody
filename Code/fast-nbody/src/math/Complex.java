@@ -124,15 +124,19 @@ public class Complex {
 	//Returns a width halved complex matrix
 	public static Complex[][][] doubleToComplexArray(double[][][] in)
 	{
+		int depth = in[0][0].length;
 		int width = in[0].length;
 		int height = in.length;
 
-		Complex[][] out = new Complex[height][width/2];
+		Complex[][][] out = new Complex[width][height][depth/2];
 		for(int y = 0; y < height; y++)
 		{
-			for(int x = 0; x <= width/2-1; x++) // -1 here since we look ahead once
+			for(int x = 0; x < width; x++)
 			{
-				out[y][x] = new Complex(in[y][2*x],in[y][2*x+1]);
+				for(int z = 0; z <= depth/2-1; z++) // -1 here since we look ahead once
+				{
+					out[x][y][z] = new Complex(in[x][y][2*z],in[x][y][2*z+1]);
+				}
 			}
 		}
 		return out;
@@ -141,16 +145,20 @@ public class Complex {
 	//Opposite of the above
 	public static double[][][] complexToDoubleArray(Complex[][][] in)
 	{
+		int depth = in[0][0].length;
 		int width = in[0].length;
 		int height = in.length;
 
-		double[][] out = new double[height][width*2];
-		for(int y = 0; y < height; y++)
+		double[][][] out = new double[width][height][depth*2];
+		for(int z = 0; z < depth; z++)
 		{
-			for(int x = 0; x < width; x++) // -1 here since we look ahead once
+			for(int y = 0; y < height; y++)
 			{
-				out[y][2*x] = in[y][x].re();
-				out[y][2*x+1] = in[y][x].im();
+				for(int x = 0; x < width; x++) // -1 here since we look ahead once
+				{
+					out[x][y][2*z] = in[x][y][z].re();
+					out[x][y][2*z+1] = in[x][y][z].im();
+				}
 			}
 		}
 		return out;
@@ -206,6 +214,10 @@ public class Complex {
 				out[i] = new Complex(in[i],0);
 			}
 			return out;
+		}
+
+		public Vector toVector() {
+			return new Vector(re,im,0);
 		}
 	
 

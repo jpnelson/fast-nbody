@@ -144,10 +144,11 @@ public class SPME3DList extends ParticleList {
 						double uX = (CELL_SIDE_COUNT) * (particleX / 1.0);//Unit cell already in fractional coordinates
 						double uY = (CELL_SIDE_COUNT) * (particleY / 1.0);
 						double uZ = (CELL_SIDE_COUNT) * (particleZ / 1.0);
-						//Removed periodic images? Seems to be off by a grid cell in x/y? FIXME?
-						double a = M.evaluate(uX-x);
-						double b = M.evaluate(uY-y);
-						double c = M.evaluate(uZ-z);
+						
+						//The weights
+						double a = M.evaluate(uX-x+1);
+						double b = M.evaluate(uY-y+1);
+						double c = M.evaluate(uZ-z+1);
 						sum += p.getCharge() * a * b * c;
 					}
 					Q[x][y][z] = sum;
@@ -210,11 +211,11 @@ public class SPME3DList extends ParticleList {
 						int thisX = particleCellX + dx;
 						int thisY = particleCellY + dy;
 						int thisZ = particleCellZ + dz;
-						if(thisX >= 0 && thisY >= 0 && thisX < CELL_SIDE_COUNT && thisY < CELL_SIDE_COUNT)
+						if(inGrid(thisX) && inGrid(thisY) && inGrid(thisZ))
 						{
-							double dQdx = p.getCharge() * M.evaluateDerivative(uX - thisX) * M.evaluate(uY - thisY) * M.evaluate(uZ - thisZ);
-							double dQdy = p.getCharge() * M.evaluate(uX - thisX) * M.evaluateDerivative(uY - thisY) * M.evaluate(uZ - thisZ);
-							double dQdz = p.getCharge() * M.evaluate(uX - thisX) * M.evaluate(uY - thisY) * M.evaluateDerivative(uZ - thisZ);
+							double dQdx = p.getCharge() * M.evaluateDerivative(uX - thisX+1) * M.evaluate(uY - thisY+1) * M.evaluate(uZ - thisZ+1);
+							double dQdy = p.getCharge() * M.evaluate(uX - thisX+1) * M.evaluateDerivative(uY - thisY+1) * M.evaluate(uZ - thisZ+1);
+							double dQdz = p.getCharge() * M.evaluate(uX - thisX+1) * M.evaluate(uY - thisY+1) * M.evaluateDerivative(uZ - thisZ+1);
 							double convValue = convolutedMatrix[thisX][thisY][thisZ].re();
 							p.addToForce(-dQdx * convValue, -dQdy * convValue,-dQdz * convValue); //FIXME .re()?
 						}
@@ -231,13 +232,13 @@ public class SPME3DList extends ParticleList {
 			for(Particle3D q : getNearParticles(p.getPosition(),directRange))
 			{
 				if(!p.equals(q)){
-					Complex r = p.getPosition().sub(q.getPosition());
+					Vector r = p.getPosition().sub(q.getPosition());
 					if(r.mag() < CUTOFF_DISTANCE){ //in unit coordinates
 						double d = r.mag();
 						double fac = -q.getCharge() * p.getCharge() / (squared(d));
-						Complex rHat = r.scale(1.0/d);
-						Complex force = rHat.scale(fac);
-						p.addToForce(force.re(), force.im());
+						Vector rHat = r.scale(1.0/d);
+						Vector force = rHat.scale(fac);
+						p.addToForce(force.x, force.y, force.z);
 					}
 				}
 			}
@@ -332,7 +333,7 @@ public class SPME3DList extends ParticleList {
 			double bterm = M.bspmod[x]*M.bspmod[y]*M.bspmod[z];
 			double eterm = Math.exp(-squared(Math.PI/ewaldCoefficient)*mSquared) / (bterm * Math.PI * V * mSquared);
 			//Section 3.2.8 Lee[05]
-			double inverseQPart = (squared(inverseFTQComplex[x-1][y-1][z-1].re())+squared(inverseFTQComplex[x-1][y-1][z-1].im())); //Lee[05]
+			double inverseQPart = squared(inverseFTQComplex[x-1][y-1][z-1].re())+squared(inverseFTQComplex[x-1][y-1][z-1].im()); //Lee[05]
 			double thisContribution = eterm * inverseQPart;
 			convolutedMatrix[x-1][y-1][z-1] = inverseFTQComplex[x-1][y-1][z-1].scale(eterm); //Save this for the force calculation
 			sum += thisContribution; //from the argument that F(Q(M))*F(Q(-M))=F-1(Q)^2
@@ -342,9 +343,9 @@ public class SPME3DList extends ParticleList {
 
 	private double getDirEnergy(){
 		double sum = 0;
-		for(Particle p : this)
+		for(Particle3D p : unitParticles)
 		{
-			for(Particle q : getNearParticles(p.getPosition(),directRange))
+			for(Particle3D q : getNearParticles(p.getPosition(),directRange))
 			{
 				if(!p.equals(q)){
 					double d = p.getPosition().sub(q.getPosition()).mag();
@@ -357,7 +358,7 @@ public class SPME3DList extends ParticleList {
 
 	private double getSelfEnergy(){
 		double sum = 0;
-		for(Particle p : this)
+		for(Particle3D p : unitParticles)
 		{
 			sum += squared(p.getCharge());
 		}
@@ -366,9 +367,9 @@ public class SPME3DList extends ParticleList {
 
 	private double getActualEnergy(){
 		double sum = 0;
-		for(Particle p : this)
+		for(Particle3D p : unitParticles)
 		{
-			for(Particle q : this)
+			for(Particle3D q : unitParticles)
 			{
 				if(!p.equals(q)){
 					double d = p.getPosition().sub(q.getPosition()).mag();
@@ -378,7 +379,11 @@ public class SPME3DList extends ParticleList {
 		}
 		return 0.5*sum;
 	}
-
+	
+	static private boolean inGrid(int x){
+		return (x >= 0 && x < CELL_SIDE_COUNT);
+	}
+	
 	//Uses a cell list method
 	public ArrayList<Particle3D> getNearParticles(Vector p, int range)
 	{
@@ -396,7 +401,7 @@ public class SPME3DList extends ParticleList {
 					int thisX = (cellX + dx);
 					int thisY = (cellY + dy);
 					int thisZ = (cellZ + dz);
-					if(thisX >= 0 && thisY >= 0 && thisX < CELL_SIDE_COUNT && thisY < CELL_SIDE_COUNT){
+					if(inGrid(thisX) && inGrid(thisY) && inGrid(thisZ)){
 						nearParticles.addAll(cellList[thisX][thisY][thisZ]);
 					}
 				}
@@ -407,21 +412,28 @@ public class SPME3DList extends ParticleList {
 	}
 	
 	//Using b spline interpolation, take a point and return the interpolated matrix's values
-	private double interpolateMatrix(Complex fractionalCoordinate, Complex[][] Matrix)
+	private double interpolateMatrix(Vector fractionalCoordinate, Complex[][][] Matrix)
 	{
-		int cellX = (int)(fractionalCoordinate.re() * CELL_SIDE_COUNT);
-		int cellY = (int)(fractionalCoordinate.im() * CELL_SIDE_COUNT);
+		int cellX = (int)(fractionalCoordinate.x * CELL_SIDE_COUNT);
+		int cellY = (int)(fractionalCoordinate.y * CELL_SIDE_COUNT);
+		int cellZ = (int)(fractionalCoordinate.z * CELL_SIDE_COUNT);
+
 		double sum = 0;
 		for(int dx= -ASSIGNMENT_SCHEME_ORDER; dx < ASSIGNMENT_SCHEME_ORDER; dx++)
 		{
 			for(int dy= -ASSIGNMENT_SCHEME_ORDER; dy < ASSIGNMENT_SCHEME_ORDER; dy++)
 			{
-				int thisCellX = cellX+dx;
-				int thisCellY = cellY+dy;
-				if(thisCellX >= 0 && thisCellY >= 0 && thisCellX < CELL_SIDE_COUNT && thisCellY < CELL_SIDE_COUNT){
-					double xWeight = M.evaluate(fractionalCoordinate.re()*CELL_SIDE_COUNT - thisCellX);
-					double yWeight = M.evaluate(fractionalCoordinate.im()*CELL_SIDE_COUNT - thisCellY);
-					sum += Matrix[thisCellX][thisCellY].re() * xWeight * yWeight;
+				for(int dz= -ASSIGNMENT_SCHEME_ORDER; dz < ASSIGNMENT_SCHEME_ORDER; dz++)
+				{
+					int thisCellX = cellX+dx;
+					int thisCellY = cellY+dy;
+					int thisCellZ = cellZ+dz;
+					if(inGrid(thisCellX) && inGrid(thisCellY) && inGrid(thisCellZ)){
+						double xWeight = M.evaluate(fractionalCoordinate.x*CELL_SIDE_COUNT - thisCellX+1);
+						double yWeight = M.evaluate(fractionalCoordinate.y*CELL_SIDE_COUNT - thisCellY+1);
+						double zWeight = M.evaluate(fractionalCoordinate.z*CELL_SIDE_COUNT - thisCellZ+1);
+						sum += Matrix[thisCellX][thisCellY][thisCellZ].re() * xWeight * yWeight * zWeight;
+					}
 				}
 			}
 		}
@@ -436,14 +448,9 @@ public class SPME3DList extends ParticleList {
 		int i = (int)(position.re() / (windowSize.getWidth()) / meshWidth); //Need to translate into unit coordinates, then find it's grid coordinate
 		int j = (int)(position.im() / (windowSize.getHeight()) / meshWidth);
 		Complex sum = Complex.zero;
-		Complex fracPosition = position.scale(1.0/windowSize.getWidth());
+		Vector fracPosition = position.scale(1.0/windowSize.getWidth()).toVector();
 		
-		for (Particle particle : getNearParticles(fracPosition,directRange)) {
-			Complex r = particle.getPosition().sub(fracPosition);
-			double erfTerm = ErrorFunction.erfc(ewaldCoefficient * r.mag());
-			sum = sum.add(r.ln().scale(erfTerm * particle.getCharge()));
-		}
-		return -interpolateMatrix(fracPosition,convolutedMatrix) + sum.re();
+		return interpolateMatrix(fracPosition,convolutedMatrix); //-interpolateMatrix(fracPosition,convolutedMatrix) + sum.re()
 	}
 
 	@Override
@@ -464,7 +471,7 @@ public class SPME3DList extends ParticleList {
 	public void draw(Graphics2D g)
 	{
 		
-		for(Particle p : nonUnitParticles)
+		for(Particle p : nonUnitParticles) //don't do the unit particles (all coords < 1) or this (null for the 3D implementation)
 		{
 			p.draw(g);
 		}

@@ -1,6 +1,7 @@
 package test.PME;
 //http://www.challenge.nm.org/archive/03-04/FinalReports/26/node15.html good for debugging
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import org.junit.Test;
 

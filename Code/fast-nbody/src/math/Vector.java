@@ -26,6 +26,11 @@ public class Vector {
 		return x*other.x+y*other.y+z*other.z;
 	}
 	
+	public double mag()
+	{	
+		return Math.sqrt(x*x+y*y+z*z);
+	}
+	
 	public Vector scale(double c){
 		return new Vector(x*c,y*c,z*c);
 	}
