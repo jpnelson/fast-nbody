@@ -30,9 +30,9 @@ public class ScalarSumTest {
 		
 		//Make IFTQ ourselves
 		DoubleFFT_2D fft = new DoubleFFT_2D(CELL_SIDE_COUNT,CELL_SIDE_COUNT);
-		double[][] inverseFTQDoubles = MatrixOperations.copyMatrix(pmeList.Q, CELL_SIDE_COUNT*2);
+		double[][] inverseFTQDoubles = MatrixOperations.copyMatrix2D(pmeList.Q, CELL_SIDE_COUNT*2);
 		fft.realInverseFull(inverseFTQDoubles, false);
-		Complex[][] inverseFTQComplex = Complex.doubleToComplexArray(inverseFTQDoubles); //IFT of Q
+		Complex[][] inverseFTQComplex = Complex.doubleToComplexArray2D(inverseFTQDoubles); //IFT of Q
 		
 		
 		int indtop = CELL_SIDE_COUNT * CELL_SIDE_COUNT;

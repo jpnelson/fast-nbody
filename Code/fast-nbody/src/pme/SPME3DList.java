@@ -188,9 +188,9 @@ public class SPME3DList extends ParticleList {
 		//Perform a FFT on convolutedMatrix to make theta * Q from B C F^-1(Q)
 		//Make IFTQ ourselves
 		DoubleFFT_3D fft = new DoubleFFT_3D(CELL_SIDE_COUNT,CELL_SIDE_COUNT,CELL_SIDE_COUNT);
-		double[][][] convolutedDoubles = Complex.complexToDoubleArray(convolutedMatrix);
+		double[][][] convolutedDoubles = Complex.complexToDoubleArray3D(convolutedMatrix);
 		fft.complexForward(convolutedDoubles);
-		convolutedMatrix = Complex.doubleToComplexArray(convolutedDoubles); //F(B C F^-1(Q)) Pg. 182 Lee[05]
+		convolutedMatrix = Complex.doubleToComplexArray3D(convolutedDoubles); //F(B C F^-1(Q)) Pg. 182 Lee[05]
 		
 		for(Particle3D p : unitParticles){
 			//Pg 183 Lee[05]
@@ -279,9 +279,9 @@ public class SPME3DList extends ParticleList {
 		
 		//Make IFTQ ourselves
 		DoubleFFT_3D fft = new DoubleFFT_3D(CELL_SIDE_COUNT,CELL_SIDE_COUNT,CELL_SIDE_COUNT);
-		double[][][] inverseFTQDoubles = MatrixOperations.copyMatrix(Q, CELL_SIDE_COUNT*2);
+		double[][][] inverseFTQDoubles = MatrixOperations.copyMatrix3D(Q, CELL_SIDE_COUNT*2);
 		fft.realInverseFull(inverseFTQDoubles, false);
-		Complex[][][] inverseFTQComplex = Complex.doubleToComplexArray(inverseFTQDoubles); //IFT of Q
+		Complex[][][] inverseFTQComplex = Complex.doubleToComplexArray3D(inverseFTQDoubles); //IFT of Q
 		
 		debugMatrix = new double[CELL_SIDE_COUNT][CELL_SIDE_COUNT][CELL_SIDE_COUNT];
 		convolutedMatrix = new Complex[CELL_SIDE_COUNT][CELL_SIDE_COUNT][CELL_SIDE_COUNT];

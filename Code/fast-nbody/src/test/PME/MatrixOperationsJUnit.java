@@ -47,7 +47,7 @@ public class MatrixOperationsJUnit {
 				}
 			}
 		}
-		Complex[][][] out = Complex.doubleToComplexArray(in);
+		Complex[][][] out = Complex.doubleToComplexArray3D(in);
 		assertTrue(out[2][2][2].re() == in[2][2][4]);
 		assertTrue(out[0][0][0].im() == in[0][0][1]);
 
@@ -61,7 +61,7 @@ public class MatrixOperationsJUnit {
 		for(int x = 0; x < 4; x++)
 			for(int y = 0; y < 4; y++)
 				for(int z = 0; z < 8; z++)
-					assertTrue(in[x][y][z] == Complex.complexToDoubleArray(Complex.doubleToComplexArray(in))[x][y][z]);
+					assertTrue(in[x][y][z] == Complex.complexToDoubleArray3D(Complex.doubleToComplexArray3D(in))[x][y][z]);
 	}
 	
 	@Test
@@ -69,7 +69,7 @@ public class MatrixOperationsJUnit {
 	{
 		double[][][] testMatrix = new double[3][3][6];
 		testMatrix[1][2][3] = 1.0;
-		double[][][] testMatrixCopy = MatrixOperations.copyMatrix(testMatrix, 6);
+		double[][][] testMatrixCopy = MatrixOperations.copyMatrix3D(testMatrix, 6);
 		assertTrue(testMatrix[1][2][3] == testMatrixCopy[1][2][3]);
 		assertTrue(testMatrixCopy[0][0].length == 6);
 	}

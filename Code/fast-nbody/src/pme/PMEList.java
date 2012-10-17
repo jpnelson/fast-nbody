@@ -98,11 +98,11 @@ public class PMEList extends ParticleList{
 	private double getReciprocalEnergy()
 	{
 		DoubleFFT_2D fft = new DoubleFFT_2D(CELL_SIDE_COUNT,CELL_SIDE_COUNT);
-		double[][] chargeAssignmentsIFT = MatrixOperations.copyMatrix(chargeAssignments,CELL_SIDE_COUNT*2);
+		double[][] chargeAssignmentsIFT = MatrixOperations.copyMatrix2D(chargeAssignments,CELL_SIDE_COUNT*2);
 		fft.realInverseFull(chargeAssignmentsIFT, false);
-		Complex[][] chargeAssignmentsIFTComplex = Complex.doubleToComplexArray(chargeAssignmentsIFT);
+		Complex[][] chargeAssignmentsIFTComplex = Complex.doubleToComplexArray2D(chargeAssignmentsIFT);
 		Complex[][] convolutedMatrix = MatrixOperations.multiply(cMatrix, chargeAssignmentsIFTComplex);
-		fft.complexForward(Complex.complexToDoubleArray(convolutedMatrix));
+		fft.complexForward(Complex.complexToDoubleArray2D(convolutedMatrix));
 		double sum = 0;
 		deltaXS = new double[CELL_SIDE_COUNT][CELL_SIDE_COUNT];
 		//Get the reciprocal energy

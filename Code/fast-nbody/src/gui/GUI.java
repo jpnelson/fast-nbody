@@ -39,7 +39,8 @@ public class GUI implements ActionListener, PropertyChangeListener{
 	static Dimension windowSize = new Dimension(512,512);
 	JFrame jFrame;
 	JMenuBar jMenuBar;
-	JMenu chargesMenu;
+	JMenu timingMenu;
+	JMenu potentialsMenu;
 	JMenu particlesMenu;
 	JMenuItem calculateChargesItem;
 	JMenuItem calculateFMAItem;
@@ -66,16 +67,17 @@ public class GUI implements ActionListener, PropertyChangeListener{
 		simulationCanvas = new SimulationCanvas(windowSize,this);
 		//Menu
 		jMenuBar = new JMenuBar();
-		chargesMenu = new JMenu("Charges");
+		potentialsMenu = new JMenu("Potentials");
 		particlesMenu = new JMenu("Particles");
+		timingMenu = new JMenu("Timings");
 		
-		calculateChargesItem = new JMenuItem("Calculate charges (Basic algorithm)");
+		calculateChargesItem = new JMenuItem("Calculate potentials (Basic algorithm)");
 		calculateChargesItem.addActionListener(this);
 		
-		calculateFMAItem = new JMenuItem("Calculate charges (Fast multipole algorithm)");
+		calculateFMAItem = new JMenuItem("Calculate potentials (Fast multipole algorithm)");
 		calculateFMAItem.addActionListener(this);
 		
-		calculatePMEItem = new JMenuItem("Calculate charges (Particle mesh ewald method)");
+		calculatePMEItem = new JMenuItem("Calculate potentials (Particle mesh ewald method)");
 		calculatePMEItem.addActionListener(this);
 		
 		distributeRandomlyItem = new JMenuItem("Distribute particles randomly");
@@ -87,9 +89,9 @@ public class GUI implements ActionListener, PropertyChangeListener{
 		clearParticlesItem = new JMenuItem("Clear particles");
 		clearParticlesItem.addActionListener(this);
 
-		chargesMenu.add(calculateChargesItem);
-		chargesMenu.add(calculateFMAItem);
-		chargesMenu.add(calculatePMEItem);
+		potentialsMenu.add(calculateChargesItem);
+		potentialsMenu.add(calculateFMAItem);
+		potentialsMenu.add(calculatePMEItem);
 
 		particlesMenu.add(distributeRandomlyItem);
 		particlesMenu.add(distributeRegularlyItem);
@@ -100,7 +102,7 @@ public class GUI implements ActionListener, PropertyChangeListener{
 
 		//Add the menus to the menubar
 		jMenuBar.add(particlesMenu);
-		jMenuBar.add(chargesMenu);
+		jMenuBar.add(potentialsMenu);
 		
 		//Add components
 		jFrame.getContentPane().add(simulationCanvas);
@@ -156,7 +158,7 @@ public class GUI implements ActionListener, PropertyChangeListener{
 	{
 		//Copy the ParticleList list
 		printSeparator();
-		SPME3DList pmeList = new SPME3DList(particles,new SpaceSize(simulationCanvas.canvasSize.width,simulationCanvas.canvasSize.height));
+		SPMEList pmeList = new SPMEList(particles,new SpaceSize(simulationCanvas.canvasSize.width,simulationCanvas.canvasSize.height));
 		System.out.println("Calculating charges using smooth particle mesh ewald method");
 		int height = simulationCanvas.getHeight();
 		int width = simulationCanvas.getWidth(); 

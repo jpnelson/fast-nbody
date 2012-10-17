@@ -115,7 +115,7 @@ public class MatrixOperations {
 	
 	
 	//Copies a matrix and possibly extends it's width
-	public static double[][][] copyMatrix(double[][][] q, int newWidth)
+	public static double[][][] copyMatrix3D(double[][][] q, int newWidth)
 	{
 		double[][][] newMatrix = new double[q[0][0].length][q[0].length][newWidth];
 		for(int i = 0; i < q.length; i++)
@@ -127,7 +127,17 @@ public class MatrixOperations {
 		}
 		return newMatrix;
 	}
-	
+	//Copies a matrix and possibly extends it's width
+	public static double[][] copyMatrix2D(double[][] M, int newWidth)
+	{
+		double[][] newMatrix = new double[M[0].length][newWidth];
+		for(int i = 0; i < M.length; i++)
+		{
+			newMatrix[i] = Arrays.copyOf(M[i], newWidth);
+		}
+		return newMatrix;
+	}
+
 	//Was for 1D stuff. TODO remove?
 	public static double[] makeRowMajorVector(double[][] M)
 	{
