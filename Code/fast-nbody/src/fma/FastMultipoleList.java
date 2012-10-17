@@ -176,7 +176,7 @@ public class FastMultipoleList extends ParticleList{
 	
 	//The actual procedure for calculating charges
 	@Override
-	public double charge(Complex position) {
+	public double potential(Complex position) {
 		double x = position.re();
 		double y = position.im();
 		int xIndex = (int) Math.floor(meshes[LEVEL_COUNT].boxesOnSide* (x / (double)(meshes[LEVEL_COUNT].meshSize.getWidth())));
@@ -196,7 +196,7 @@ public class FastMultipoleList extends ParticleList{
 	{
 		if(x >= 0 && y >= 0 && x < meshes[LEVEL_COUNT].boxesOnSide && y < meshes[LEVEL_COUNT].boxesOnSide)
 		{
-			return meshes[LEVEL_COUNT].meshCells[x][y].particles.charge(position); //The old way
+			return meshes[LEVEL_COUNT].meshCells[x][y].particles.potential(position); //The old way
 		}else{
 			return 0;
 		}

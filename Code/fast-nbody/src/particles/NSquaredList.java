@@ -19,7 +19,7 @@ public class NSquaredList extends ParticleList{
 	}
 
 	@Override
-	public double charge(Complex position)
+	public double potential(Complex position)
 	{
 		
 		Complex sum = Complex.zero;

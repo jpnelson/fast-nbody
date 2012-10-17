@@ -54,8 +54,8 @@ public class FastMultipoleListJUnit {
 		nsl = new NSquaredList(pts);
 		System.out.println("=========");
 		System.out.println(lev.charge(complexToEricComplex(pos)));
-		System.out.println(fml.charge(pos));
-		System.out.println(nsl.charge(pos));
+		System.out.println(fml.potential(pos));
+		System.out.println(nsl.potential(pos));
 		
 		
 	}

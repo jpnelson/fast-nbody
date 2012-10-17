@@ -309,7 +309,7 @@ public class PMEList extends ParticleList{
 	
 	
 	@Override
-	public double charge(Complex position) {
+	public double potential(Complex position) {
 		int i = (int)(position.re() / meshWidth);
 		int j = (int)(position.im() / meshWidth);
 		

@@ -34,7 +34,7 @@ public class CalculationTask extends SwingWorker<Void,Void>{
 		//Calculate the charges
 		for (int y=0;y<height;y++) {
 			for (int x=0;x<width;x++) {
-				double chargeAtIJ = particleList.charge(new Complex(x,y));
+				double chargeAtIJ = particleList.potential(new Complex(x,y));
 				charges.add(chargeAtIJ);
 			}
 			progress = (int) (((double)y+1)/((double)height) * 100);

@@ -22,8 +22,8 @@ public abstract class ParticleList extends ArrayList<Particle>{
 			p.draw(g);
 		}
 	}
-	
-	public abstract double charge(Complex position);
+		
+	public abstract double potential(Complex position);
 	
 	public abstract void debugDraw(Graphics g);
 

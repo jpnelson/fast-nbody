@@ -428,7 +428,7 @@ public class SPMEList extends ParticleList {
 
 
 	@Override
-	public double charge(Complex position) { //position is in coordinates out of the original dimensions given
+	public double potential(Complex position) { //position is in coordinates out of the original dimensions given
 		int i = (int)(position.re() / (windowSize.getWidth()) / meshWidth); //Need to translate into unit coordinates, then find it's grid coordinate
 		int j = (int)(position.im() / (windowSize.getHeight()) / meshWidth);
 		Complex sum = Complex.zero;

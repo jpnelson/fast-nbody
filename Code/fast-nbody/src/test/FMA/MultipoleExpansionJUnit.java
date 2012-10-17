@@ -39,7 +39,7 @@ public class MultipoleExpansionJUnit {
 	public void testCharge()
 	{
 		
-		assertTrue(pl1.charge(pos)-mp1.potential(pos) < 0.0001);
+		assertTrue(pl1.potential(pos)-mp1.potential(pos) < 0.0001);
 		
 	}
 	@Test
