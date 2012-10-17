@@ -4,6 +4,7 @@ import math.Complex;
 
 import java.awt.BorderLayout;
 import java.awt.Canvas;
+import java.awt.CheckboxMenuItem;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -17,6 +18,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -51,6 +53,7 @@ public class GUI implements ActionListener, PropertyChangeListener{
 	JMenuItem distributeRandomlyItem;
 	JMenuItem distributeNRandomlyItem;
 	JMenuItem distributeRegularlyItem;
+	JCheckBoxMenuItem requireNeutralItem;
 	
 	JMenuItem timeBasicItem;
 	JMenuItem timeFMAItem;
@@ -64,6 +67,7 @@ public class GUI implements ActionListener, PropertyChangeListener{
 	public ArrayList<Particle> particles = new ArrayList<Particle>(); //This lists job is to keep track of mouse clicks and charges
 	CalculationTask calcTask;
 	TimingTask timeTask;
+	private boolean requireNeutralSystem = false;
 
 	
 	public GUI()
@@ -89,6 +93,9 @@ public class GUI implements ActionListener, PropertyChangeListener{
 		calculatePMEItem = new JMenuItem("Calculate potentials (Particle mesh ewald method)");
 		calculatePMEItem.addActionListener(this);
 		
+		requireNeutralItem = new JCheckBoxMenuItem("Require neutral distribution",requireNeutralSystem);
+		requireNeutralItem.addActionListener(this);
+
 		distributeRandomlyItem = new JMenuItem("Distribute "+RANDOM_PARTICLE_NUMBER+" particles randomly");
 		distributeRandomlyItem.addActionListener(this);
 		
@@ -118,6 +125,7 @@ public class GUI implements ActionListener, PropertyChangeListener{
 		particlesMenu.add(distributeRandomlyItem);
 		particlesMenu.add(distributeNRandomlyItem);
 		particlesMenu.add(distributeRegularlyItem);
+		particlesMenu.add(requireNeutralItem);
 		particlesMenu.add(clearParticlesItem);
 		
 		timingMenu.add(timeBasicItem);
@@ -171,6 +179,8 @@ public class GUI implements ActionListener, PropertyChangeListener{
 			timeFMA();
 		if (e.getSource() == timePMEItem)
 			timePME();
+		if (e.getSource() == requireNeutralItem)
+			requireNeutralSystem = !requireNeutralSystem;
 	}
 	//Button actions
 	private void timeList(ParticleList pl)
@@ -217,8 +227,21 @@ public class GUI implements ActionListener, PropertyChangeListener{
 		calculateList(new NSquaredList(particles));
 	}
 	
+	private static double calculateChargeSum(ArrayList<Particle> list)
+	{
+		double sum=0;
+		for(Particle p : list){
+			sum += p.getCharge();
+		}
+		return sum;
+	}
+	
 	public void calculatePME()
 	{
+		if(calculateChargeSum(particles) != 0)
+			JOptionPane.showMessageDialog(jFrame,
+					"Warning: The particle mesh ewald method is only effective for neutral systems, but charge sum="+calculateChargeSum(particles),
+					"Non neutral system", JOptionPane.WARNING_MESSAGE);
 		calculateList(new SPMEList(particles,new SpaceSize(simulationCanvas.canvasSize.width,simulationCanvas.canvasSize.height)));
 	}
 	
@@ -228,10 +251,13 @@ public class GUI implements ActionListener, PropertyChangeListener{
 	}
 	private void distributeN(int N)
 	{
+		if(requireNeutralSystem && N%2==1)
+			N++;//Don't allow odd number of particles in a neutral system
 		for(int i = 0; i < N; i++)
 		{
 			Particle p;
-			int charge = Math.random() < 0.5? -Particle.DEFAULT_CHARGE:Particle.DEFAULT_CHARGE;
+			double chance = requireNeutralSystem ? i % 2 : Math.random() * 2; //Alternate if we require a neutral system
+			int charge =chance < 0.5? -Particle.DEFAULT_CHARGE:Particle.DEFAULT_CHARGE;
 			p = new Particle(Math.random()*simulationCanvas.getWidth(),Math.random()*simulationCanvas.getWidth(),Particle.DEFAULT_MASS,charge);
 			particles.add(p);
 		}

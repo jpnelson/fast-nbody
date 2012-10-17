@@ -89,10 +89,6 @@ public class FastMultipoleList extends ParticleList{
 						Complex cCenter = meshes[l].getCellCenter(c.getX(), c.getY());//meshes[l] meshes[LEVEL_COUNT]
 						LocalExpansion cLocalExpand = new LocalExpansion(c.multipoleExpansion,cCenter.sub(thisCellCenter),EXPANSION_TERMS);
 						sum = sum.add(cLocalExpand);//was thisCellCenter (20/9/12) TODO: check this line. Copied like Step 4
-						if(x==3 && y==0 && l==2) //1,0 lvl 1 | 3,0 lvl 2 | 6,0 lvl 3| 12,1 lvl 4 | 25,3 lvl 5
-						{
-							//System.out.println(cCenter);
-						}
 					}
 					
 					

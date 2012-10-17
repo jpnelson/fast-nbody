@@ -164,19 +164,6 @@ public class SPMEList extends ParticleList {
 			}
 	}
 
-	//Eq 4.8 Essman[95]
-	private void initBMatrix()
-	{
-		B = new double[CELL_SIDE_COUNT][CELL_SIDE_COUNT];
-		for(int x = 0; x < CELL_SIDE_COUNT; x++)
-		{
-			for(int y = 0; y < CELL_SIDE_COUNT; y++)
-			{
-				B[x][y] = squared(M.b(1, x, CELL_SIDE_COUNT).mag())*squared(M.b(2, y, CELL_SIDE_COUNT).mag());
-			}
-		}
-	}
-
 	public void initCellList(){
 		cellList = new ArrayList[CELL_SIDE_COUNT][CELL_SIDE_COUNT];
 		for(int i = 0; i < CELL_SIDE_COUNT; i++)
@@ -399,7 +386,6 @@ public class SPMEList extends ParticleList {
 			}
 		}
 		return nearParticles;
-
 	}
 	
 	//Using b spline interpolation, take a point and return the interpolated matrix's values

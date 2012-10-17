@@ -1,4 +1,9 @@
-\begin{thebibliography}{1}
+\begin{thebibliography}{10}
+
+\bibitem{toukmaji:73}
+John A. Board~Jr. Abdulnour Y.~Toukmaji.
+\newblock Ewald summation techniques in perspective: a survey.
+\newblock {\em Computer Physics Communications}, 95:73--92, 1996.
 
 \bibitem{darden:10089}
 Tom Darden, Darrin York, and Lee Pedersen.
@@ -16,6 +21,10 @@ Ulrich Essmann, Lalith Perera, Max~L. Berkowitz, Tom Darden, Hsing Lee, and
 L.~Greengard and V.~Rokhlin.
 \newblock A fast algorithm for particle simulations.
 \newblock {\em Journal of Computational Physics}, 1987.
+
+\bibitem{Ihler04}
+Alexander~T. Ihler.
+\newblock An overview of fast multipole methods, 2004.
 
 \bibitem{MilleniumRun}
 Max~Planck institute~of Astrophysics.
@@ -39,5 +48,10 @@ Theoretical and Computational~Biophysics group.
 \newblock Namd scalable molecular dynamics.
 \newblock \url{http://www.ks.uiuc.edu/Research/namd/}.
 \newblock Accessed: 10/10/2012.
+
+\bibitem{JTransform}
+Piotr Wendykier.
+\newblock Jtransforms fft library, 2011.
+\newblock \url{http://sourceforge.net/projects/jtransforms}.
 
 \end{thebibliography}
