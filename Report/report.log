@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2012.5.5)  18 OCT 2012 01:10
+This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2012.5.5)  18 OCT 2012 18:56
 entering extended mode
  %&-line parsing enabled.
 **report.tex
@@ -626,20 +626,20 @@ Underfull \hbox (badness 10000) in paragraph at lines 315--324
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.337 \end{equation}
+l.338 \end{equation}
                     pdfTeX warning (ext4): destination with the same identifier
  (name{figure.2.6}) has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.337 \end{equation}
+l.338 \end{equation}
                      <./figures/fma_mesh.pdf> <./figures/wellsep.pdf>]
-Underfull \hbox (badness 10000) detected at line 409
+Underfull \hbox (badness 10000) detected at line 410
 [][]
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 376--410
+Underfull \hbox (badness 10000) in paragraph at lines 377--411
 
  []
 
@@ -647,6 +647,10 @@ Underfull \hbox (badness 10000) in paragraph at lines 376--410
 Underfull \vbox (badness 3623) has occurred while \output is active []
 
  [12]
+Underfull \hbox (badness 10000) in paragraph at lines 413--414
+
+ []
+
 [13]
 Chapter 3.
 [14
@@ -663,10 +667,10 @@ LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
  ) 
 Here is how much of TeX's memory you used:
- 7101 strings out of 495061
- 96777 string characters out of 1182622
- 206990 words of memory out of 3000000
- 10063 multiletter control sequences out of 15000+50000
+ 7102 strings out of 495061
+ 96791 string characters out of 1182622
+ 207050 words of memory out of 3000000
+ 10064 multiletter control sequences out of 15000+50000
  12143 words of font info for 46 fonts, out of 3000000 for 9000
  28 hyphenation exceptions out of 8191
  38i,22n,39p,1087b,393s stack positions out of 5000i,500n,10000p,200000b,50000s
@@ -686,9 +690,9 @@ usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/share/t
 exmf-texlive/fonts/type1/public/amsfonts/cm/cmti7.pfb></usr/share/texmf-texlive
 /fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/share/texmf-texlive/fonts/type
 1/public/amsfonts/symbols/msbm10.pfb>
-Output written on report.pdf (17 pages, 2394024 bytes).
+Output written on report.pdf (17 pages, 2396024 bytes).
 PDF statistics:
- 383 PDF objects out of 1000 (max. 8388607)
+ 384 PDF objects out of 1000 (max. 8388607)
  93 named destinations out of 1000 (max. 500000)
  172 words of extra memory for PDF output out of 10000 (max. 10000000)
 

@@ -77,7 +77,7 @@ public class SimulationCanvas extends Canvas implements MouseListener, MouseMoti
 		gui.particles.add(newParticle);
 		gui.redraw();
 		
-		System.out.println("Particle created with position "+newParticle.getPosition().toString()+" and charge "+newParticle.getCharge());		
+		System.out.println("[Simulation Canvas] Particle created with position "+newParticle.getPosition().toString()+" and charge "+newParticle.getCharge());		
 	}
 
 	@Override

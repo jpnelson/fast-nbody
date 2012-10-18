@@ -99,7 +99,7 @@ public class BSpline {
 		}
 //		for(int i = 0; i <= K; i++)
 //		{
-//			System.out.println("bsp_mod["+i+"]="+bspmod[i]);
+//			System.out.println("[Bspline] bsp_mod["+i+"]="+bspmod[i]);
 //		}
 	}
 }

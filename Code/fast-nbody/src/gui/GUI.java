@@ -1,18 +1,15 @@
 package gui;
 
-import math.Complex;
 
 import java.awt.BorderLayout;
-import java.awt.Canvas;
-import java.awt.CheckboxMenuItem;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
@@ -33,17 +30,28 @@ import fma.FastMultipoleList;
 import particles.NSquaredList;
 import particles.Particle;
 import particles.ParticleList;
-import pme.PMEList;
-import pme.SPME3DList;
 import pme.SPMEList;
 
 public class GUI implements ActionListener, PropertyChangeListener{
 	//Window
 	static Dimension WINDOW_SIZE = new Dimension(512,512);
 	static int RANDOM_PARTICLE_NUMBER = 50; //The number of particles to distribute randomly by default
+	
+	//Benchmarking
+	static int BENCHMARK_INCREMENT = 1000;
+	static int BENCHMARK_MAXIMUM = 10000;
+	static int BENCHMARK_MINIMUM = 5000;
+	TimingTask currentBenchmarkingTask;
+	Class<? extends ParticleList> benchmarkClass;
+	String currentBenchmarkLogFileName;
+	
 	JFrame jFrame;
 	JMenuBar jMenuBar;
+	
 	JMenu timingMenu;
+	JMenu timingOnceSubMenu;
+	JMenu timingBenchmarkSubMenu;
+	
 	JMenu potentialsMenu;
 	JMenu particlesMenu;
 	JMenuItem calculateChargesItem;
@@ -51,13 +59,16 @@ public class GUI implements ActionListener, PropertyChangeListener{
 	JMenuItem calculatePMEItem;
 	JMenuItem clearParticlesItem;
 	JMenuItem distributeRandomlyItem;
-	JMenuItem distributeNRandomlyItem;
+	JMenuItem distributeNItem;
 	JMenuItem distributeRegularlyItem;
 	JCheckBoxMenuItem requireNeutralItem;
 	
 	JMenuItem timeBasicItem;
 	JMenuItem timeFMAItem;
 	JMenuItem timePMEItem;
+	JMenuItem benchmarkBasicItem;
+	JMenuItem benchmarkPMEItem;
+	JMenuItem benchmarkFMAItem;
 	
 	JProgressBar progressBar;
 	//Graphics
@@ -83,6 +94,8 @@ public class GUI implements ActionListener, PropertyChangeListener{
 		potentialsMenu = new JMenu("Potentials");
 		particlesMenu = new JMenu("Particles");
 		timingMenu = new JMenu("Timings");
+		timingOnceSubMenu = new JMenu("Time on this configuration");
+		timingBenchmarkSubMenu = new JMenu("Benchmark");
 		
 		calculateChargesItem = new JMenuItem("Calculate potentials (Basic algorithm)");
 		calculateChargesItem.addActionListener(this);
@@ -99,12 +112,14 @@ public class GUI implements ActionListener, PropertyChangeListener{
 		distributeRandomlyItem = new JMenuItem("Distribute "+RANDOM_PARTICLE_NUMBER+" particles randomly");
 		distributeRandomlyItem.addActionListener(this);
 		
-		distributeNRandomlyItem = new JMenuItem("Distribute N particles randomly");
-		distributeNRandomlyItem.addActionListener(this);
+		distributeNItem = new JMenuItem("Distribute N particles randomly");
+		distributeNItem.addActionListener(this);
 		
 		distributeRegularlyItem = new JMenuItem("Distribute particles regularly");
 		distributeRegularlyItem.addActionListener(this);
 		
+		
+		//Timing menu
 		timeBasicItem = new JMenuItem("Time the Basic algorithm");
 		timeBasicItem.addActionListener(this);
 		
@@ -114,7 +129,15 @@ public class GUI implements ActionListener, PropertyChangeListener{
 		timePMEItem = new JMenuItem("Time the Particle mesh ewald method");
 		timePMEItem.addActionListener(this);
 		
+		benchmarkFMAItem = new JMenuItem("Benchmark the Fast multipole algorithm");
+		benchmarkFMAItem.addActionListener(this);
 		
+		benchmarkBasicItem = new JMenuItem("Benchmark the Basic algorithm");
+		benchmarkBasicItem.addActionListener(this);
+
+		benchmarkPMEItem = new JMenuItem("Benchmark the Particle mesh ewald method");
+		benchmarkPMEItem.addActionListener(this);
+
 		clearParticlesItem = new JMenuItem("Clear particles");
 		clearParticlesItem.addActionListener(this);
 
@@ -123,14 +146,22 @@ public class GUI implements ActionListener, PropertyChangeListener{
 		potentialsMenu.add(calculatePMEItem);
 
 		particlesMenu.add(distributeRandomlyItem);
-		particlesMenu.add(distributeNRandomlyItem);
+		particlesMenu.add(distributeNItem);
 		particlesMenu.add(distributeRegularlyItem);
 		particlesMenu.add(requireNeutralItem);
 		particlesMenu.add(clearParticlesItem);
 		
-		timingMenu.add(timeBasicItem);
-		timingMenu.add(timeFMAItem);
-		timingMenu.add(timePMEItem);
+		
+		timingOnceSubMenu.add(timeBasicItem);
+		timingOnceSubMenu.add(timeFMAItem);
+		timingOnceSubMenu.add(timePMEItem);
+		
+		timingBenchmarkSubMenu.add(benchmarkBasicItem);
+		timingBenchmarkSubMenu.add(benchmarkFMAItem);
+		timingBenchmarkSubMenu.add(benchmarkPMEItem);
+		
+		timingMenu.add(timingOnceSubMenu);
+		timingMenu.add(timingBenchmarkSubMenu);
 
 		//Interface
 		progressBar = new JProgressBar(0,100);
@@ -154,7 +185,7 @@ public class GUI implements ActionListener, PropertyChangeListener{
 	
 	private static void printSeparator()
 	{
-		System.out.println("___________________");
+		System.out.println("[GUI] ___________________");
 	}
     
     //Button presses
@@ -167,8 +198,8 @@ public class GUI implements ActionListener, PropertyChangeListener{
 			calculateFMA();
 		if (e.getSource() == calculatePMEItem)
 			calculatePME();
-		if (e.getSource() == distributeNRandomlyItem)
-			distributeNRandomly();
+		if (e.getSource() == distributeNItem)
+			distributeN();
 		if (e.getSource() == distributeRandomlyItem)
 			distributeRandomly();
 		if (e.getSource() == distributeRegularlyItem)
@@ -179,27 +210,22 @@ public class GUI implements ActionListener, PropertyChangeListener{
 			timeFMA();
 		if (e.getSource() == timePMEItem)
 			timePME();
+		if (e.getSource() == benchmarkBasicItem)
+			benchmarkList(NSquaredList.class);
+		if (e.getSource() == benchmarkFMAItem)
+			benchmarkList(FastMultipoleList.class);
+		if (e.getSource() == benchmarkPMEItem)
+			benchmarkList(SPMEList.class);
 		if (e.getSource() == requireNeutralItem)
 			requireNeutralSystem = !requireNeutralSystem;
 	}
 	//Button actions
-	private void timeList(ParticleList pl)
-	{
-		printSeparator();
-		System.out.println("Timing basic algorithm");
-		
-		int height = simulationCanvas.getHeight();
-		int width = simulationCanvas.getWidth();
-		
-		timeTask = new TimingTask(this,pl,width,height);
-		timeTask.addPropertyChangeListener(this);
-		timeTask.execute();
-	}
+
 	
 	private void calculateList(ParticleList pl)
 	{
 		printSeparator();
-		System.out.println("Calculating charges");
+		System.out.println("[GUI] Calculating potentials");
 		
 		int height = simulationCanvas.getHeight();
 		int width = simulationCanvas.getWidth();
@@ -208,6 +234,82 @@ public class GUI implements ActionListener, PropertyChangeListener{
 		calcTask.addPropertyChangeListener(this);
 		calcTask.execute();
 	}
+	
+	/*----------Timing and benchmarking----------*/
+	private void timeList(ParticleList pl)
+	{
+		printSeparator();
+
+		int height = simulationCanvas.getHeight();
+		int width = simulationCanvas.getWidth();
+		
+		timeTask = new TimingTask(this,pl,width,height);
+		timeTask.addPropertyChangeListener(this);
+		timeTask.execute();
+	}
+	
+	/*Do one iteration of the benchmarking process (calculate once)
+	 * when the currentBenchmarkingTask execution is complete, the GUI will receive a call at the property change event
+	 * This enables the interface to be responsive during benchmarking iterations.
+	 */
+	private void doBenchmarkIteration(Class<? extends ParticleList> c)
+	{
+		distributeN(BENCHMARK_INCREMENT); //Start filling up the particles array list
+		ParticleList pl = new NSquaredList(); //Only initialise it if we have to. If it didn't get initialised, the method fails.
+		
+		//Create a particle list from the class object we're given
+		try {
+			pl = c.getConstructor(new Class[]{ArrayList.class}).newInstance(particles);
+		} catch (Exception e){
+			//Assume we used the wrong constructor, not a basic list
+			try {
+				pl = c.getConstructor(new Class[]{ArrayList.class,SpaceSize.class}).newInstance(particles,
+						new SpaceSize(simulationCanvas.canvasSize.width,simulationCanvas.canvasSize.height));
+			} catch (Exception e2) {
+				e2.printStackTrace();
+			}
+		}
+		
+		//The actual work to be timed
+		int height = simulationCanvas.getHeight();
+		int width = simulationCanvas.getWidth();
+		currentBenchmarkingTask = new TimingTask(this,pl,width,height,currentBenchmarkLogFileName);
+		currentBenchmarkingTask.addPropertyChangeListener(this);
+		currentBenchmarkingTask.execute();
+	}
+	
+	private static String getNewLogFileName(Class<? extends ParticleList> c)
+	{
+		//Check change the variable name if it already exists. Naming scheme like: benchmark_list(1).csv
+		boolean fileExists = true;
+		int num=0;
+		String fileName="";
+		
+		while(fileExists){
+			if(num==0){
+				fileName = "benchmarks/benchmark_"+c.getSimpleName()+".csv";
+			}else{
+				fileName = "benchmarks/benchmark_"+c.getSimpleName()+"("+num+")"+".csv";
+			}
+			File f = new File(fileName);
+			fileExists = f.exists();
+			num++;
+		}
+		File f = new File("benchmarks");
+		f.mkdirs(); //Ensure the folder is there
+		return fileName;
+	}
+	
+	private void benchmarkList(Class<? extends ParticleList> c)
+	{
+		currentBenchmarkLogFileName = getNewLogFileName(c); //The name of the log file for this benchmark
+		benchmarkClass = c; //Save this in the GUI so we know which class we're benchmarking at the moment
+		clearParticles();
+		distributeN(BENCHMARK_MINIMUM); //Make sure we start at the minimum
+		doBenchmarkIteration(c);					
+	}
+	
+	
 	private void timeBasic()
 	{
 		timeList(new NSquaredList(particles));
@@ -263,7 +365,7 @@ public class GUI implements ActionListener, PropertyChangeListener{
 		}
 		simulationCanvas.repaint();
 	}
-	public void distributeNRandomly()
+	private void distributeN()
 	{
 		try{
 			int N = Integer.parseInt(JOptionPane.showInputDialog(jFrame,"Number of particles to distribute"));
@@ -280,7 +382,7 @@ public class GUI implements ActionListener, PropertyChangeListener{
 	
 	public void clearParticles()
 	{
-		System.out.println("Clearing particles");
+		System.out.println("[GUI] Clearing particles");
 		particles.clear();
 		redraw();
 	}
@@ -300,7 +402,7 @@ public class GUI implements ActionListener, PropertyChangeListener{
 	
 	@Override
 	public void propertyChange(PropertyChangeEvent e) {
-		//If progress has been made
+        //If progress has been made
         if ("progress" == e.getPropertyName()) {
             int progress = (Integer) e.getNewValue();
             progressBar.setValue(progress);        
@@ -319,6 +421,20 @@ public class GUI implements ActionListener, PropertyChangeListener{
             	Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);  
             }
         }
+        //If we're benchmarking the next iteration
+        if(currentBenchmarkingTask != null){
+	        if ("state" == e.getPropertyName() && e.getSource().equals(currentBenchmarkingTask) && e.getNewValue().equals(SwingWorker.StateValue.DONE))
+	        {
+	        	if(particles.size() < BENCHMARK_MAXIMUM){
+	        		doBenchmarkIteration(benchmarkClass);
+	        	}else{
+	        		//We've benchmarked the last iteration
+	        		System.out.println("[GUI] Benchmarking complete");
+	        		benchmarkClass = null; //reset if for safety
+	        		currentBenchmarkingTask = null; //we use whether it is null or not as a way of telling if we're benchmarking at the moment
+	        	}
+	        }
+        }
 	}
 	
 	public void visualiseCharges(ArrayList<Double> charges)
@@ -336,7 +452,7 @@ public class GUI implements ActionListener, PropertyChangeListener{
 			if(Math.abs(d) > maxCharge && !Double.isInfinite(d))
 				maxCharge = Math.abs(d);
 		}
-		System.out.println("Max charge is "+maxCharge);
+		System.out.println("[GUI] Max charge is "+maxCharge);
 		
 		
 		for (int y=0;y<height;y++) {

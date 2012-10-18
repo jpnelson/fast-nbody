@@ -24,13 +24,14 @@ public class FastMultipoleList extends ParticleList{
 		super(particles);
 		this.windowSize = windowSize;
 		
-		
 		init();
 
 	}
 	
+	@Override
 	public void init()
 	{
+		initialised = true;
 		int lowestLevelBoxCount = (int)Math.pow(4.0, LEVEL_COUNT);
 		//2^n is the number of times we've split horizontally. (2^n)^2 = 4^n
 		int boxesOnSide = (int)Math.pow(2.0, LEVEL_COUNT);
@@ -44,16 +45,6 @@ public class FastMultipoleList extends ParticleList{
 		
 		//Form multipole expansions
 		lowestLevelMesh.formMultipoleExpansions(EXPANSION_TERMS);
-		//System.out.println(lowestLevelMesh.meshCells[14][11].multipoleExpansion);
-
-		
-//		for(int x = 0; x < meshes[LEVEL_COUNT-1].boxesOnSide; x++)
-//		{
-//			for(int y = 0; y < meshes[LEVEL_COUNT-1].boxesOnSide; y++)
-//			{
-//				
-//			}
-//		}
 		
 		//Save all the coarser meshes
 		int l = lowestLevelMesh.level;
@@ -65,8 +56,8 @@ public class FastMultipoleList extends ParticleList{
 		}
 		
 
-//		if(c.multipoleExpansion.getNumerators().get(0).re() != 0.0)
-//			System.out.println(l+" sum: "+x + " "+y + " " + c.getX() + " "+ c.getY() + "| "+c.multipoleExpansion+",...");
+		/*if(c.multipoleExpansion.getNumerators().get(0).re() != 0.0)
+			System.out.println(l+" sum: "+x + " "+y + " " + c.getX() + " "+ c.getY() + "| "+c.multipoleExpansion+",...");*/
 		
 		//Find the centers for each box
 		meshes[1].meshCells[0][0].psiBar = new LocalExpansion(EXPANSION_TERMS, meshes[1].getCellCenter(0, 0));
@@ -91,11 +82,7 @@ public class FastMultipoleList extends ParticleList{
 						sum = sum.add(cLocalExpand);//was thisCellCenter (20/9/12) TODO: check this line. Copied like Step 4
 					}
 					
-					
-					
 					thisCell.psi = sum.add(thisCell.psiBar);
-					
-					
 				}
 			}
 			for(int x = 0; x < meshes[l].boxesOnSide; x++)
@@ -111,19 +98,11 @@ public class FastMultipoleList extends ParticleList{
 					childTopRight.psiBar = thisCell.psi.shift(meshes[l+1].getCellCenter(x*2+1,y*2));
 					childBotLeft.psiBar = thisCell.psi.shift(meshes[l+1].getCellCenter(x*2  ,y*2+1));
 					childBotRight.psiBar = thisCell.psi.shift(meshes[l+1].getCellCenter(x*2+1,y*2+1));
-					
-//					if(x==3 && y==0 && l==2) //1,0 lvl 1 | 3,0 lvl 2 | 6,0 lvl 3| 12,1 lvl 4 | 25,3 lvl 5
-//					{
-//						System.out.println(thisCell.psi);
-//						//System.out.println(meshes[l+1].meshCells[x*2][y*2+1].psiBar);
-//					}
-					
 				}
 			}
 			
 		}
-
-
+		
 		//Step 4 (G&R)
 		//Compute interactions at the finest mesh level
 		for(int x = 0; x < meshes[LEVEL_COUNT].boxesOnSide; x++)
@@ -146,14 +125,6 @@ public class FastMultipoleList extends ParticleList{
 
 			}
 		}
-		//DEBUG
-//		for(int x = 0; x < meshes[LEVEL_COUNT].boxesOnSide; x++)
-//		{
-//			for(int y = 0; y < meshes[LEVEL_COUNT].boxesOnSide; y++)
-//			{
-//				//System.out.println("X: "+x+"Y: "+y+" "+meshes[LEVEL_COUNT].meshCells[x][y].psi.potential(new Complex(1.0,1.1)));
-//			}
-//		}
 	}
 	
 	public void debugDraw(Graphics g)
@@ -173,6 +144,7 @@ public class FastMultipoleList extends ParticleList{
 	//The actual procedure for calculating charges
 	@Override
 	public double potential(Complex position) {
+		if(!initialised) init();
 		double x = position.re();
 		double y = position.im();
 		int xIndex = (int) Math.floor(meshes[LEVEL_COUNT].boxesOnSide* (x / (double)(meshes[LEVEL_COUNT].meshSize.getWidth())));

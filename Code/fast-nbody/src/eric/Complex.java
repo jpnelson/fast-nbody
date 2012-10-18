@@ -95,11 +95,6 @@ public class Complex {
 		return re + " + " + im + "i" ;
 	}
 	
-	public static void main(String[] args) {
-		Complex z = new Complex(10.0,200000.0);
-		Complex z0 = new Complex(1.0,1.0);
-		System.out.println((z.sub(z0)).ln().scale(-1.0).re());		
-	}
 
 	public Complex neg() {
 		

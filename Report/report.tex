@@ -291,7 +291,7 @@ In a binary search
 \subsubsection{Fast Fourier Transformations}
 \cite{JTransform}
 The chosen library for Fast Fourier Transformations (Required for calculation of the reciprocal space potential) was the JTransforms library. \cite{JTransform}. This library has the advantage of being implemented in pure Java code, allowing simpler integration and debugging. The Fourier Transformation operation is the core of the run time for the \pmem{}, and so and optimised library is essential for performance reasons.
-\subsection{Optimisations}
+\subsection{Implementation analysis}
 \label{sec:optimisations}
 %_________________ FMA SECTION __________________
 \section{The Fast multipole algorithm}
@@ -324,6 +324,7 @@ These \emph{well separated} cells are the ones which we will use the expansions 
 \end{figure}
 
 \subsection{Mathematical description}
+\label{sec:fma_math}
 \subsubsection{Potential and the multipole expansion approximation}
 We describe the potential at a point $x_0 \in \mathbb{C}$ from the charge $q$ at $x \in \mathbb{C}$ by
 \begin{equation}
@@ -409,7 +410,9 @@ Return the cumulative potential\;
 \end{algorithm}
 
 \subsection{The implementation}
+A more object oriented approach was taken in the implementation of the \fma{} than in the \pmem{}. The primary classes the mathematics are \texttt{LocalExpansion.java} and \texttt{MultipoleExpansion.java}, which contain methods for creating, shifting, evaluating and storing the expansions described in Section \ref{sec:fma_math}.\\
 
+An object for a mesh is implemented in \texttt{Mesh.java}, which contains a 2D array of cells, defined in \texttt{Cell.java}. The \texttt{Mesh} class contains a function called \texttt{makeCoarserMesh()} which creates a coarser mesh, shifting and merging multipole expansion in the process. This coarser mesh is saved into an array of each mesh level, from the maximum depth, to zero.
 
 \chapter{Comparison of the algorithms}
 \label{chap:compare}

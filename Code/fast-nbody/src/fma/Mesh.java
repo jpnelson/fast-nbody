@@ -44,7 +44,7 @@ public class Mesh {
 		int yCoordinate = (int) Math.floor(p.getPosition().im() / (meshSize.getHeight() / (double)(boxesOnSide)));
 		
 		meshCells[xCoordinate][yCoordinate].add(p);
-		System.out.println(p.getPosition().toString() + " in cell "+xCoordinate+","+yCoordinate);
+		//System.out.println("[Mesh] "+p.getPosition().toString() + " in cell "+xCoordinate+","+yCoordinate);
 	}
 	
 	//When we're done adding particles we calculate multipole expansions for each box
@@ -55,10 +55,6 @@ public class Mesh {
 			for(int y = 0; y < boxesOnSide; y++)
 			{
 				meshCells[x][y].multipoleExpansion = new MultipoleExpansion(meshCells[x][y].particles,getCellCenter(x,y),numberOfTerms);
-//				if(x==14 && y==11)
-//				{
-//					System.out.println(meshCells[x][y].multipoleExpansion);
-//				}
 			}
 		}
 	}
@@ -193,12 +189,12 @@ public class Mesh {
 	}
 	public void print()
 	{
-		System.out.println("Multipole expansions: ");
+		System.out.println("[Mesh] Multipole expansions: ");
 		for(int x = 0; x < boxesOnSide; x++)
 		{
 			for(int y = 0; y < boxesOnSide; y++)
 			{
-				System.out.println("("+x+","+y+"): "+meshCells[x][y].multipoleExpansion);
+				System.out.println("[Mesh] ("+x+","+y+"): "+meshCells[x][y].multipoleExpansion);
 			}
 		}
 	}

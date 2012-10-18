@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import math.Complex;
 
 public abstract class ParticleList extends ArrayList<Particle>{
+	protected boolean initialised = false;
 	public ParticleList(ArrayList particles) {
 		this.addAll(particles);
 	}
@@ -22,6 +23,9 @@ public abstract class ParticleList extends ArrayList<Particle>{
 			p.draw(g);
 		}
 	}
+	//Don't put this in the constructor, as initialisation may take time that we wish to measure, so we call it when we want
+	//Will set initialised to true at the start
+	public abstract void init();
 		
 	public abstract double potential(Complex position);
 	

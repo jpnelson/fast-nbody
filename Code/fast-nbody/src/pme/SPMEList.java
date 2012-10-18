@@ -32,6 +32,7 @@ public class SPMEList extends ParticleList {
 	double[][] B; //The B Matrix (Essman[95])
 	double[][] debugMatrix;
 	Complex[][] convolutedMatrix;
+	Complex[][] inverseFTQComplex;
 	
 	public BSpline M;		//Order ASSIGNMENT_SCHEME_ORDER B spline
 	
@@ -59,10 +60,7 @@ public class SPMEList extends ParticleList {
 		}
 		this.addAll(unitParticles);
 		
-		//Initialize the bspline
-		M = new BSpline(ASSIGNMENT_SCHEME_ORDER);
-		M.fillBSPMod(CELL_SIDE_COUNT);
-		init();
+		//init(); we'll call it when needed
 	}
 
 	//subroutine ewaldcof from http://chem.skku.ac.kr/~wkpark/tutor/chem/tinker/source/kewald.f
@@ -95,49 +93,59 @@ public class SPMEList extends ParticleList {
 				xhi = x;
 			}
 		}
-		System.out.println("Chose ewald coefficient of "+x);
+		System.out.println("[SPMEList] Chose ewald coefficient of "+x);
 		return x;
 	}
-
-	private void init()
+	@Override
+	public void init()
 	{
+		initialised = true;
+		//Initialise the bspline
+		M = new BSpline(ASSIGNMENT_SCHEME_ORDER);
+		M.fillBSPMod(CELL_SIDE_COUNT);
+		
+		
 		initCellList();
 		initQMatrix();
+		invertQMatrixFFT();
+		getRecEnergy(); //Important part of the process, as it creates the convoluted matrix while calculating the energy.
 		//initBMatrix();
 		//initCMatrix();
 
 		//Starting Eq 4.7 Essman[95]
-//		double[][] BC = MatrixOperations.straightMultiply(B, C);
-//		DoubleFFT_2D fft = new DoubleFFT_2D(CELL_SIDE_COUNT,CELL_SIDE_COUNT);
-//		double[][] qInverseFT = MatrixOperations.copyMatrix(Q, 2*CELL_SIDE_COUNT);
-//		fft.realInverseFull(qInverseFT, false);
-//		Complex[][] product = MatrixOperations.straightMultiply(Complex.doubleToComplexArrayNoImaginaryPart(BC), Complex.doubleToComplexArray(qInverseFT));
-//		double[][] wideProduct = Complex.complexToDoubleArray(product);
-//		fft.complexForward(wideProduct);
-//		convolution = Complex.doubleToComplexArray(wideProduct);
-//
-//		theta = MatrixOperations.copyMatrix(BC, 2*CELL_SIDE_COUNT);
-//		fft.realForwardFull(theta);
-//		complexTheta = Complex.doubleToComplexArray(theta);
+		//The matrix approach (commented out currently)
+		/*double[][] BC = MatrixOperations.straightMultiply(B, C);
+		DoubleFFT_2D fft = new DoubleFFT_2D(CELL_SIDE_COUNT,CELL_SIDE_COUNT);
+		double[][] qInverseFT = MatrixOperations.copyMatrix(Q, 2*CELL_SIDE_COUNT);
+		fft.realInverseFull(qInverseFT, false);
+		Complex[][] product = MatrixOperations.straightMultiply(Complex.doubleToComplexArrayNoImaginaryPart(BC), Complex.doubleToComplexArray(qInverseFT));
+		double[][] wideProduct = Complex.complexToDoubleArray(product);
+		fft.complexForward(wideProduct);
+		convolution = Complex.doubleToComplexArray(wideProduct);
 
+		theta = MatrixOperations.copyMatrix(BC, 2*CELL_SIDE_COUNT);
+		fft.realForwardFull(theta);
+		complexTheta = Complex.doubleToComplexArray(theta);*/
 
-		System.out.println("Reciprocal energy: "+getRecEnergy());
-		System.out.println("Direct energy: "+getDirEnergy());
-		System.out.println("Self energy: "+getSelfEnergy());
-		System.out.println("Actual energy: "+getActualEnergy());
+		
+		//Useful properties for most simulations, but not for our purposes
+		/*System.out.println("[SPMEList] Reciprocal energy: "+getRecEnergy());
+		System.out.println("[SPMEList] Direct energy: "+getDirEnergy());
+		System.out.println("[SPMEList] Self energy: "+getSelfEnergy());
+		System.out.println("[SPMEList] Actual energy: "+getActualEnergy());*/
 		
 		//Forces
-		calculateRecForces();
+		/*calculateRecForces();
 		calculateDirForces();
-		System.out.println("-------");
-		System.out.println("Actual forces");
-		System.out.println("-------");
-		calculateActualForces();
+		System.out.println("[SPMEList] -------");
+		System.out.println("[SPMEList] Actual forces");
+		System.out.println("[SPMEList] -------");
+		calculateActualForces();*/
 	}
 
 
 	//Eq 4.6 Essman[95]
-	public void initQMatrix()
+	private void initQMatrix()
 	{
 		Q = new double[CELL_SIDE_COUNT][CELL_SIDE_COUNT];
 		for(int x = 0; x < CELL_SIDE_COUNT; x++)
@@ -164,7 +172,7 @@ public class SPMEList extends ParticleList {
 			}
 	}
 
-	public void initCellList(){
+	private void initCellList(){
 		cellList = new ArrayList[CELL_SIDE_COUNT][CELL_SIDE_COUNT];
 		for(int i = 0; i < CELL_SIDE_COUNT; i++)
 		{
@@ -188,7 +196,7 @@ public class SPMEList extends ParticleList {
 	
 	
 	//Requires getRecEnergy to have been called, which fills the convolutedMatrix
-	public void calculateRecForces(){
+	private void calculateRecForces(){
 		//Perform a FFT on convolutedMatrix to make theta * Q from B C F^-1(Q)
 		//Make IFTQ ourselves
 		DoubleFFT_2D fft = new DoubleFFT_2D(CELL_SIDE_COUNT,CELL_SIDE_COUNT);
@@ -221,7 +229,7 @@ public class SPMEList extends ParticleList {
 		
 	}
 	
-	public void calculateDirForces(){
+	private void calculateDirForces(){
 		for(Particle p : this)
 		{
 			for(Particle q : getNearParticles(p.getPosition(),directRange))
@@ -237,7 +245,7 @@ public class SPMEList extends ParticleList {
 					}
 				}
 			}
-			//System.out.println("Particle at "+p.getPosition()+" has force "+p.getForce());
+			//System.out.println("[SPMEList] Particle at "+p.getPosition()+" has force "+p.getForce());
 		}
 	}
 	
@@ -259,24 +267,24 @@ public class SPMEList extends ParticleList {
 					forces[i].y+= force.im();
 				}
 			}
-			//System.out.println("Particle at "+p.getPosition()+" has force ("+forces[i].x + ","+forces[i].y+")");
+			//System.out.println("[SPMEList] Particle at "+p.getPosition()+" has force ("+forces[i].x + ","+forces[i].y+")");
 			i++;
 		}
+	}
+	
+	private void invertQMatrixFFT(){
+		//Make IFTQ ourselves
+		DoubleFFT_2D fft = new DoubleFFT_2D(CELL_SIDE_COUNT,CELL_SIDE_COUNT);
+		double[][] inverseFTQDoubles = MatrixOperations.copyMatrix2D(Q, CELL_SIDE_COUNT*2);
+		fft.realInverseFull(inverseFTQDoubles, false);
+		inverseFTQComplex = Complex.doubleToComplexArray2D(inverseFTQDoubles); //IFT of Q
 	}
 	
 	//Requires Q to be initialised. C is implicitly calculated in here (part of eterm)
 	//B matrix is also calculated elsewhere, in BSpline at the moment
 	//Refer to page 191 of Lee[05]
 	private double getRecEnergy(){
-		//Fill the bspmod array
-		M.fillBSPMod(CELL_SIDE_COUNT);
-		
-		//Make IFTQ ourselves
-		DoubleFFT_2D fft = new DoubleFFT_2D(CELL_SIDE_COUNT,CELL_SIDE_COUNT);
-		double[][] inverseFTQDoubles = MatrixOperations.copyMatrix2D(Q, CELL_SIDE_COUNT*2);
-		fft.realInverseFull(inverseFTQDoubles, false);
-		Complex[][] inverseFTQComplex = Complex.doubleToComplexArray2D(inverseFTQDoubles); //IFT of Q
-		
+		invertQMatrixFFT();
 		debugMatrix = new double[CELL_SIDE_COUNT][CELL_SIDE_COUNT];
 		convolutedMatrix = new Complex[CELL_SIDE_COUNT][CELL_SIDE_COUNT];
 		//initiliaze the whole convolutedMatrix array to zero
@@ -369,7 +377,7 @@ public class SPMEList extends ParticleList {
 	}
 
 	//Uses a cell list method
-	public ArrayList<Particle> getNearParticles(Complex p, int range)
+	private ArrayList<Particle> getNearParticles(Complex p, int range)
 	{
 		int cellX = (int)Math.floor(p.re() / meshWidth);
 		int cellY = (int)Math.floor(p.im() / meshWidth);
@@ -415,6 +423,7 @@ public class SPMEList extends ParticleList {
 
 	@Override
 	public double potential(Complex position) { //position is in coordinates out of the original dimensions given
+		if(!initialised) init();
 		int i = (int)(position.re() / (windowSize.getWidth()) / meshWidth); //Need to translate into unit coordinates, then find it's grid coordinate
 		int j = (int)(position.im() / (windowSize.getHeight()) / meshWidth);
 		Complex sum = Complex.zero;
@@ -436,8 +445,7 @@ public class SPMEList extends ParticleList {
 		{
 			for(int j = 0; j < CELL_SIDE_COUNT; j++)
 			{
-				//g.setColor(Color.gray);
-				//g.drawRect((int)(i*512.0/CELL_SIDE_COUNT), (int)(j*512.0/CELL_SIDE_COUNT), (int)512.0/CELL_SIDE_COUNT, (int)512.0/CELL_SIDE_COUNT);
+				//Place code for debug drawing here
 			}
 		}
 	}
@@ -445,7 +453,6 @@ public class SPMEList extends ParticleList {
 	@Override
 	public void draw(Graphics2D g)
 	{
-		
 		for(Particle p : nonUnitParticles)
 		{
 			p.draw(g);

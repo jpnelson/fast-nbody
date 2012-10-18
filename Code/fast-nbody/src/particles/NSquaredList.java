@@ -29,6 +29,11 @@ public class NSquaredList extends ParticleList{
 		
 		return sum.re();
 	}
+	
+	@Override
+	public void init(){
+		initialised = true;
+	}
 
 	@Override
 	public void debugDraw(Graphics g) {

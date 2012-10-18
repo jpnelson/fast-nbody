@@ -55,7 +55,7 @@ public class CalculationTask extends SwingWorker<Void,Void>{
 
     		//Do nothing if it didn't work otherwise, when this procedure completes the error will be displayed in GUI propertyChange
     	}
-    	System.out.println("Calculation worker completed");
+    	System.out.println("[Calulation Task] Calculation worker completed");
         Toolkit.getDefaultToolkit().beep();
     }
 }

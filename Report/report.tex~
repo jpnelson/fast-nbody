@@ -99,7 +99,7 @@ The N body problem is common across the fields of physics, biology and chemistry
 \section{The $O(n^2)$ solution}
         
 %%%%%%%%FIGURE%%%%%%%%%%%%%
-\begin{figure}[h]
+\begin{figure}[H]
 \bcen \includegraphics{figures/nbodies.pdf} \ecen
 \caption{The na\"{\i}ve approach to the n body problem - calculate each interaction for each particle}
 \end{figure}
@@ -107,7 +107,7 @@ The N body problem is common across the fields of physics, biology and chemistry
 The simplest solution to the N body problem is the basic $O(n^2)$ approach of calculating each interaction directly. Pseudocode for the algorithm is given below.\\
 
 %%%%%PSEUDOCODE%%%%%%%%%
-\begin{algorithm}[h]
+\begin{algorithm}[H]
  \SetLine
  \KwData{$r_i$: particle positions, $q_i$: particle charges, N: number of particles, Q: output array of charges}
  \For{i=0 to N}{
@@ -141,7 +141,7 @@ The advantage of doing this is that $\phi_{\text{sr}}$, the short range term, ca
 \subsubsection{Real space computation}
 The short range potential at a point can be computed by considering only particles within a small radius of the point. We can keep the radius small as $\phi_{\text{sr}}$ converges quickly in real space. This is also important, as we need to keep the number of particles considered less than $N$, in order to reduce the algorithm from $O(n^2)$ complexity. This is the case though, as the radius we consider is constant and less than the size of the simulation cell width, and we assume the particles are distributed randomly within the simulation cell.
 %%%%%%%%FIGURE%%%%%%%%%%%%%
-\begin{figure}[h]
+\begin{figure}[H]
 \bcen \includegraphics{figures/cutoff.pdf} \ecen
 \caption{A particle and the particles that we consider it's interactions with, based on the cutoff distance}
 \end{figure}
@@ -151,7 +151,7 @@ The reciprocal space is the long range part of the potential computation, and wh
 
 Discrete fourier transformations require a discrete space to transform, however, our real space is continuous. So for this, we need to discretise the charges onto a grid. The approach taken in the original paper was to use Lagrangian interpolation to achieve this. Close mesh cells receive most of the charge from each particle, and this amount decreases to zero at some point, depending on the interpolation order. This is described in detail in Section \ref{sec:math_desc_lagrange}.\\
 %%%%%%%%FIGURE%%%%%%%%%%%%%
-\begin{figure}[h]
+\begin{figure}[H]
 \bcen \includegraphics[width=\textwidth]{figures/Qarray.jpg} \ecen
 \caption{A distribution of continuous charges, and an interpretation of them as discrete charges}
 \end{figure}
@@ -162,7 +162,7 @@ An alternative to using lagrange interpolation is to use cardinal B splines. Thi
 \subsubsection{Periodic boundary conditions}
 One advantage that the Particle Mesh Ewald method has is the ability to simulate \emph{Periodic Boundary Conditions} \cite{essmann:8577}. Periodic Boundary Conditions have a wrap around behaviour - that is, instead of treating the walls of the simulation unit as empty space, we can allow them to loop around to the other side of the box again, effectively allowing infinite replication of the simulation unit. This is helpful practically, as many applications are interested in the effects on a small portion of a large system \cite{toukmaji:73} (For example, simulation of water at a molecular scale). Simulating the entire system would be time consuming if not impossible, and simulating only a small portion without Periodic Boundary Conditions would produce unrealistic results (Molecules may disperse into empty space over time). While useful practically, Periodic Boundary Conditions do not change the complexity or performance, and as our interest is in a comparison with the \fma{}, we do not implement Periodic Boundary Conditions in this paper.
 %%%%%%%%FIGURE%%%%%%%%%%%%%
-\begin{figure}[h]
+\begin{figure}[H]
 \bcen \includegraphics[width=0.75\textwidth]{figures/pbc.pdf} \ecen
 \caption{A particle (in red) interacting with it's nearest neighbours, with periodic boundary conditions in one dimension (x axis)}
 \end{figure}
@@ -240,7 +240,7 @@ Where the $*$ indicates terms with $|r_j - r_i| > r_{\text{cut}}$ are left out o
 \subsubsection{Main particle mesh ewald flow}
 The basic flow of the algorithm is given below\\ \newline
 %%%%%PSEUDOCODE%%%%%%%%%
-\begin{algorithm}[h]
+\begin{algorithm}[H]
 \SetLine
 \KwData{$Q$: Charge assignment matrix, $r_{\text{cut}}$: Cutoff distance, $r$: position at which we calculate the potential}
 Initialise the ewald coefficient (Equation \ref{eq:ewald_coeff})\\
@@ -260,7 +260,7 @@ Combine the interpolated energy and directly computed energy
 \label{sec:verlet}
 The following algorithm utilises a list known as a \emph{Verlet list} to keep track of which particles are within a cutoff distance of each other, with only $O(n)$ complexity. It is used in the direct energy calculation of the \pmem{}\\
 %%%%%PSEUDOCODE%%%%%%%%%
-\begin{algorithm}[h]
+\begin{algorithm}[H]
 \SetLine
 \For{i=0 to N}{
     $\text{cell}_x := \lceil u_{xi} \rceil$; (With $u_{xi}$ the scaled fractional x coordinate, as defined in Equation \ref{eq:q_array}))\\
@@ -306,7 +306,7 @@ A multipole expansion is a function which is a sum of a series of terms, which c
 \subsubsection{The mesh}
 The mesh is similar to the one used in the \pmem{}. We say that the mesh has $n$ levels, and at each level we split each cell into quarters, starting with level $0$, which is the simulation cell. Each cell is split in four when moving down a level. We call the four sub cells of a cell $c$ the \emph{children} of $c$. Conversely, we call the cell that $c$ is a sub cell of the \emph{parent} of $c$.
 %%%%%%%%FIGURE%%%%%%%%%%%%%
-\begin{figure}[h]
+\begin{figure}[H]
 \bcen \includegraphics[width=0.35\textwidth]{figures/fma_mesh.pdf} \ecen
 \caption{A simulation cell, with meshes up to level 2 displayed, giving $2^n = 2^2 = 4$ boxes per side}
 \end{figure}
@@ -318,12 +318,13 @@ For a cell $c$, we call a cell $d$ \emph{Well separated} from $c$ if\\
 \newline
 These \emph{well separated} cells are the ones which we will use the expansions to calculate potential for. For cells that are not well separated, we will calculate interactions directly.
 %%%%%%%%FIGURE%%%%%%%%%%%%%
-\begin{figure}[h]
+\begin{figure}[H]
 \bcen \includegraphics[width=0.35\textwidth]{figures/wellsep.pdf} \ecen
 \caption{A cell, marked with a circle, and the squares that are well separated from it, marked with crosses.}
 \end{figure}
 
 \subsection{Mathematical description}
+\label{sec:fma_math}
 \subsubsection{Potential and the multipole expansion approximation}
 We describe the potential at a point $x_0 \in \mathbb{C}$ from the charge $q$ at $x \in \mathbb{C}$ by
 \begin{equation}
@@ -375,7 +376,7 @@ b_0 = \sum_{k=1} ^{\infty} \frac{a^k}{z^k_0} (-1)^k + a_0 \log(-z_0)
 \subsection{The algorithm}
 The basic flow of the algorithm is given below\\
 %%%%%PSEUDOCODE%%%%%%%%%
-\begin{algorithm}[h]
+\begin{algorithm}[H]
 \SetLine
 \KwData{level-count: the number of mesh levels we create, $P$: the set of particles, $r$: a point at which we wish to calculate the potential}
 \For{i=0 to level-count}{Initialise mesh[i] by adding all particles $p \in P$ to the appropriate cells}
@@ -409,7 +410,9 @@ Return the cumulative potential\;
 \end{algorithm}
 
 \subsection{The implementation}
+A more object oriented approach was taken in the implementation of the \fma{} than in the \pmem{}. The primary classes the mathematics are \texttt{LocalExpansion.java} and \texttt{MultipoleExpansion.java}, which contain methods for creating, shifting, evaluating and storing the expansions described in Section \ref{sec:fma_math}.\\
 
+An object for a mesh is implemented in \texttt{Mesh.java}, which contains a 2D array of cells, defined in \texttt{Cell.java}. The \texttt{Mesh} class contains a function called \texttt{makeCoarserMesh()} which creates a coarser mesh, shifting and merging multipole expansion in the process. This coarser mesh is saved into an array of each mesh level, from the maximum depth, to zero.
 
 \chapter{Comparison of the algorithms}
 \label{chap:compare}

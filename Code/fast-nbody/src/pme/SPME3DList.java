@@ -60,11 +60,7 @@ public class SPME3DList extends ParticleList {
 					p.getMass(),p.getCharge()));
 		}
 		//this.addAll(unitParticles); don't do this, use 3D particle list unitParticles from now on instead
-		
-		//Initialize the bspline
-		M = new BSpline(ASSIGNMENT_SCHEME_ORDER);
-		M.fillBSPMod(CELL_SIDE_COUNT);
-		init();
+		//init(); we'll call it manually
 	}
 
 	//subroutine ewaldcof from http://chem.skku.ac.kr/~wkpark/tutor/chem/tinker/source/kewald.f
@@ -97,33 +93,41 @@ public class SPME3DList extends ParticleList {
 				xhi = x;
 			}
 		}
-		System.out.println("Chose ewald coefficient of "+x);
+		System.out.println("[SPME3DList] Chose ewald coefficient of "+x);
 		return x;
 	}
 
-	private void init()
+	@Override
+	public void init()
 	{
+		initialised = true;
+		
+		//Initialise the bspline
+		M = new BSpline(ASSIGNMENT_SCHEME_ORDER);
+		M.fillBSPMod(CELL_SIDE_COUNT);
+		init();
+		
 		initCellList();
 		initQMatrix();
 		
 		//Energies
-		System.out.println("Reciprocal energy: "+getRecEnergy());
-		System.out.println("Direct energy: "+getDirEnergy());
-		System.out.println("Self energy: "+getSelfEnergy());
-		System.out.println("Actual energy: "+getActualEnergy());
+		System.out.println("[SPME3DList] Reciprocal energy: "+getRecEnergy());
+		System.out.println("[SPME3DList] Direct energy: "+getDirEnergy());
+		System.out.println("[SPME3DList] Self energy: "+getSelfEnergy());
+		System.out.println("[SPME3DList] Actual energy: "+getActualEnergy());
 		
 		//Forces
 		calculateRecForces();
 		calculateDirForces();
-		System.out.println("-------");
-		System.out.println("Actual forces");
-		System.out.println("-------");
+		System.out.println("[SPME3DList] -------");
+		System.out.println("[SPME3DList] Actual forces");
+		System.out.println("[SPME3DList] -------");
 		calculateActualForces();
 	}
 
 
 	//Eq 4.6 Essman[95]
-	public void initQMatrix()
+	private void initQMatrix()
 	{
 		Q = new double[CELL_SIDE_COUNT][CELL_SIDE_COUNT][CELL_SIDE_COUNT];
 		for(int x = 0; x < CELL_SIDE_COUNT; x++)
@@ -156,7 +160,7 @@ public class SPME3DList extends ParticleList {
 		}
 	}
 
-	public void initCellList(){
+	private void initCellList(){
 		cellList = new ArrayList[CELL_SIDE_COUNT][CELL_SIDE_COUNT][CELL_SIDE_COUNT];
 		for(int i = 0; i < CELL_SIDE_COUNT; i++)
 		{
@@ -184,7 +188,7 @@ public class SPME3DList extends ParticleList {
 	
 	
 	//Requires getRecEnergy to have been called, which fills the convolutedMatrix
-	public void calculateRecForces(){
+	private void calculateRecForces(){
 		//Perform a FFT on convolutedMatrix to make theta * Q from B C F^-1(Q)
 		//Make IFTQ ourselves
 		DoubleFFT_3D fft = new DoubleFFT_3D(CELL_SIDE_COUNT,CELL_SIDE_COUNT,CELL_SIDE_COUNT);
@@ -225,7 +229,7 @@ public class SPME3DList extends ParticleList {
 		
 	}
 	
-	public void calculateDirForces(){
+	private void calculateDirForces(){
 		for(Particle3D p : unitParticles)
 		{
 			for(Particle3D q : getNearParticles(p.getPosition(),directRange))
@@ -241,7 +245,7 @@ public class SPME3DList extends ParticleList {
 					}
 				}
 			}
-			System.out.println("Particle at "+p.getPosition()+" has force "+p.getForce());
+			System.out.println("[SPME3DList] Particle at "+p.getPosition()+" has force "+p.getForce());
 		}
 	}
 	
@@ -265,7 +269,7 @@ public class SPME3DList extends ParticleList {
 				}
 
 			}
-			System.out.println("Particle at "+q.getPosition()+" has force ("+forces[i].x + ","+forces[i].y+","+forces[i].z+")");
+			System.out.println("[SPME3DList] Particle at "+q.getPosition()+" has force ("+forces[i].x + ","+forces[i].y+","+forces[i].z+")");
 			i++;
 		}
 	}
@@ -386,7 +390,7 @@ public class SPME3DList extends ParticleList {
 	}
 	
 	//Uses a cell list method
-	public ArrayList<Particle3D> getNearParticles(Vector p, int range)
+	private ArrayList<Particle3D> getNearParticles(Vector p, int range)
 	{
 		int cellX = (int)Math.floor(p.x / meshWidth);
 		int cellY = (int)Math.floor(p.y / meshWidth);
@@ -446,9 +450,10 @@ public class SPME3DList extends ParticleList {
 
 	@Override
 	public double potential(Complex position) { //position is in coordinates out of the original dimensions given
-		int i = (int)(position.re() / (windowSize.getWidth()) / meshWidth); //Need to translate into unit coordinates, then find it's grid coordinate
-		int j = (int)(position.im() / (windowSize.getHeight()) / meshWidth);
-		Complex sum = Complex.zero;
+		if(!initialised) init();
+		/*int i = (int)(position.re() / (windowSize.getWidth()) / meshWidth); //Need to translate into unit coordinates, then find it's grid coordinate
+		int j = (int)(position.im() / (windowSize.getHeight()) / meshWidth); Was useful for computing the closest grid coord to a point for debugging*/
+		
 		Vector fracPosition = position.scale(1.0/windowSize.getWidth()).toVector();
 		double directEnergy=0;
 		
@@ -458,7 +463,7 @@ public class SPME3DList extends ParticleList {
 			directEnergy += erfTerm * particle.getCharge()/(r.mag());
 		}
 		double potentialAtPosition = interpolateMatrix(fracPosition,convolutedMatrix)*1e6+directEnergy;
-		if(fracPosition.x==0.5 && fracPosition.y==0) System.out.println(fracPosition.x+" "+fracPosition.y+" "+fracPosition.z+" "+potentialAtPosition);
+		if(fracPosition.x==0.5 && fracPosition.y==0) System.out.println("[SPME3DList] "+fracPosition.x+" "+fracPosition.y+" "+fracPosition.z+" "+potentialAtPosition);
 		return potentialAtPosition; //-interpolateMatrix(fracPosition,convolutedMatrix) + sum.re()
 	}
 
