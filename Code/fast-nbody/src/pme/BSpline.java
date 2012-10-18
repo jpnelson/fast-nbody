@@ -8,7 +8,8 @@ public class BSpline {
 	final int order;
 	public double[] bspmod;
 	Hashtable<Double, Double> evaluateValues = new Hashtable<Double, Double>(); //used to prevent re evaluation
-
+	public int hits=0;
+	public int misses=0;//Debug variables
 	public BSpline(int order)
 	{
 		this.order = order;
@@ -19,9 +20,13 @@ public class BSpline {
 	//Eq 4.1 Essman[95]
 	public double evaluate(double x)
 	{
-		if(evaluateValues.containsKey(x))
+		Double mx = evaluateValues.get(x);
+		if(mx != null)
 		{
-			return (Double) evaluateValues.get(x);
+			hits++;
+			return mx;
+		}else{
+			misses++;
 		}
 		double u = (double)x;
 		double n = (double)order;

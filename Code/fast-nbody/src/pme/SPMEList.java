@@ -109,6 +109,7 @@ public class SPMEList extends ParticleList {
 		initQMatrix();
 		invertQMatrixFFT();
 		getRecEnergy(); //Important part of the process, as it creates the convoluted matrix while calculating the energy.
+		System.out.println("[SPMEList] BSpline hit %"+100*(double)((double)(M.hits)/(double)(M.hits+M.misses)));
 		//initBMatrix();
 		//initCMatrix();
 
