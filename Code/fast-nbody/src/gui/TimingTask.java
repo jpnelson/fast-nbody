@@ -15,6 +15,7 @@ import particles.ParticleList;
  */
 public class TimingTask extends SwingWorker<Void,Void>{
 	int width,height;
+	static int BENCHMARK_REPS = 1;
 	ParticleList particleList;
 	GUI gui;
 	String outputFile="";
@@ -37,34 +38,67 @@ public class TimingTask extends SwingWorker<Void,Void>{
 	}
 	@Override
 	protected Void doInBackground() throws Exception {
-		setProgress(0);
-		int progress = 0;
-		//Calculate the charges
-		int i=0;
-		
-		long startTime = System.currentTimeMillis();
-		//Initialisation
-		particleList.init();
-		long endInitTime = System.currentTimeMillis();
-		for(Particle p : particleList){
-			particleList.potential(p.getPosition());
-			i++;
-			progress = (int) (100 * (double)i / (double)particleList.size()-1);
-			setProgress(Math.max(Math.min(progress, 100), 0));
+		boolean benchmarking = outputFile != ""; //This task is used for benchmarking and timing
+		int repetitions = benchmarking ? BENCHMARK_REPS : 1; //Only do one rep if we're timing
+		long[] initTimes = new long[repetitions];
+		long[] totalTimes = new long[repetitions];
+		for(int rep = 0; rep < repetitions; rep++){
+			setProgress(0);
+			int progress = 0;
+			//Calculate the charges
+			int i=0;
+			
+			long startTime = System.currentTimeMillis();
+			//Initialisation
+			particleList.init();
+			long endInitTime = System.currentTimeMillis();
+			for(Particle p : particleList){
+				particleList.potential(p.getPosition());
+				i++;
+				progress = (int) (100 * (double)i / (double)particleList.size()-1);
+				setProgress(Math.max(Math.min(progress, 100), 0)*(rep+1) / repetitions);
+			}
+			long endTime = System.currentTimeMillis();
+			
+			long initTime = (endInitTime-startTime);
+			long totalTime = (endTime-startTime);
+			
+			//Save each result in an array
+			initTimes[rep] = initTime;
+			totalTimes[rep] = totalTime;
+			System.out.println("[TimingTask] N="+particleList.size()+": Rep " +(rep+1)+"/"+repetitions);
 		}
-		long endTime = System.currentTimeMillis();
-		
-		long initTime = (endInitTime-startTime);
-		long totalTime = (endTime-startTime);
-		//Output to a file if one was specified, otherwise go to standard output
-		if(outputFile != ""){
-			PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(outputFile, true)));
-			out.println(particleList.size()+", "+totalTime+","+initTime);
-			out.close();
+			//Output to a file if one was specified, otherwise go to standard output
+			if(benchmarking){
+				PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(outputFile, true)));
+				if(repetitions > 1)
+				{
+					//Calculate the standard deviations for this rep
+					double totalStdDev = 0;
+					double initStdDev = 0;
+					for(int rep = 0; rep < repetitions; rep++)
+					{
+						totalStdDev += Math.abs(totalTimes[rep] - average(totalTimes)) / (double)repetitions; //Average distance from mean
+						initStdDev += Math.abs(initTimes[rep] - average(initTimes)) / (double)repetitions; //Average distance from mean
+					}
+					out.println(particleList.size()+","+average(totalTimes)+","+totalStdDev+","+average(initTimes)+","+initStdDev); //Only do 2 columns if there was 1 iteration
+
+				}else{
+					out.println(particleList.size()+","+totalTimes[0]+","+initTimes[0]); //Only do 2 columns if there was 1 iteration
+				}
+				out.close();
+			}
+			System.out.println("[Timing Task] N="+particleList.size()+"\t Total time: "+average(totalTimes) + 
+					"\t Initialisation time: "+average(initTimes)+" ms"); //If it's a timing task, the average will be the avg from one array
+	        return null;
+	}
+	
+	private static double average(long[] a){
+		double average = 0;
+		for(int i = 0; i < a.length; i++){
+			average += (double)a[i] / (double)(a.length);
 		}
-		System.out.println("[Timing Task] N="+particleList.size()+"\t Total time: "+totalTime + 
-				"\t Initialisation time: "+initTime+" ms");
-        return null;
+		return average;
 	}
 	
     @Override

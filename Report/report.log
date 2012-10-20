@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2012.5.5)  18 OCT 2012 18:56
+This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2012.5.5)  20 OCT 2012 18:33
 entering extended mode
  %&-line parsing enabled.
 **report.tex
@@ -342,35 +342,75 @@ Package: float 2001/11/08 v1.3d Float enhancements (AL)
 \float@box=\box36
 \@float@everytoks=\toks27
 \@floatcapt=\box37
+)
+(/usr/share/texmf-texlive/tex/latex/oberdiek/epstopdf.sty
+Package: epstopdf 2009/10/17 v2.4 Conversion with epstopdf on the fly (HO)
+
+(/usr/share/texmf-texlive/tex/latex/oberdiek/epstopdf-base.sty
+Package: epstopdf-base 2009/10/17 v2.4 Base part for package epstopdf
+
+(/usr/share/texmf-texlive/tex/latex/oberdiek/grfext.sty
+Package: grfext 2007/09/30 v1.0 Managing graphics extensions (HO)
+)
+
+Package epstopdf Warning: Shell escape feature is not enabled.
+
+Package grfext Info: Graphics extension search list:
+(grfext)             [.png,.pdf,.jpg,.mps,.jpeg,.jbig2,.jb2,.PNG,.PDF,.JPG,.JPE
+G,.JBIG2,.JB2,.eps]
+(grfext)             \AppendGraphicsExtensions on input line 433.
+(/usr/share/texmf-texlive/tex/latex/latexconfig/epstopdf-sys.cfg
+File: epstopdf-sys.cfg 2009/10/26 v1.1 Configuration of epstopdf for TeX Live
+)))
+(/usr/share/texmf-texlive/tex/latex/caption/caption.sty
+Package: caption 2009/10/09 v3.1k Customizing captions (AR)
+
+(/usr/share/texmf-texlive/tex/latex/caption/caption3.sty
+Package: caption3 2009/10/09 v3.1k caption3 kernel (AR)
+\captionmargin=\dimen135
+\captionmargin@=\dimen136
+\captionwidth=\dimen137
+\caption@indent=\dimen138
+\caption@parindent=\dimen139
+\caption@hangindent=\dimen140
+)
+\c@ContinuedFloat=\count117
+Package caption Info: float package is loaded.
+Package caption Info: hyperref package is loaded.
+)
+(/usr/share/texmf-texlive/tex/latex/caption/subcaption.sty
+Package: subcaption 2008/08/31 v1.0b Adding subcaptions (AR)
+\c@subfigure=\count118
+\c@subtable=\count119
 ) (./report.aux)
 \openout1 = `report.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 27.
-LaTeX Font Info:    ... okay on input line 27.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 27.
-LaTeX Font Info:    ... okay on input line 27.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 27.
-LaTeX Font Info:    ... okay on input line 27.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 27.
-LaTeX Font Info:    ... okay on input line 27.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 27.
-LaTeX Font Info:    ... okay on input line 27.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 27.
-LaTeX Font Info:    ... okay on input line 27.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 27.
-LaTeX Font Info:    ... okay on input line 27.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 30.
+LaTeX Font Info:    ... okay on input line 30.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 30.
+LaTeX Font Info:    ... okay on input line 30.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 30.
+LaTeX Font Info:    ... okay on input line 30.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 30.
+LaTeX Font Info:    ... okay on input line 30.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 30.
+LaTeX Font Info:    ... okay on input line 30.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 30.
+LaTeX Font Info:    ... okay on input line 30.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 30.
+LaTeX Font Info:    ... okay on input line 30.
 
 (/usr/share/texmf-texlive/tex/context/base/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count117
-\scratchdimen=\dimen135
+\scratchcounter=\count120
+\scratchdimen=\dimen141
 \scratchbox=\box38
-\nofMPsegments=\count118
-\nofMParguments=\count119
+\nofMPsegments=\count121
+\nofMParguments=\count122
 \everyMPshowfont=\toks28
-\MPscratchCnt=\count120
-\MPscratchDim=\dimen136
-\MPnumerator=\count121
+\MPscratchCnt=\count123
+\MPscratchDim=\dimen142
+\MPnumerator=\count124
 \everyMPtoPDFconversion=\toks29
 )
 *geometry detected driver: pdftex*
@@ -413,40 +453,42 @@ driver: pdftex
 \@twosidetrue \@mparswitchtrue 
 (1in=72.27pt, 1cm=28.45pt)
 -----------------------
-Package hyperref Info: Link coloring OFF on input line 27.
+Package hyperref Info: Link coloring OFF on input line 30.
 (/usr/share/texmf-texlive/tex/latex/hyperref/nameref.sty
 Package: nameref 2007/05/29 v2.31 Cross-referencing by name of section
 
 (/usr/share/texmf-texlive/tex/latex/oberdiek/refcount.sty
 Package: refcount 2008/08/11 v3.1 Data extraction from references (HO)
 )
-\c@section@level=\count122
+\c@section@level=\count125
 )
-LaTeX Info: Redefining \ref on input line 27.
-LaTeX Info: Redefining \pageref on input line 27.
+LaTeX Info: Redefining \ref on input line 30.
+LaTeX Info: Redefining \pageref on input line 30.
  (./report.out)
 (./report.out)
 \@outlinefile=\write3
 \openout3 = `report.out'.
 
 \AtBeginShipoutBox=\box39
- <logoWhite.png, id=71, 1317.92375pt x 515.9275pt>
+Package caption Info: Begin \AtBeginDocument code.
+Package caption Info: End \AtBeginDocument code.
+ <logoWhite.png, id=83, 1317.92375pt x 515.9275pt>
 File: logoWhite.png Graphic file (type png)
 
 <use logoWhite.png>
 
 LaTeX Font Warning: Font shape `OT1/cmr/bx/sc' undefined
-(Font)              using `OT1/cmr/bx/n' instead on input line 50.
+(Font)              using `OT1/cmr/bx/n' instead on input line 53.
 
 [1
 
 {/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map} <./logoWhite.png (PNG copy)
 >]
-LaTeX Font Info:    Try loading font information for U+msa on input line 85.
+LaTeX Font Info:    Try loading font information for U+msa on input line 88.
  (/usr/share/texmf-texlive/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2009/06/22 v3.00 AMS symbols A
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 85.
+LaTeX Font Info:    Try loading font information for U+msb on input line 88.
 
 (/usr/share/texmf-texlive/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2009/06/22 v3.00 AMS symbols B
@@ -454,7 +496,7 @@ File: umsb.fd 2009/06/22 v3.00 AMS symbols B
  been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.86 \end{abstract}
+l.89 \end{abstract}
                     [1] (./report.toc)
 \tf@toc=\write4
 \openout4 = `report.toc'.
@@ -464,7 +506,7 @@ l.86 \end{abstract}
 ]
 Chapter 1.
 
-Underfull \hbox (badness 10000) in paragraph at lines 93--94
+Underfull \hbox (badness 10000) in paragraph at lines 96--97
 
  []
 
@@ -474,110 +516,83 @@ Underfull \hbox (badness 10000) in paragraph at lines 93--94
 Chapter 2.
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 99.
+(hyperref)                removing `math shift' on input line 102.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `superscript' on input line 99.
+(hyperref)                removing `superscript' on input line 102.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 99.
+(hyperref)                removing `math shift' on input line 102.
 
 
 
 pdfTeX warning: pdflatex (file ./figures/nbodies.pdf): PDF inclusion: found PDF
  version <1.5>, but at most version <1.4> allowed
-<figures/nbodies.pdf, id=118, 161.32144pt x 188.4227pt>
+<figures/nbodies.pdf, id=133, 161.32144pt x 188.4227pt>
 File: figures/nbodies.pdf Graphic file (type pdf)
 
 <use figures/nbodies.pdf>
-Underfull \hbox (badness 10000) in paragraph at lines 107--108
+Underfull \hbox (badness 10000) in paragraph at lines 111--112
 
  []
 
 Package hyperref Info: bookmark level for unknown algocf defaults to 0 on input
- line 121.
+ line 125.
 
-Underfull \hbox (badness 10000) detected at line 122
+Underfull \hbox (badness 10000) detected at line 126
 [][]
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 110--123
+Underfull \hbox (badness 10000) in paragraph at lines 114--127
 
  []
 
 [4
 
-pdfTeX warning (ext4): destination with the same identifier (name{figure.2.1}) 
-has been already used, duplicate ignored
+ <./figures/nbodies.pdf>]
+<figures/graphs/basic_algo_complex.pdf, id=146, 587.19376pt x 442.65375pt>
+File: figures/graphs/basic_algo_complex.pdf Graphic file (type pdf)
 
-\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
-                                                  \fi \fi 
-l.125 
-       <./figures/nbodies.pdf>]
-<figures/cutoff.pdf, id=133, 350.04109pt x 210.8795pt>
+<use figures/graphs/basic_algo_complex.pdf> [5 <./figures/graphs/basic_algo_com
+plex.pdf>] <figures/cutoff.pdf, id=195, 350.04109pt x 210.8795pt>
 File: figures/cutoff.pdf Graphic file (type pdf)
 
 <use figures/cutoff.pdf>
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
- [5]
-Underfull \hbox (badness 10000) in paragraph at lines 150--151
+Underfull \hbox (badness 10000) in paragraph at lines 162--163
 
  []
 
-<figures/Qarray.jpg, id=145, 1031.855pt x 513.92pt>
+<figures/Qarray.jpg, id=198, 1031.855pt x 513.92pt>
 File: figures/Qarray.jpg Graphic file (type jpg)
  <use figures/Qarray.jpg>
-Underfull \hbox (badness 10000) in paragraph at lines 152--157
+Underfull \hbox (badness 10000) in paragraph at lines 164--169
 
  []
 
-[6pdfTeX warning (ext4): destination with the same identifier (name{figure.2.2}
-) has been already used, duplicate ignored
 
-\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
-                                                  \fi \fi 
-l.160 
-      pdfTeX warning (ext4): destination with the same identifier (name{figure.
-2.3}) has been already used, duplicate ignored
+Underfull \vbox (badness 2884) has occurred while \output is active []
 
-\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
-                                                  \fi \fi 
-l.160 
-       <./figures/cutoff.pdf> <./figures/Qarray.jpg>]
-<figures/pbc.pdf, id=159, 550.86449pt x 160.6pt>
+ [6 <./figures/cutoff.pdf>] <figures/pbc.pdf, id=213, 550.86449pt x 160.6pt>
 File: figures/pbc.pdf Graphic file (type pdf)
- <use figures/pbc.pdf>
-Underfull \hbox (badness 10000) in paragraph at lines 176--183
+
+<use figures/pbc.pdf>
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [7 <./figures/Qarray.jpg> <./figures/pbc.pdf>]
+Underfull \hbox (badness 10000) in paragraph at lines 188--195
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 188--190
-
- []
-
-[7pdfTeX warning (ext4): destination with the same identifier (name{figure.2.4}
-) has been already used, duplicate ignored
-
-\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
-                                                  \fi \fi 
-l.192 ...l{eq:primitive_rec_energy} \end{equation}
-                                                   <./figures/pbc.pdf>]
-Underfull \hbox (badness 10000) in paragraph at lines 192--198
+Underfull \hbox (badness 10000) in paragraph at lines 200--202
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 210--212
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 218--219
+Underfull \hbox (badness 10000) in paragraph at lines 204--210
 
  []
 
@@ -587,79 +602,86 @@ Underfull \hbox (badness 10000) in paragraph at lines 222--224
  []
 
 
-Underfull \hbox (badness 10000) detected at line 257
-[][]
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 241--258
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 241--258
+Underfull \hbox (badness 10000) in paragraph at lines 230--231
 
  []
 
 [8]
-Underfull \hbox (badness 10000) detected at line 277
+Underfull \hbox (badness 10000) in paragraph at lines 234--236
+
+ []
+
+
+Underfull \hbox (badness 10000) detected at line 269
 [][]
  []
 
-[9] <figures/fma_mesh.pdf, id=229, 402.85507pt x 477.75905pt>
+
+Underfull \hbox (badness 10000) in paragraph at lines 253--270
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 253--270
+
+ []
+
+
+Underfull \hbox (badness 10000) detected at line 289
+[][]
+ []
+
+
+Underfull \vbox (badness 4518) has occurred while \output is active []
+
+ [9]
+[10] <figures/fma_mesh.pdf, id=290, 402.85507pt x 477.75905pt>
 File: figures/fma_mesh.pdf Graphic file (type pdf)
 
 <use figures/fma_mesh.pdf>
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
- [10]
-<figures/wellsep.pdf, id=242, 321.77718pt x 322.12846pt>
+<figures/wellsep.pdf, id=292, 321.77718pt x 322.12846pt>
 File: figures/wellsep.pdf Graphic file (type pdf)
 
 <use figures/wellsep.pdf>
-Underfull \hbox (badness 10000) in paragraph at lines 315--324
+Underfull \hbox (badness 10000) in paragraph at lines 327--336
 
  []
 
-[11pdfTeX warning (ext4): destination with the same identifier (name{figure.2.5
-}) has been already used, duplicate ignored
 
-\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
-                                                  \fi \fi 
-l.338 \end{equation}
-                    pdfTeX warning (ext4): destination with the same identifier
- (name{figure.2.6}) has been already used, duplicate ignored
+Underfull \vbox (badness 2326) has occurred while \output is active []
 
-\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
-                                                  \fi \fi 
-l.338 \end{equation}
-                     <./figures/fma_mesh.pdf> <./figures/wellsep.pdf>]
-Underfull \hbox (badness 10000) detected at line 410
+ [11 <./figures/fma_mesh.pdf>] [12 <./figures/wellsep.pdf>]
+Underfull \hbox (badness 10000) detected at line 422
 [][]
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 377--411
+Underfull \hbox (badness 10000) in paragraph at lines 389--423
 
  []
 
 
-Underfull \vbox (badness 3623) has occurred while \output is active []
-
- [12]
-Underfull \hbox (badness 10000) in paragraph at lines 413--414
+Underfull \hbox (badness 10000) in paragraph at lines 425--426
 
  []
 
-[13]
+[13] <figures/graphs/fma_0_5000.pdf, id=343, 587.19376pt x 442.65375pt>
+File: figures/graphs/fma_0_5000.pdf Graphic file (type pdf)
+
+<use figures/graphs/fma_0_5000.pdf>
+<figures/graphs/fma_2k_20k.pdf, id=344, 587.19376pt x 442.65375pt>
+File: figures/graphs/fma_2k_20k.pdf Graphic file (type pdf)
+
+<use figures/graphs/fma_2k_20k.pdf> [14 <./figures/graphs/fma_0_5000.pdf> <./fi
+gures/graphs/fma_2k_20k.pdf>]
 Chapter 3.
-[14
+[15
 
 ]
 Chapter 4.
-(./report.bbl [15
+(./report.bbl [16
 
-]) [16
+]) [17
 
 ] (./report.aux)
 
@@ -667,10 +689,10 @@ LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
  ) 
 Here is how much of TeX's memory you used:
- 7102 strings out of 495061
- 96791 string characters out of 1182622
- 207050 words of memory out of 3000000
- 10064 multiletter control sequences out of 15000+50000
+ 8177 strings out of 495061
+ 116483 string characters out of 1182622
+ 230591 words of memory out of 3000000
+ 11110 multiletter control sequences out of 15000+50000
  12143 words of font info for 46 fonts, out of 3000000 for 9000
  28 hyphenation exceptions out of 8191
  38i,22n,39p,1087b,393s stack positions out of 5000i,500n,10000p,200000b,50000s
@@ -690,9 +712,9 @@ usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/share/t
 exmf-texlive/fonts/type1/public/amsfonts/cm/cmti7.pfb></usr/share/texmf-texlive
 /fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/share/texmf-texlive/fonts/type
 1/public/amsfonts/symbols/msbm10.pfb>
-Output written on report.pdf (17 pages, 2396024 bytes).
+Output written on report.pdf (18 pages, 2441576 bytes).
 PDF statistics:
- 384 PDF objects out of 1000 (max. 8388607)
- 93 named destinations out of 1000 (max. 500000)
- 172 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 530 PDF objects out of 1000 (max. 8388607)
+ 98 named destinations out of 1000 (max. 500000)
+ 211 words of extra memory for PDF output out of 10000 (max. 10000000)
 

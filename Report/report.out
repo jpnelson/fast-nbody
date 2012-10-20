@@ -2,16 +2,19 @@
 \BOOKMARK [1][-]{section.1.1}{The N body problem}{chapter.1}
 \BOOKMARK [0][-]{chapter.2}{Algorithms for the n body problem}{}
 \BOOKMARK [1][-]{section.2.1}{The O\(n2\) solution}{chapter.2}
+\BOOKMARK [2][-]{subsection.2.1.1}{The algorithm}{section.2.1}
+\BOOKMARK [2][-]{subsection.2.1.2}{Implementation analysis}{section.2.1}
 \BOOKMARK [1][-]{section.2.2}{The particle mesh ewald method}{chapter.2}
 \BOOKMARK [2][-]{subsection.2.2.1}{Background}{section.2.2}
 \BOOKMARK [2][-]{subsection.2.2.2}{Mathematical description}{section.2.2}
 \BOOKMARK [2][-]{subsection.2.2.3}{The algorithm}{section.2.2}
 \BOOKMARK [2][-]{subsection.2.2.4}{The implementation}{section.2.2}
-\BOOKMARK [2][-]{subsection.2.2.5}{Optimisations}{section.2.2}
+\BOOKMARK [2][-]{subsection.2.2.5}{Implementation analysis}{section.2.2}
 \BOOKMARK [1][-]{section.2.3}{The Fast multipole algorithm}{chapter.2}
 \BOOKMARK [2][-]{subsection.2.3.1}{Background}{section.2.3}
 \BOOKMARK [2][-]{subsection.2.3.2}{Mathematical description}{section.2.3}
 \BOOKMARK [2][-]{subsection.2.3.3}{The algorithm}{section.2.3}
 \BOOKMARK [2][-]{subsection.2.3.4}{The implementation}{section.2.3}
+\BOOKMARK [2][-]{subsection.2.3.5}{Implementation analysis}{section.2.3}
 \BOOKMARK [0][-]{chapter.3}{Comparison of the algorithms}{}
 \BOOKMARK [0][-]{chapter.4}{Discussion}{}

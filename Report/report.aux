@@ -25,91 +25,98 @@
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \@writefile{toc}{\contentsline {section}{\numberline {2.1}The $O(n^2)$ solution}{4}{section.2.1}}
-\@writefile{lof}{\contentsline {figure}{\numberline {2.1}{\ignorespaces The na\"{\i }ve approach to the n body problem - calculate each interaction for each particle}}{4}{figure.2.1}}
-\@writefile{loa}{\contentsline {algocf}{\numberline {1}{\ignorespaces The basic approach to the N body problem}}{4}{algocf.1}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.1.1}The algorithm}{4}{subsection.2.1.1}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.1}{\ignorespaces The na\"{\i }ve approach to the n body problem - calculate each interaction for each particle\relax }}{4}{figure.caption.2}}
+\@writefile{loa}{\contentsline {algocf}{\numberline {1}{\ignorespaces The basic approach to the N body problem\relax }}{4}{algocfline.1}}
 \citation{petersen:3668}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.1.2}Implementation analysis}{5}{subsection.2.1.2}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.2}{\ignorespaces The basic algorithm's run time compared to a function of $N^2$. It is easy to see that the basic algorithms run time grows proportionally to $N^2$, as we would expect from it's complexity class $O(n^2)$\relax }}{5}{figure.caption.3}}
 \@writefile{toc}{\contentsline {section}{\numberline {2.2}The particle mesh ewald method}{5}{section.2.2}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.2.1}Background}{5}{subsection.2.2.1}}
-\@writefile{toc}{\contentsline {subsubsection}{Potential vs. Energy}{5}{section*.2}}
-\@writefile{toc}{\contentsline {subsubsection}{Ewald summation}{5}{section*.3}}
-\@writefile{toc}{\contentsline {subsubsection}{Real space computation}{5}{section*.4}}
+\@writefile{toc}{\contentsline {subsubsection}{Potential vs. Energy}{5}{section*.4}}
+\@writefile{toc}{\contentsline {subsubsection}{Ewald summation}{5}{section*.5}}
+\@writefile{toc}{\contentsline {subsubsection}{Real space computation}{6}{section*.6}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.3}{\ignorespaces A particle and the particles that we consider it's interactions with, based on the cutoff distance\relax }}{6}{figure.caption.7}}
+\@writefile{toc}{\contentsline {subsubsection}{Reciprocal space computation}{6}{section*.8}}
 \citation{essmann:8577}
-\@writefile{lof}{\contentsline {figure}{\numberline {2.2}{\ignorespaces A particle and the particles that we consider it's interactions with, based on the cutoff distance}}{6}{figure.2.2}}
-\@writefile{toc}{\contentsline {subsubsection}{Reciprocal space computation}{6}{section*.5}}
-\@writefile{lof}{\contentsline {figure}{\numberline {2.3}{\ignorespaces A distribution of continuous charges, and an interpretation of them as discrete charges}}{6}{figure.2.3}}
 \citation{essmann:8577}
 \citation{toukmaji:73}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.4}{\ignorespaces A distribution of continuous charges, and an interpretation of them as discrete charges\relax }}{7}{figure.caption.9}}
+\@writefile{toc}{\contentsline {subsubsection}{Periodic boundary conditions}{7}{section*.10}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.5}{\ignorespaces A particle (in red) interacting with it's nearest neighbours, with periodic boundary conditions in one dimension (x axis)\relax }}{7}{figure.caption.11}}
 \citation{essmann:8577}
-\@writefile{toc}{\contentsline {subsubsection}{Periodic boundary conditions}{7}{section*.6}}
-\@writefile{lof}{\contentsline {figure}{\numberline {2.4}{\ignorespaces A particle (in red) interacting with it's nearest neighbours, with periodic boundary conditions in one dimension (x axis)}}{7}{figure.2.4}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.2.2}Mathematical description}{7}{subsection.2.2.2}}
-\@writefile{toc}{\contentsline {subsubsection}{Interpolating the charges to the Q array}{7}{section*.7}}
-\newlabel{sec:math_desc_lagrange}{{2.2.2}{7}{Interpolating the charges to the Q array\relax }{section*.7}{}}
-\newlabel{eq:q_array}{{2.1}{7}{Interpolating the charges to the Q array\relax }{equation.2.2.1}{}}
-\@writefile{toc}{\contentsline {subsubsection}{Calculating electrostatic potential from the Q array}{7}{section*.8}}
 \citation{essmann:8577}
 \citation{essmann:8577}
 \citation{essmann:8577}
 \citation{lee05}
 \citation{darden:10089}
 \citation{essmann:8577}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2.2}Mathematical description}{8}{subsection.2.2.2}}
+\@writefile{toc}{\contentsline {subsubsection}{Interpolating the charges to the Q array}{8}{section*.12}}
+\newlabel{sec:math_desc_lagrange}{{2.2.2}{8}{Interpolating the charges to the Q array\relax }{section*.12}{}}
+\newlabel{eq:q_array}{{2.1}{8}{Interpolating the charges to the Q array\relax }{equation.2.2.1}{}}
+\@writefile{toc}{\contentsline {subsubsection}{Calculating electrostatic potential from the Q array}{8}{section*.13}}
+\newlabel{eq:primitive_rec_energy}{{2.2}{8}{Calculating electrostatic potential from the Q array\relax }{equation.2.2.2}{}}
+\newlabel{eq:energy_rec}{{2.3}{8}{Calculating electrostatic potential from the Q array\relax }{equation.2.2.3}{}}
+\@writefile{toc}{\contentsline {subsubsection}{Interpolating energies back from the grid in real space}{8}{section*.14}}
+\newlabel{sec:interpolate_from_grid}{{2.2.2}{8}{Interpolating energies back from the grid in real space\relax }{section*.14}{}}
+\newlabel{eq:interpoalte_from_grid}{{2.4}{8}{Interpolating energies back from the grid in real space\relax }{equation.2.2.4}{}}
 \citation{essmann:8577}
 \citation{essmann:8577}
 \citation{lee05}
-\newlabel{eq:primitive_rec_energy}{{2.2}{8}{Calculating electrostatic potential from the Q array\relax }{equation.2.2.2}{}}
-\newlabel{eq:energy_rec}{{2.3}{8}{Calculating electrostatic potential from the Q array\relax }{equation.2.2.3}{}}
-\@writefile{toc}{\contentsline {subsubsection}{Interpolating energies back from the grid in real space}{8}{section*.9}}
-\newlabel{sec:interpolate_from_grid}{{2.2.2}{8}{Interpolating energies back from the grid in real space\relax }{section*.9}{}}
-\newlabel{eq:interpoalte_from_grid}{{2.4}{8}{Interpolating energies back from the grid in real space\relax }{equation.2.2.4}{}}
-\@writefile{toc}{\contentsline {subsubsection}{The ewald coefficient}{8}{section*.10}}
-\newlabel{eq:ewald_coeff}{{2.5}{8}{The ewald coefficient\relax }{equation.2.2.5}{}}
-\newlabel{eq:energy_dir}{{2.6}{8}{The ewald coefficient\relax }{equation.2.2.6}{}}
-\newlabel{eq:energy_dir_noerfc}{{2.7}{8}{The ewald coefficient\relax }{equation.2.2.7}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.2.3}The algorithm}{8}{subsection.2.2.3}}
-\@writefile{toc}{\contentsline {subsubsection}{Main particle mesh ewald flow}{8}{section*.11}}
+\@writefile{toc}{\contentsline {subsubsection}{The ewald coefficient}{9}{section*.15}}
+\newlabel{eq:ewald_coeff}{{2.5}{9}{The ewald coefficient\relax }{equation.2.2.5}{}}
+\newlabel{eq:energy_dir}{{2.6}{9}{The ewald coefficient\relax }{equation.2.2.6}{}}
+\newlabel{eq:energy_dir_noerfc}{{2.7}{9}{The ewald coefficient\relax }{equation.2.2.7}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2.3}The algorithm}{9}{subsection.2.2.3}}
+\@writefile{toc}{\contentsline {subsubsection}{Main particle mesh ewald flow}{9}{section*.16}}
+\@writefile{toc}{\contentsline {subsubsection}{Verlet list algorithm}{9}{section*.17}}
+\newlabel{sec:verlet}{{2.2.3}{9}{Verlet list algorithm\relax }{section*.17}{}}
 \citation{JTransform}
 \citation{JTransform}
-\@writefile{toc}{\contentsline {subsubsection}{Verlet list algorithm}{9}{section*.12}}
-\newlabel{sec:verlet}{{2.2.3}{9}{Verlet list algorithm\relax }{section*.12}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.2.4}The implementation}{9}{subsection.2.2.4}}
-\@writefile{toc}{\contentsline {subsubsection}{The Cardinal B Spline}{9}{section*.13}}
-\@writefile{toc}{\contentsline {subsubsection}{Calculating the ewald coefficient}{9}{section*.14}}
 \citation{Ihler04}
-\citation{greengard:315}
-\@writefile{toc}{\contentsline {subsubsection}{Fast Fourier Transformations}{10}{section*.15}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.2.5}Optimisations}{10}{subsection.2.2.5}}
-\newlabel{sec:optimisations}{{2.2.5}{10}{Optimisations\relax }{subsection.2.2.5}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2.4}The implementation}{10}{subsection.2.2.4}}
+\@writefile{toc}{\contentsline {subsubsection}{The Cardinal B Spline}{10}{section*.18}}
+\@writefile{toc}{\contentsline {subsubsection}{Calculating the ewald coefficient}{10}{section*.19}}
+\@writefile{toc}{\contentsline {subsubsection}{Fast Fourier Transformations}{10}{section*.20}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2.5}Implementation analysis}{10}{subsection.2.2.5}}
+\newlabel{sec:optimisations}{{2.2.5}{10}{Implementation analysis\relax }{subsection.2.2.5}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {2.3}The Fast multipole algorithm}{10}{section.2.3}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.3.1}Background}{10}{subsection.2.3.1}}
-\@writefile{toc}{\contentsline {subsubsection}{Complex plane}{10}{section*.16}}
-\@writefile{toc}{\contentsline {subsubsection}{Multipole expansions}{10}{section*.17}}
-\@writefile{toc}{\contentsline {subsubsection}{The mesh}{10}{section*.18}}
 \citation{greengard:315}
-\@writefile{lof}{\contentsline {figure}{\numberline {2.5}{\ignorespaces A simulation cell, with meshes up to level 2 displayed, giving $2^n = 2^2 = 4$ boxes per side}}{11}{figure.2.5}}
-\@writefile{toc}{\contentsline {subsubsection}{Well separated cells}{11}{section*.19}}
-\@writefile{lof}{\contentsline {figure}{\numberline {2.6}{\ignorespaces A cell, marked with a circle, and the squares that are well separated from it, marked with crosses.}}{11}{figure.2.6}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.3.2}Mathematical description}{11}{subsection.2.3.2}}
-\newlabel{sec:fma_math}{{2.3.2}{11}{Mathematical description\relax }{subsection.2.3.2}{}}
-\@writefile{toc}{\contentsline {subsubsection}{Potential and the multipole expansion approximation}{11}{section*.20}}
-\newlabel{eq:potential}{{2.8}{11}{Potential and the multipole expansion approximation\relax }{equation.2.3.8}{}}
+\@writefile{toc}{\contentsline {subsubsection}{Complex plane}{11}{section*.21}}
+\@writefile{toc}{\contentsline {subsubsection}{Multipole expansions}{11}{section*.22}}
+\@writefile{toc}{\contentsline {subsubsection}{The mesh}{11}{section*.23}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.6}{\ignorespaces A simulation cell, with meshes up to level 2 displayed, giving $2^n = 2^2 = 4$ boxes per side\relax }}{11}{figure.caption.24}}
+\@writefile{toc}{\contentsline {subsubsection}{Well separated cells}{11}{section*.25}}
 \citation{greengard:315}
+\citation{greengard:315}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.7}{\ignorespaces A cell, marked with a circle, and the squares that are well separated from it, marked with crosses.\relax }}{12}{figure.caption.26}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3.2}Mathematical description}{12}{subsection.2.3.2}}
+\newlabel{sec:fma_math}{{2.3.2}{12}{Mathematical description\relax }{subsection.2.3.2}{}}
+\@writefile{toc}{\contentsline {subsubsection}{Potential and the multipole expansion approximation}{12}{section*.27}}
+\newlabel{eq:potential}{{2.8}{12}{Potential and the multipole expansion approximation\relax }{equation.2.3.8}{}}
 \newlabel{eq:multipole_expansion}{{2.9}{12}{Potential and the multipole expansion approximation\relax }{equation.2.3.9}{}}
-\@writefile{toc}{\contentsline {subsubsection}{Shifting multipole expansions}{12}{section*.21}}
+\@writefile{toc}{\contentsline {subsubsection}{Shifting multipole expansions}{12}{section*.28}}
 \newlabel{eq:pre_shift_multipole}{{2.11}{12}{Shifting multipole expansions\relax }{equation.2.3.11}{}}
 \newlabel{eq:shifted_multipole}{{2.12}{12}{Shifting multipole expansions\relax }{equation.2.3.12}{}}
 \newlabel{eq:b_descr}{{2.13}{12}{Shifting multipole expansions\relax }{equation.2.3.13}{}}
-\@writefile{toc}{\contentsline {subsubsection}{Local expansions}{12}{section*.22}}
-\newlabel{local_expansion}{{2.14}{12}{Local expansions\relax }{equation.2.3.14}{}}
-\newlabel{where_local_expansion}{{2.15}{12}{Local expansions\relax }{equation.2.3.15}{}}
+\@writefile{toc}{\contentsline {subsubsection}{Local expansions}{13}{section*.29}}
+\newlabel{local_expansion}{{2.14}{13}{Local expansions\relax }{equation.2.3.14}{}}
+\newlabel{where_local_expansion}{{2.15}{13}{Local expansions\relax }{equation.2.3.15}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.3.3}The algorithm}{13}{subsection.2.3.3}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.3.4}The implementation}{13}{subsection.2.3.4}}
-\@writefile{toc}{\contentsline {chapter}{\numberline {3}Comparison of the algorithms}{14}{chapter.3}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3.5}Implementation analysis}{14}{subsection.2.3.5}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.8}{\ignorespaces The Fast Multipole Algorithm's performance over the group of systems in the range 0 to 5,000 particles, and 0 to 20,000.\relax }}{14}{figure.caption.30}}
+\providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
+\newlabel{fig:fma_complex}{{2.8}{14}{The \fma 's performance over the group of systems in the range 0 to 5,000 particles, and 0 to 20,000.\relax \relax }{figure.caption.30}{}}
+\@writefile{toc}{\contentsline {chapter}{\numberline {3}Comparison of the algorithms}{15}{chapter.3}}
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\newlabel{chap:compare}{{3}{14}{Comparison of the algorithms\relax }{chapter.3}{}}
+\newlabel{chap:compare}{{3}{15}{Comparison of the algorithms\relax }{chapter.3}{}}
 \bibstyle{plain}
 \bibdata{references}
-\@writefile{toc}{\contentsline {chapter}{\numberline {4}Discussion}{15}{chapter.4}}
+\@writefile{toc}{\contentsline {chapter}{\numberline {4}Discussion}{16}{chapter.4}}
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \bibcite{toukmaji:73}{1}

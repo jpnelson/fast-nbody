@@ -109,9 +109,8 @@ public class SPMEList extends ParticleList {
 		initQMatrix();
 		invertQMatrixFFT();
 		getRecEnergy(); //Important part of the process, as it creates the convoluted matrix while calculating the energy.
-		System.out.println("[SPMEList] BSpline hit %"+100*(double)((double)(M.hits)/(double)(M.hits+M.misses)));
-		//initBMatrix();
-		//initCMatrix();
+		calculateRecForces(); //Also important as it does the forward fourier transformation.
+		System.out.println("[SPMEList] BSpline hit ratio: "+100*(double)((double)(M.hits)/(double)(M.hits+M.misses))+"%");
 
 		//Starting Eq 4.7 Essman[95]
 		//The matrix approach (commented out currently)
@@ -146,7 +145,7 @@ public class SPMEList extends ParticleList {
 
 
 	//Eq 4.6 Essman[95]
-	private void initQMatrix()
+	public void initQMatrix()
 	{
 		Q = new double[CELL_SIDE_COUNT][CELL_SIDE_COUNT];
 		for(int x = 0; x < CELL_SIDE_COUNT; x++)
@@ -173,7 +172,7 @@ public class SPMEList extends ParticleList {
 			}
 	}
 
-	private void initCellList(){
+	public void initCellList(){
 		cellList = new ArrayList[CELL_SIDE_COUNT][CELL_SIDE_COUNT];
 		for(int i = 0; i < CELL_SIDE_COUNT; i++)
 		{
@@ -285,7 +284,6 @@ public class SPMEList extends ParticleList {
 	//B matrix is also calculated elsewhere, in BSpline at the moment
 	//Refer to page 191 of Lee[05]
 	private double getRecEnergy(){
-		invertQMatrixFFT();
 		debugMatrix = new double[CELL_SIDE_COUNT][CELL_SIDE_COUNT];
 		convolutedMatrix = new Complex[CELL_SIDE_COUNT][CELL_SIDE_COUNT];
 		//initiliaze the whole convolutedMatrix array to zero
@@ -312,8 +310,6 @@ public class SPMEList extends ParticleList {
 			
 			int y = ind / CELL_SIDE_COUNT + 1;
 			int x = ind - (y - 1) * CELL_SIDE_COUNT + 1;
-//			double mXPrime = (0 <= x && x <= CELL_SIDE_COUNT/2)? x : x - CELL_SIDE_COUNT;
-//			double mYPrime = (0 <= y && y <= CELL_SIDE_COUNT/2)? y : y - CELL_SIDE_COUNT;
 			int mXPrime = x - 1;
 			if (x > midPoint) {
 				mXPrime = x - 1 - CELL_SIDE_COUNT;
@@ -378,7 +374,7 @@ public class SPMEList extends ParticleList {
 	}
 
 	//Uses a cell list method
-	private ArrayList<Particle> getNearParticles(Complex p, int range)
+	public ArrayList<Particle> getNearParticles(Complex p, int range)
 	{
 		int cellX = (int)Math.floor(p.re() / meshWidth);
 		int cellY = (int)Math.floor(p.im() / meshWidth);

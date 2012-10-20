@@ -39,8 +39,8 @@ public class GUI implements ActionListener, PropertyChangeListener{
 	
 	//Benchmarking
 	static int BENCHMARK_INCREMENT = 1000;
-	static int BENCHMARK_MAXIMUM = 10000;
-	static int BENCHMARK_MINIMUM = 5000;
+	static int BENCHMARK_MAXIMUM = 20000;
+	static int BENCHMARK_MINIMUM = 0;
 	TimingTask currentBenchmarkingTask;
 	Class<? extends ParticleList> benchmarkClass;
 	String currentBenchmarkLogFileName;

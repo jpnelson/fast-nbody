@@ -10,7 +10,6 @@ import math.Complex;
 import math.MatrixOperations;
 import particles.NSquaredList;
 import particles.Particle;
-import pme.PMEList;
 import fma.MultipoleExpansion;
 
 

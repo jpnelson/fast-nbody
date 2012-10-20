@@ -1,0 +1,11 @@
+set format "$%g$"
+set title "The $O(n^2)$ algorithm"
+set xlabel "Simulation size (particles)"
+set ylabel "Running time (ms)"
+set border 3
+set xtics nomirror
+set ytics nomirror
+set terminal latex
+set output "basic_algo_complex.tex"
+set size 1,2
+plot "basic_algo_complex.csv" using 1:2   #Plot the data

@@ -13,6 +13,9 @@
 \usepackage{graphicx}
 \usepackage{hyperref}
 \usepackage{float}
+\usepackage{epstopdf}
+\usepackage{caption}
+\usepackage{subcaption}
 \newcommand{\hilight}[1]{\colorbox{yellow}{#1}}
 \newcommand{\TODO}{\hilight{NOT DONE}}
 \newcommand{\hs}{$\hspace{0.5cm}$}
@@ -97,6 +100,7 @@ The N body problem is common across the fields of physics, biology and chemistry
 %_____________ALGORITHMS CHAPTER________________
 \chapter{Algorithms for the n body problem}
 \section{The $O(n^2)$ solution}
+\subsection{The algorithm}
         
 %%%%%%%%FIGURE%%%%%%%%%%%%%
 \begin{figure}[H]
@@ -122,6 +126,14 @@ The simplest solution to the N body problem is the basic $O(n^2)$ approach of ca
 \end{algorithm}
 
 The advantages to the $O(n^2)$ approach are it's simplicity, ease of implementation, and it's low overhead. However, it's primary disadvantage is that it is limited to small numbers of particles by it's $O(n^2)$ complexity. These advantages and disadvantages are further discussed in Chapter \ref{chap:compare}
+
+\subsection{Implementation analysis}
+The $O(n^2)$ algorithm was run on increasing system sizes for one time step, and the time taken to calculate the potential at each atom's position was calculated. It is easy to turn this process into a dynamic simulation, using the relationship between potential energy, a particle's charge, and force.
+%%%%%%%%FIGURE%%%%%%%%%%%%%
+\begin{figure}[H]
+\bcen \includegraphics[width=0.75\textwidth]{figures/graphs/basic_algo_complex.pdf} \ecen
+\caption{The basic algorithm's run time compared to a function of $N^2$. It is easy to see that the basic algorithms run time grows proportionally to $N^2$, as we would expect from it's complexity class $O(n^2)$}
+\end{figure}
 
 %_____________PME Section________________
 \section{The particle mesh ewald method}
@@ -213,7 +225,7 @@ That is, with $r = (r_x,r_y)$, which has scaled fractional coordinates $(u_x,u_y
 \label{eq:interpoalte_from_grid}
 E(r_x,r_y) = \sum _{i,j = -n} ^{n} Q(\lfloor u_{x+i} \rfloor,\lfloor u_{y+j} \rfloor) * M_n(u_x - \lfloor u_{x+i} \rfloor) * M_n(u_y - \lfloor u_{y+j} \rfloor)
 \end{equation}
-
+This equation iterates over cells within our interpolation order $n$, and calculates the weighting we ascribe to the cell ($ M_n(u_x - \lfloor u_{x+i} \rfloor) * M_n(u_y - \lfloor u_{y+j} \rfloor$, a real number in the range $[0,1]$). Summing the proportion of the grid charge assignments, we produce B Spline interpolated values from the grid.
 \subsubsection{The ewald coefficient}
 The ewald coefficient, $\beta$, is a number describing the ratio between the real space and the reciprocal space contributions to the calculation of the total energy. In practice, it depends on the tolerance $\epsilon_\text{tol}$, and our desired cutoff distance $r_{\text{cut}}$ in the following way, \cite{darden:10089} \cite{essmann:8577}\\
 \begin{equation}
@@ -291,7 +303,7 @@ In a binary search
 \subsubsection{Fast Fourier Transformations}
 \cite{JTransform}
 The chosen library for Fast Fourier Transformations (Required for calculation of the reciprocal space potential) was the JTransforms library. \cite{JTransform}. This library has the advantage of being implemented in pure Java code, allowing simpler integration and debugging. The Fourier Transformation operation is the core of the run time for the \pmem{}, and so and optimised library is essential for performance reasons.
-\subsection{Optimisations}
+\subsection{Implementation analysis}
 \label{sec:optimisations}
 %_________________ FMA SECTION __________________
 \section{The Fast multipole algorithm}
@@ -413,6 +425,16 @@ Return the cumulative potential\;
 A more object oriented approach was taken in the implementation of the \fma{} than in the \pmem{}. The primary classes the mathematics are \texttt{LocalExpansion.java} and \texttt{MultipoleExpansion.java}, which contain methods for creating, shifting, evaluating and storing the expansions described in Section \ref{sec:fma_math}.\\
 
 An object for a mesh is implemented in \texttt{Mesh.java}, which contains a 2D array of cells, defined in \texttt{Cell.java}. The \texttt{Mesh} class contains a function called \texttt{makeCoarserMesh()} which creates a coarser mesh, shifting and merging multipole expansion in the process. This coarser mesh is saved into an array of each mesh level, from the maximum depth, to zero.
+
+\subsection{Implementation analysis}
+The \fma{} was run over the class of problems with sizes in the range [0,5000] with an increment of 250, and [0, 20000] with an increment of 1000. The results are shown in Figure \ref{fig:fma_complex}
+%%%%%%%%FIGURE%%%%%%%%%%%%%
+\begin{figure}[H]
+\includegraphics[width=0.49\textwidth]{figures/graphs/fma_0_5000.pdf}
+\includegraphics[width=0.49\textwidth]{figures/graphs/fma_2k_20k.pdf}
+\caption{The \fma's performance over the group of systems in the range 0 to 5,000 particles, and 0 to 20,000.}
+\label{fig:fma_complex}
+\end{figure}
 
 \chapter{Comparison of the algorithms}
 \label{chap:compare}

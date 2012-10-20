@@ -1,13 +1,13 @@
 package pme;
 
-import java.util.Hashtable;
+import java.util.HashMap;
 
 import math.Complex;
 
 public class BSpline {
 	final int order;
 	public double[] bspmod;
-	Hashtable<Double, Double> evaluateValues = new Hashtable<Double, Double>(); //used to prevent re evaluation
+	HashMap<Double, Double> evaluateValues = new HashMap<Double, Double>(); //used to prevent re evaluation
 	public int hits=0;
 	public int misses=0;//Debug variables
 	public BSpline(int order)

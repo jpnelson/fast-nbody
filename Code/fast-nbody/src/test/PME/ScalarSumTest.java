@@ -75,10 +75,7 @@ public class ScalarSumTest {
 			double d_2 = inverseFTQComplex[k1-1][k2-1].im();
 			double struc2 = d_1 * d_1 + d_2 * d_2;
 			energy += eterm * struc2;
-			if(k1==35 && k2==1)
-			{
-				System.out.println("ASDF");
-			}
+			
 			System.out.println("SST: "+k1+" "+k2+" "+energy);
 		}
 		System.out.println("ENERGY "+energy * .5);
