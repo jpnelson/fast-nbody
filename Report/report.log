@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2012.5.5)  21 OCT 2012 18:47
+This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2012.5.5)  21 OCT 2012 18:59
 entering extended mode
  %&-line parsing enabled.
 **report.tex
@@ -488,7 +488,7 @@ LaTeX Info: Redefining \pageref on input line 30.
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: subfigure package is loaded.
 Package caption Info: End \AtBeginDocument code.
- <logoWhite.png, id=87, 1317.92375pt x 515.9275pt>
+ <logoWhite.png, id=91, 1317.92375pt x 515.9275pt>
 File: logoWhite.png Graphic file (type png)
 
 <use logoWhite.png>
@@ -546,7 +546,7 @@ Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
 
 pdfTeX warning: pdflatex (file ./figures/nbodies.pdf): PDF inclusion: found PDF
  version <1.5>, but at most version <1.4> allowed
-<figures/nbodies.pdf, id=138, 161.32144pt x 188.4227pt>
+<figures/nbodies.pdf, id=143, 161.32144pt x 188.4227pt>
 File: figures/nbodies.pdf Graphic file (type pdf)
 
 <use figures/nbodies.pdf>
@@ -569,11 +569,11 @@ Underfull \hbox (badness 10000) in paragraph at lines 114--127
 [4
 
  <./figures/nbodies.pdf>]
-<figures/graphs/basic_algo_complex.pdf, id=151, 587.19376pt x 442.65375pt>
+<figures/graphs/basic_algo_complex.pdf, id=156, 587.19376pt x 442.65375pt>
 File: figures/graphs/basic_algo_complex.pdf Graphic file (type pdf)
 
 <use figures/graphs/basic_algo_complex.pdf> [5 <./figures/graphs/basic_algo_com
-plex.pdf>] <figures/cutoff.pdf, id=200, 350.04109pt x 210.8795pt>
+plex.pdf>] <figures/cutoff.pdf, id=205, 350.04109pt x 210.8795pt>
 File: figures/cutoff.pdf Graphic file (type pdf)
 
 <use figures/cutoff.pdf>
@@ -581,7 +581,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 163--164
 
  []
 
-<figures/Qarray.jpg, id=203, 1031.855pt x 513.92pt>
+<figures/Qarray.jpg, id=208, 1031.855pt x 513.92pt>
 File: figures/Qarray.jpg Graphic file (type jpg)
  <use figures/Qarray.jpg>
 Underfull \hbox (badness 10000) in paragraph at lines 165--170
@@ -591,7 +591,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 165--170
 
 Underfull \vbox (badness 2884) has occurred while \output is active []
 
- [6 <./figures/cutoff.pdf>] <figures/pbc.pdf, id=218, 550.86449pt x 160.6pt>
+ [6 <./figures/cutoff.pdf>] <figures/pbc.pdf, id=223, 550.86449pt x 160.6pt>
 File: figures/pbc.pdf Graphic file (type pdf)
 
 <use figures/pbc.pdf>
@@ -651,15 +651,15 @@ Underfull \hbox (badness 10000) detected at line 290
 Underfull \vbox (badness 4518) has occurred while \output is active []
 
  [9]
-[10] <figures/fma_mesh.pdf, id=297, 402.85507pt x 477.75905pt>
+[10] <figures/fma_mesh.pdf, id=299, 402.85507pt x 477.75905pt>
 File: figures/fma_mesh.pdf Graphic file (type pdf)
 
 <use figures/fma_mesh.pdf>
-<figures/wellsep.pdf, id=299, 321.77718pt x 322.12846pt>
+<figures/wellsep.pdf, id=301, 321.77718pt x 322.12846pt>
 File: figures/wellsep.pdf Graphic file (type pdf)
 
 <use figures/wellsep.pdf>
-Underfull \hbox (badness 10000) in paragraph at lines 331--340
+Underfull \hbox (badness 10000) in paragraph at lines 329--338
 
  []
 
@@ -667,29 +667,29 @@ Underfull \hbox (badness 10000) in paragraph at lines 331--340
 Underfull \vbox (badness 2326) has occurred while \output is active []
 
  [11 <./figures/fma_mesh.pdf>] [12 <./figures/wellsep.pdf>]
-Underfull \hbox (badness 10000) detected at line 427
+Underfull \hbox (badness 10000) detected at line 425
 [][]
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 394--428
+Underfull \hbox (badness 10000) in paragraph at lines 392--426
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 430--431
+Underfull \hbox (badness 10000) in paragraph at lines 428--429
 
  []
 
-[13] <figures/graphs/fma_0_5000.pdf, id=350, 587.19376pt x 442.65375pt>
+[13] <figures/graphs/fma_0_5000.pdf, id=352, 587.19376pt x 442.65375pt>
 File: figures/graphs/fma_0_5000.pdf Graphic file (type pdf)
 
 <use figures/graphs/fma_0_5000.pdf>
-<figures/graphs/fma_2k_20k.pdf, id=351, 587.19376pt x 442.65375pt>
+<figures/graphs/fma_2k_20k.pdf, id=353, 587.19376pt x 442.65375pt>
 File: figures/graphs/fma_2k_20k.pdf Graphic file (type pdf)
 
 <use figures/graphs/fma_2k_20k.pdf>
-Underfull \hbox (badness 10000) in paragraph at lines 448--449
+Underfull \hbox (badness 10000) in paragraph at lines 446--447
 
  []
 
@@ -1184,23 +1184,23 @@ Missing character: There is no   in font cmr10!
 Missing character: There is no Â in font cmr10!
 Missing character: There is no   in font cmr10!
 
-Overfull \hbox (4.94688pt too wide) in paragraph at lines 453--462
+Overfull \hbox (4.94688pt too wide) in paragraph at lines 451--460
 [][]
  []
 
 [14 <./figures/graphs/fma_0_5000.pdf> <./figures/graphs/fma_2k_20k.pdf>]
-<figures/graphs/fma_mesh_acc.pdf, id=451, 587.19376pt x 442.65375pt>
+<figures/graphs/fma_mesh_acc.pdf, id=453, 587.19376pt x 442.65375pt>
 File: figures/graphs/fma_mesh_acc.pdf Graphic file (type pdf)
 
 <use figures/graphs/fma_mesh_acc.pdf>
-<figures/graphs/fma_fixed_mesh_acc.pdf, id=455, 587.19376pt x 442.65375pt>
+<figures/graphs/fma_fixed_mesh_acc.pdf, id=457, 587.19376pt x 442.65375pt>
 File: figures/graphs/fma_fixed_mesh_acc.pdf Graphic file (type pdf)
 
 <use figures/graphs/fma_fixed_mesh_acc.pdf>
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [15 <./figures/graphs/fma_mesh_acc.pdf>]
-<figures/graphs/fma_terms_acc.pdf, id=509, 587.19376pt x 442.65375pt>
+<figures/graphs/fma_terms_acc.pdf, id=511, 587.19376pt x 442.65375pt>
 File: figures/graphs/fma_terms_acc.pdf Graphic file (type pdf)
 
 <use figures/graphs/fma_terms_acc.pdf>
@@ -1224,9 +1224,9 @@ LaTeX Font Warning: Some font shapes were not available, defaults substituted.
  ) 
 Here is how much of TeX's memory you used:
  8309 strings out of 495061
- 118518 string characters out of 1182622
- 232594 words of memory out of 3000000
- 11219 multiletter control sequences out of 15000+50000
+ 118530 string characters out of 1182622
+ 232599 words of memory out of 3000000
+ 11220 multiletter control sequences out of 15000+50000
  12442 words of font info for 47 fonts, out of 3000000 for 9000
  28 hyphenation exceptions out of 8191
  38i,22n,39p,1087b,393s stack positions out of 5000i,500n,10000p,200000b,50000s
@@ -1247,9 +1247,9 @@ mf-texlive/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/share/texmf-texlive/
 fonts/type1/public/amsfonts/cm/cmti7.pfb></usr/share/texmf-texlive/fonts/type1/
 public/amsfonts/cm/cmtt10.pfb></usr/share/texmf-texlive/fonts/type1/public/amsf
 onts/symbols/msbm10.pfb>
-Output written on report.pdf (21 pages, 2507796 bytes).
+Output written on report.pdf (21 pages, 2507942 bytes).
 PDF statistics:
- 715 PDF objects out of 1000 (max. 8388607)
- 113 named destinations out of 1000 (max. 500000)
- 234 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 717 PDF objects out of 1000 (max. 8388607)
+ 112 named destinations out of 1000 (max. 500000)
+ 242 words of extra memory for PDF output out of 10000 (max. 10000000)
 

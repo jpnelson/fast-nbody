@@ -103,7 +103,7 @@ public class SPMEList extends ParticleList {
 		//Initialise the bspline
 		M = new BSpline(ASSIGNMENT_SCHEME_ORDER);
 		M.fillBSPMod(CELL_SIDE_COUNT);
-		
+		M.fillBSplineCoefficients(this, CELL_SIDE_COUNT);
 		
 		initCellList();
 		initQMatrix();
@@ -153,6 +153,7 @@ public class SPMEList extends ParticleList {
 			for(int y = 0; y < CELL_SIDE_COUNT; y++)
 			{
 					double sum = 0;
+					int pIndex = 0;
 					for(Particle p : this)
 					{
 						double particleX,particleY,particleZ;
@@ -162,8 +163,8 @@ public class SPMEList extends ParticleList {
 						double uX = (CELL_SIDE_COUNT) * (particleX / 1.0);//Unit cell already in fractional coordinates
 						double uY = (CELL_SIDE_COUNT) * (particleY / 1.0);
 						//Removed periodic images? Seems to be off by a grid cell in x/y? FIXME?
-						double a = M.evaluate(uX-x);
-						double b = M.evaluate(uY-y);
+						double a = M.evaluate(pIndex,(int) (Math.floor(uX)-x),true);
+						double b = M.evaluate(pIndex,(int) (Math.floor(uY)-y),false);
 						sum += p.getCharge() * a * b;
 					}
 					Q[x][y] = sum;
@@ -203,7 +204,7 @@ public class SPMEList extends ParticleList {
 		double[][] convolutedDoubles = Complex.complexToDoubleArray2D(convolutedMatrix);
 		fft.complexForward(convolutedDoubles);
 		convolutedMatrix = Complex.doubleToComplexArray2D(convolutedDoubles); //F(B C F^-1(Q)) Pg. 182 Lee[05]
-		
+		int pIndex = 0;
 		for(Particle p : this){
 			//Pg 183 Lee[05]
 			//For each grid point that this particle has been interpolated to
@@ -219,12 +220,13 @@ public class SPMEList extends ParticleList {
 					int thisY = particleCellY + dy;
 					if(thisX >= 0 && thisY >= 0 && thisX < CELL_SIDE_COUNT && thisY < CELL_SIDE_COUNT)
 					{
-						double dQdx = p.getCharge() * M.evaluateDerivative(uX - thisX) * M.evaluate(uY - thisY);
-						double dQdy = p.getCharge() * M.evaluate(uX - thisX) * M.evaluateDerivative(uY - thisY);
+						double dQdx = p.getCharge() * M.evaluateDerivative(uX - thisX) * M.evaluate(pIndex,Math.abs(dx),true);
+						double dQdy = p.getCharge() * M.evaluate(pIndex,Math.abs(dy),false) * M.evaluateDerivative(uY - thisY);
 						p.addToForce(-dQdx * convolutedMatrix[thisX][thisY].re(), -dQdy * convolutedMatrix[thisX][thisY].re()); //FIXME .re()?
 					}
 				}
 			}
+			pIndex++;
 		}
 		
 	}

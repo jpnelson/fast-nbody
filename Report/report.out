@@ -9,7 +9,8 @@
 \BOOKMARK [2][-]{subsection.2.2.2}{Mathematical description}{section.2.2}
 \BOOKMARK [2][-]{subsection.2.2.3}{The algorithm}{section.2.2}
 \BOOKMARK [2][-]{subsection.2.2.4}{The implementation}{section.2.2}
-\BOOKMARK [2][-]{subsection.2.2.5}{Implementation analysis}{section.2.2}
+\BOOKMARK [2][-]{subsection.2.2.5}{Running time analysis}{section.2.2}
+\BOOKMARK [2][-]{subsection.2.2.6}{Accuracy analysis}{section.2.2}
 \BOOKMARK [1][-]{section.2.3}{The Fast multipole algorithm}{chapter.2}
 \BOOKMARK [2][-]{subsection.2.3.1}{Background}{section.2.3}
 \BOOKMARK [2][-]{subsection.2.3.2}{Mathematical description}{section.2.3}

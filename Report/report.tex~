@@ -302,7 +302,6 @@ The ewald coefficient is calculated by means of a binary search for a coefficien
 \]
 In a binary search
 \subsubsection{Fast Fourier Transformations}
-\cite{JTransform}
 The chosen library for Fast Fourier Transformations (Required for calculation of the reciprocal space potential) was the JTransforms library. \cite{JTransform}. This library has the advantage of being implemented in pure Java code, allowing simpler integration and debugging. The Fourier Transformation operation is the core of the run time for the \pmem{}, and so and optimised library is essential for performance reasons.
 \subsection{Implementation analysis}
 \subsubsection{Running time analysis}
@@ -496,7 +495,9 @@ Next we examine the effect the number of terms we truncate our multipole expansi
 \label{fig:fma_terms_acc}
 \end{figure}
 
-From figure \ref{fig:fma_terms_acc} we see that the accuracy of the \fma increases exponentially as we increase the number of terms in our expansion. The improvement in accuracy as we increase the number of expansion terms decreases after $N \approx 20$, however, as we approach the machine precision
+From figure \ref{fig:fma_terms_acc} we see that the accuracy of the \fma increases exponentially as we increase the number of terms in our expansion. The improvement in accuracy as we increase the number of expansion terms decreases after $N \approx 20$, however, as we approach the machine precision.
+
+%TODO: show the effect these parameters have on the running time?
 
 \chapter{Comparison of the algorithms}
 \label{chap:compare}

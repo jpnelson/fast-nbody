@@ -302,11 +302,9 @@ The ewald coefficient is calculated by means of a binary search for a coefficien
 \]
 In a binary search
 \subsubsection{Fast Fourier Transformations}
-\cite{JTransform}
 The chosen library for Fast Fourier Transformations (Required for calculation of the reciprocal space potential) was the JTransforms library. \cite{JTransform}. This library has the advantage of being implemented in pure Java code, allowing simpler integration and debugging. The Fourier Transformation operation is the core of the run time for the \pmem{}, and so and optimised library is essential for performance reasons.
-\subsection{Implementation analysis}
-\subsubsection{Running time analysis}
-\subsubsection{Accuracy analysis}
+\subsection{Running time analysis}
+\subsection{Accuracy analysis}
 \label{sec:optimisations}
 %_________________ FMA SECTION __________________
 \section{The Fast multipole algorithm}

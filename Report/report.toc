@@ -24,24 +24,23 @@
 \contentsline {subsubsection}{The Cardinal B Spline}{10}{section*.18}
 \contentsline {subsubsection}{Calculating the ewald coefficient}{10}{section*.19}
 \contentsline {subsubsection}{Fast Fourier Transformations}{10}{section*.20}
-\contentsline {subsection}{\numberline {2.2.5}Implementation analysis}{10}{subsection.2.2.5}
-\contentsline {subsubsection}{Running time analysis}{10}{section*.21}
-\contentsline {subsubsection}{Accuracy analysis}{10}{section*.22}
+\contentsline {subsection}{\numberline {2.2.5}Running time analysis}{10}{subsection.2.2.5}
+\contentsline {subsection}{\numberline {2.2.6}Accuracy analysis}{10}{subsection.2.2.6}
 \contentsline {section}{\numberline {2.3}The Fast multipole algorithm}{10}{section.2.3}
 \contentsline {subsection}{\numberline {2.3.1}Background}{10}{subsection.2.3.1}
-\contentsline {subsubsection}{Complex plane}{11}{section*.23}
-\contentsline {subsubsection}{Multipole expansions}{11}{section*.24}
-\contentsline {subsubsection}{The mesh}{11}{section*.25}
-\contentsline {subsubsection}{Well separated cells}{11}{section*.27}
+\contentsline {subsubsection}{Complex plane}{11}{section*.21}
+\contentsline {subsubsection}{Multipole expansions}{11}{section*.22}
+\contentsline {subsubsection}{The mesh}{11}{section*.23}
+\contentsline {subsubsection}{Well separated cells}{11}{section*.25}
 \contentsline {subsection}{\numberline {2.3.2}Mathematical description}{12}{subsection.2.3.2}
-\contentsline {subsubsection}{Potential and the multipole expansion approximation}{12}{section*.29}
-\contentsline {subsubsection}{Shifting multipole expansions}{12}{section*.30}
-\contentsline {subsubsection}{Local expansions}{13}{section*.31}
+\contentsline {subsubsection}{Potential and the multipole expansion approximation}{12}{section*.27}
+\contentsline {subsubsection}{Shifting multipole expansions}{12}{section*.28}
+\contentsline {subsubsection}{Local expansions}{13}{section*.29}
 \contentsline {subsection}{\numberline {2.3.3}The algorithm}{13}{subsection.2.3.3}
 \contentsline {subsection}{\numberline {2.3.4}The implementation}{13}{subsection.2.3.4}
 \contentsline {subsection}{\numberline {2.3.5}Running time analysis}{14}{subsection.2.3.5}
 \contentsline {subsection}{\numberline {2.3.6}Accuracy analysis}{15}{subsection.2.3.6}
-\contentsline {subsubsection}{Maximum mesh level}{15}{section*.34}
-\contentsline {subsubsection}{Number of terms}{16}{section*.37}
+\contentsline {subsubsection}{Maximum mesh level}{15}{section*.32}
+\contentsline {subsubsection}{Number of terms}{16}{section*.35}
 \contentsline {chapter}{\numberline {3}Comparison of the algorithms}{18}{chapter.3}
 \contentsline {chapter}{\numberline {4}Discussion}{19}{chapter.4}

@@ -6,6 +6,7 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import pme.BSpline;
+import pme.FastBSpline;
 
 public class SplineTest {
 	@Test
@@ -16,6 +17,14 @@ public class SplineTest {
 		spline2.fillBSPMod(64);
 		//System.out.println(spline2.bspmod[1]);
 		assertTrue(spline1.evaluate(1)==1);
+	}
+	
+	@Test
+	public void fastBSpline()
+	{
+		FastBSpline fM = new FastBSpline(4);
+		fM.fillBSpline(0);
+		System.out.println("FM: "+fM.c[2]);
 	}
 	
 	@Test

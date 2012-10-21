@@ -2,24 +2,44 @@ package pme;
 
 import java.util.HashMap;
 
+import particles.Particle;
+import particles.ParticleList;
+
 import math.Complex;
 
 public class BSpline {
 	final int order;
 	public double[] bspmod;
 	HashMap<Double, Double> evaluateValues = new HashMap<Double, Double>(); //used to prevent re evaluation
+	public double[][][] bsplineCoefficients; //An array the size of particles, with the bspline coefficients for each particle saved
 	public int hits=0;
 	public int misses=0;//Debug variables
+	FastBSpline fastBSpline;
 	public BSpline(int order)
 	{
 		this.order = order;
+		fastBSpline = new FastBSpline(order);
 	}
 	
-	
-	//TODO: this is pretty inefficient
-	//Eq 4.1 Essman[95]
-	public double evaluate(double x)
+	public void fillBSplineCoefficients(ParticleList particleList, int K) //K is CELL_SIDE_COUNT
 	{
+		int i = 0;
+		bsplineCoefficients = new double[particleList.size()][2][order+1];
+		for(Particle p : particleList)
+		{
+			double uX = particleList.get(i).getPosition().re() * K;
+			double uY = particleList.get(i).getPosition().im() * K;
+			fastBSpline.fillBSpline(uX - Math.floor(uX));
+			bsplineCoefficients[i][0] = fastBSpline.c;//x
+			fastBSpline.fillBSpline(uY - Math.floor(uY));
+			bsplineCoefficients[i][1] = fastBSpline.c;//y
+			i++;
+		}
+	}
+	
+	public double evaluate(double x) //overloaded so we can evaluate anywhere, not just at the particle positions
+	{
+		
 		Double mx = evaluateValues.get(x);
 		if(mx != null)
 		{
@@ -28,6 +48,7 @@ public class BSpline {
 		}else{
 			misses++;
 		}
+		
 		double u = (double)x;
 		double n = (double)order;
 		//Base case
@@ -44,6 +65,41 @@ public class BSpline {
 		return value;
 	}
 	
+	//For use at particle positions
+	//Calculates Mn(x)
+	//Eq 4.1 Essman[95]
+	public double evaluate(int particleIndex, int cellDistance, boolean x)
+	{
+		int positiveCellDistance = Math.abs(cellDistance);
+		if(positiveCellDistance > order)
+			return 0;
+		return x ? bsplineCoefficients[particleIndex][0][positiveCellDistance] : bsplineCoefficients[particleIndex][1][positiveCellDistance];
+		/*
+//		Double mx = evaluateValues.get(x);
+//		if(mx != null)
+//		{
+//			hits++;
+//			return mx;
+//		}else{
+//			misses++;
+//		}
+		
+		double u = (double)x;
+		double n = (double)order;
+		//Base case
+		if(order==2){
+			if(0 <= u && u <= 2){
+				return 1-Math.abs(u-1);
+			}else{
+				return 0;
+			}
+		}
+		BSpline lowerOrderSpline = new BSpline(order-1);
+		double value = (u / (n-1)) * lowerOrderSpline.evaluate(u) + ((n-u)/(n-1)) * lowerOrderSpline.evaluate(u-1);
+		//evaluateValues.put(x, value);
+		return value;*/
+	}
+	
 	//Eq 4.2 Essman[95]
 	public double evaluateDerivative(double x)
 	{
@@ -55,7 +111,7 @@ public class BSpline {
 	//3.2.2 Lee[05]
 	//Replace with DFTmod from http://chem.skku.ac.kr/~wkpark/tutor/chem/tinker/source/kewald.f ?
 	//Page 157 of Lee[05]
-	public Complex b(int i, double mi, int K)
+	/*public Complex b(int i, double mi, int K)
 	{
 		if(order%2==1 && (int)(2*mi) == K)
 		{
@@ -70,7 +126,7 @@ public class BSpline {
 			part2 = part2.add(expPart.scale(splinePart));
 		}
 		return part1.mult(part2.reciprocal());
-	}
+	}*/
 	
 	//From dftmod in Lee[05] (Pg 156)
 	public void fillBSPMod(int K)
@@ -107,4 +163,6 @@ public class BSpline {
 //			System.out.println("[Bspline] bsp_mod["+i+"]="+bspmod[i]);
 //		}
 	}
+	
+	
 }
