@@ -31,6 +31,8 @@
 \citation{petersen:3668}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.1.2}Implementation analysis}{5}{subsection.2.1.2}}
 \@writefile{lof}{\contentsline {figure}{\numberline {2.2}{\ignorespaces The basic algorithm's run time compared to a function of $N^2$. It is easy to see that the basic algorithms run time grows proportionally to $N^2$, as we would expect from it's complexity class $O(n^2)$\relax }}{5}{figure.caption.3}}
+\providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
+\newlabel{fig:basic_algo_complex}{{2.2}{5}{The basic algorithm's run time compared to a function of $N^2$. It is easy to see that the basic algorithms run time grows proportionally to $N^2$, as we would expect from it's complexity class $O(n^2)$\relax \relax }{figure.caption.3}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {2.2}The particle mesh ewald method}{5}{section.2.2}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.2.1}Background}{5}{subsection.2.2.1}}
 \@writefile{toc}{\contentsline {subsubsection}{Potential vs. Energy}{5}{section*.4}}
@@ -80,52 +82,75 @@
 \@writefile{toc}{\contentsline {subsubsection}{Calculating the ewald coefficient}{10}{section*.19}}
 \@writefile{toc}{\contentsline {subsubsection}{Fast Fourier Transformations}{10}{section*.20}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.2.5}Implementation analysis}{10}{subsection.2.2.5}}
-\newlabel{sec:optimisations}{{2.2.5}{10}{Implementation analysis\relax }{subsection.2.2.5}{}}
+\@writefile{toc}{\contentsline {subsubsection}{Running time analysis}{10}{section*.21}}
+\@writefile{toc}{\contentsline {subsubsection}{Accuracy analysis}{10}{section*.22}}
+\newlabel{sec:optimisations}{{2.2.5}{10}{Accuracy analysis\relax }{section*.22}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {2.3}The Fast multipole algorithm}{10}{section.2.3}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.3.1}Background}{10}{subsection.2.3.1}}
 \citation{greengard:315}
-\@writefile{toc}{\contentsline {subsubsection}{Complex plane}{11}{section*.21}}
-\@writefile{toc}{\contentsline {subsubsection}{Multipole expansions}{11}{section*.22}}
-\@writefile{toc}{\contentsline {subsubsection}{The mesh}{11}{section*.23}}
-\@writefile{lof}{\contentsline {figure}{\numberline {2.6}{\ignorespaces A simulation cell, with meshes up to level 2 displayed, giving $2^n = 2^2 = 4$ boxes per side\relax }}{11}{figure.caption.24}}
-\@writefile{toc}{\contentsline {subsubsection}{Well separated cells}{11}{section*.25}}
+\@writefile{toc}{\contentsline {subsubsection}{Complex plane}{11}{section*.23}}
+\@writefile{toc}{\contentsline {subsubsection}{Multipole expansions}{11}{section*.24}}
+\@writefile{toc}{\contentsline {subsubsection}{The mesh}{11}{section*.25}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.6}{\ignorespaces A simulation cell, with meshes up to level 2 displayed, giving $2^n = 2^2 = 4$ boxes per side\relax }}{11}{figure.caption.26}}
+\@writefile{toc}{\contentsline {subsubsection}{Well separated cells}{11}{section*.27}}
+\newlabel{sec:well_sep}{{2.3.1}{11}{Well separated cells\relax }{section*.27}{}}
 \citation{greengard:315}
 \citation{greengard:315}
-\@writefile{lof}{\contentsline {figure}{\numberline {2.7}{\ignorespaces A cell, marked with a circle, and the squares that are well separated from it, marked with crosses.\relax }}{12}{figure.caption.26}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.7}{\ignorespaces A cell, marked with a circle, and the squares that are well separated from it, marked with crosses.\relax }}{12}{figure.caption.28}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.3.2}Mathematical description}{12}{subsection.2.3.2}}
 \newlabel{sec:fma_math}{{2.3.2}{12}{Mathematical description\relax }{subsection.2.3.2}{}}
-\@writefile{toc}{\contentsline {subsubsection}{Potential and the multipole expansion approximation}{12}{section*.27}}
+\@writefile{toc}{\contentsline {subsubsection}{Potential and the multipole expansion approximation}{12}{section*.29}}
 \newlabel{eq:potential}{{2.8}{12}{Potential and the multipole expansion approximation\relax }{equation.2.3.8}{}}
 \newlabel{eq:multipole_expansion}{{2.9}{12}{Potential and the multipole expansion approximation\relax }{equation.2.3.9}{}}
-\@writefile{toc}{\contentsline {subsubsection}{Shifting multipole expansions}{12}{section*.28}}
+\@writefile{toc}{\contentsline {subsubsection}{Shifting multipole expansions}{12}{section*.30}}
 \newlabel{eq:pre_shift_multipole}{{2.11}{12}{Shifting multipole expansions\relax }{equation.2.3.11}{}}
 \newlabel{eq:shifted_multipole}{{2.12}{12}{Shifting multipole expansions\relax }{equation.2.3.12}{}}
 \newlabel{eq:b_descr}{{2.13}{12}{Shifting multipole expansions\relax }{equation.2.3.13}{}}
-\@writefile{toc}{\contentsline {subsubsection}{Local expansions}{13}{section*.29}}
+\@writefile{toc}{\contentsline {subsubsection}{Local expansions}{13}{section*.31}}
 \newlabel{local_expansion}{{2.14}{13}{Local expansions\relax }{equation.2.3.14}{}}
 \newlabel{where_local_expansion}{{2.15}{13}{Local expansions\relax }{equation.2.3.15}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.3.3}The algorithm}{13}{subsection.2.3.3}}
+\newlabel{sec:fma_alg}{{2.3.3}{13}{The algorithm\relax }{subsection.2.3.3}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.3.4}The implementation}{13}{subsection.2.3.4}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.3.5}Implementation analysis}{14}{subsection.2.3.5}}
-\@writefile{lof}{\contentsline {figure}{\numberline {2.8}{\ignorespaces The Fast Multipole Algorithm's performance over the group of systems in the range 0 to 5,000 particles, and 0 to 20,000.\relax }}{14}{figure.caption.30}}
-\providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
-\newlabel{fig:fma_complex}{{2.8}{14}{The \fma 's performance over the group of systems in the range 0 to 5,000 particles, and 0 to 20,000.\relax \relax }{figure.caption.30}{}}
-\@writefile{toc}{\contentsline {chapter}{\numberline {3}Comparison of the algorithms}{15}{chapter.3}}
+\citation{VisualVM}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3.5}Running time analysis}{14}{subsection.2.3.5}}
+\newlabel{fig:fma_complex_a}{{2.8(a)}{14}{Subfigure 2 2.8(a)\relax }{subfigure.2.8.1}{}}
+\newlabel{sub@fig:fma_complex_a}{{(a)}{14}{Subfigure 2 2.8(a)\relax }{subfigure.2.8.1}{}}
+\newlabel{fig:fma_complex_b}{{2.8(b)}{14}{Subfigure 2 2.8(b)\relax }{subfigure.2.8.2}{}}
+\newlabel{sub@fig:fma_complex_b}{{(b)}{14}{Subfigure 2 2.8(b)\relax }{subfigure.2.8.2}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.8}{\ignorespaces The Fast Multipole Algorithm's performance over the group of systems in the range 0 to 5,000 particles, and 0 to 20,000.\relax }}{14}{figure.caption.32}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(a)}{\ignorespaces {Range 0 - 2000}}}{14}{figure.caption.32}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(b)}{\ignorespaces {Range 0 - 20,000}}}{14}{figure.caption.32}}
+\newlabel{fig:fma_complex}{{2.8}{14}{The \fma 's performance over the group of systems in the range 0 to 5,000 particles, and 0 to 20,000.\relax \relax }{figure.caption.32}{}}
+\newlabel{tab:time_breakdown}{{\caption@xref {tab:time_breakdown}{ on input line 461}}{14}{Running time analysis\relax }{table.caption.33}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {2.1}{\ignorespaces The proportion of the running time spent in each method for the Fast Multipole Algorithmwhile benchmarking.\relax }}{14}{table.caption.33}}
+\citation{greengard:315}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3.6}Accuracy analysis}{15}{subsection.2.3.6}}
+\@writefile{toc}{\contentsline {subsubsection}{Maximum mesh level}{15}{section*.34}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.9}{\ignorespaces The relationship between $N$, mesh levels, and the error, when comparied with the basic algorithm.\relax }}{15}{figure.caption.35}}
+\newlabel{fig:fma_mesh_acc}{{2.9}{15}{The relationship between $N$, mesh levels, and the error, when comparied with the basic algorithm.\relax \relax }{figure.caption.35}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.10}{\ignorespaces The error for the Fast Multipole Algorithmwith a fixed mesh level $N=3$, with an increasing system size\relax }}{16}{figure.caption.36}}
+\newlabel{fig:fma_fixed_mesh_acc}{{2.10}{16}{The error for the \fma with a fixed mesh level $N=3$, with an increasing system size\relax \relax }{figure.caption.36}{}}
+\@writefile{toc}{\contentsline {subsubsection}{Number of terms}{16}{section*.37}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.11}{\ignorespaces The error, on a logarithmic scale, vs. the number of terms in the multipole expansion, with a system size of is 5000 particles\relax }}{17}{figure.caption.38}}
+\newlabel{fig:fma_terms_acc}{{2.11}{17}{The error, on a logarithmic scale, vs. the number of terms in the multipole expansion, with a system size of is 5000 particles\relax \relax }{figure.caption.38}{}}
+\@writefile{toc}{\contentsline {chapter}{\numberline {3}Comparison of the algorithms}{18}{chapter.3}}
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\newlabel{chap:compare}{{3}{15}{Comparison of the algorithms\relax }{chapter.3}{}}
+\newlabel{chap:compare}{{3}{18}{Comparison of the algorithms\relax }{chapter.3}{}}
 \bibstyle{plain}
 \bibdata{references}
-\@writefile{toc}{\contentsline {chapter}{\numberline {4}Discussion}{16}{chapter.4}}
+\@writefile{toc}{\contentsline {chapter}{\numberline {4}Discussion}{19}{chapter.4}}
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\bibcite{toukmaji:73}{1}
-\bibcite{darden:10089}{2}
-\bibcite{essmann:8577}{3}
-\bibcite{greengard:315}{4}
-\bibcite{Ihler04}{5}
-\bibcite{MilleniumRun}{6}
-\bibcite{lee05}{7}
-\bibcite{petersen:3668}{8}
-\bibcite{NAMD}{9}
-\bibcite{JTransform}{10}
+\bibcite{VisualVM}{1}
+\bibcite{toukmaji:73}{2}
+\bibcite{darden:10089}{3}
+\bibcite{essmann:8577}{4}
+\bibcite{greengard:315}{5}
+\bibcite{Ihler04}{6}
+\bibcite{MilleniumRun}{7}
+\bibcite{lee05}{8}
+\bibcite{petersen:3668}{9}
+\bibcite{NAMD}{10}
+\bibcite{JTransform}{11}

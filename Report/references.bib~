@@ -69,8 +69,8 @@ pages = {325-348}
     author = {Piotr Wendykier},
     title = {JTransforms FFT Library},
     school = {Emory University},
-    year = {2011}
-    note = {\url{http://sourceforge.net/projects/jtransforms}}
+    year = {2011},
+    note = "\url{http://sourceforge.net/projects/jtransforms}"
 }
 
 

@@ -11,17 +11,18 @@ title = sys.argv[2]
 
 with open(fileName) as f:
     data = np.loadtxt(f, dtype={
-        'names': ('N', 'total time','total stddev','init time', 'init stddev'),
-        'formats': ('i', 'd', 'd', 'd', 'd')}, delimiter=',', skiprows=1)
+        'names': ('N', 'acc','stddev'),
+        'formats': ('i', 'd', 'd')}, delimiter=',', skiprows=1)
 
-plt.plot(data['N'], data['init time'], label='Initialisation time')
-plt.errorbar(data['N'], data['total time'],label='Total time', yerr=data['total stddev'])
+plt.errorbar(data['N'], data['acc'],label='Accuracy', yerr=data['stddev'])
 
 ax = plt.axes()
-ax.set_xlabel("System size (particles)")
-ax.set_ylabel("Time (ms)")
+ax.set_xlabel("N: Mesh levels")
+ax.set_ylabel("Error")
 ax.set_title(title)
+ax.set_xticklabels([0,4,5,6,7,8], rotation='horizontal')
 pylab.legend()
-pylab.ylim(1600,2000)
+#pylab.ylim(1400,2000)
+pylab.xlim(3.5,8.5)
 plt.show()
 

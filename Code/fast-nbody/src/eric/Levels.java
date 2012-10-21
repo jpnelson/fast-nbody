@@ -44,7 +44,7 @@ public class Levels {
 					mpsum = mpsum.add(kid1.mp.shift(parent.center.sub(kid1.center)));
 					mpsum = mpsum.add(kid2.mp.shift(parent.center.sub(kid2.center)));
 					mpsum = mpsum.add(kid3.mp.shift(parent.center.sub(kid3.center)));
-					parent.mp = mpsum; 
+					parent.mp = mpsum;
 				}
 			}
 		}
@@ -73,7 +73,10 @@ public class Levels {
 					sum = sum.add(current.psibar);
 					
 					current.psi = sum;
-					
+//					if(l==4 && ibx == 0 && iby==0)
+//					{
+//						System.out.println("!");
+//					}
 					
 					
 				}

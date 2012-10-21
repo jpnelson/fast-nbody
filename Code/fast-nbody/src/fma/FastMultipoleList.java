@@ -15,7 +15,7 @@ import math.Complex;
 
 public class FastMultipoleList extends ParticleList{
 	public static int EXPANSION_TERMS = 20;
-	public static int LEVEL_COUNT = 5; //should be about log_4(N) (G&R)
+	public static int LEVEL_COUNT = 3; //should be about log_4(N) (G&R)
 	SpaceSize windowSize;
 	Mesh lowestLevelMesh;
 	Mesh[] meshes = new Mesh[LEVEL_COUNT+1];
@@ -83,6 +83,10 @@ public class FastMultipoleList extends ParticleList{
 					}
 					
 					thisCell.psi = sum.add(thisCell.psiBar);
+//					if(l==4 && x == 0 && y==0)
+//					{
+//						System.out.println("!");
+//					}
 				}
 			}
 			for(int x = 0; x < meshes[l].boxesOnSide; x++)

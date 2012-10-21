@@ -15,7 +15,7 @@
 \usepackage{float}
 \usepackage{epstopdf}
 \usepackage{caption}
-\usepackage{subcaption}
+\usepackage{subfigure}
 \newcommand{\hilight}[1]{\colorbox{yellow}{#1}}
 \newcommand{\TODO}{\hilight{NOT DONE}}
 \newcommand{\hs}{$\hspace{0.5cm}$}
@@ -133,6 +133,7 @@ The $O(n^2)$ algorithm was run on increasing system sizes for one time step, and
 \begin{figure}[H]
 \bcen \includegraphics[width=0.75\textwidth]{figures/graphs/basic_algo_complex.pdf} \ecen
 \caption{The basic algorithm's run time compared to a function of $N^2$. It is easy to see that the basic algorithms run time grows proportionally to $N^2$, as we would expect from it's complexity class $O(n^2)$}
+\label{fig:basic_algo_complex}
 \end{figure}
 
 %_____________PME Section________________
@@ -304,6 +305,8 @@ In a binary search
 \cite{JTransform}
 The chosen library for Fast Fourier Transformations (Required for calculation of the reciprocal space potential) was the JTransforms library. \cite{JTransform}. This library has the advantage of being implemented in pure Java code, allowing simpler integration and debugging. The Fourier Transformation operation is the core of the run time for the \pmem{}, and so and optimised library is essential for performance reasons.
 \subsection{Implementation analysis}
+\subsubsection{Running time analysis}
+\subsubsection{Accuracy analysis}
 \label{sec:optimisations}
 %_________________ FMA SECTION __________________
 \section{The Fast multipole algorithm}
@@ -324,6 +327,7 @@ The mesh is similar to the one used in the \pmem{}. We say that the mesh has $n$
 \end{figure}
 
 \subsubsection{Well separated cells}
+\label{sec:well_sep}
 For a cell $c$, we call a cell $d$ \emph{Well separated} from $c$ if\\
 1) $\text{Parent}(d)$ is adjacent to $\text{Parent}(c)$ (adjacent horizontally, vertically or diagonally)\\
 2) $d$ is not adjacet to $c$\\
@@ -386,6 +390,7 @@ b_0 = \sum_{k=1} ^{\infty} \frac{a^k}{z^k_0} (-1)^k + a_0 \log(-z_0)
 
 
 \subsection{The algorithm}
+\label{sec:fma_alg}
 The basic flow of the algorithm is given below\\
 %%%%%PSEUDOCODE%%%%%%%%%
 \begin{algorithm}[H]
@@ -426,15 +431,72 @@ A more object oriented approach was taken in the implementation of the \fma{} th
 
 An object for a mesh is implemented in \texttt{Mesh.java}, which contains a 2D array of cells, defined in \texttt{Cell.java}. The \texttt{Mesh} class contains a function called \texttt{makeCoarserMesh()} which creates a coarser mesh, shifting and merging multipole expansion in the process. This coarser mesh is saved into an array of each mesh level, from the maximum depth, to zero.
 
-\subsection{Implementation analysis}
-The \fma{} was run over the class of problems with sizes in the range [0,5000] with an increment of 250, and [0, 20000] with an increment of 1000. The results are shown in Figure \ref{fig:fma_complex}
+\subsection{Running time analysis}
+The \fma{} was run over the class of problems with sizes in the range [0,5000] with an increment of 250, and [0, 20000] with an increment of 1000. The results are shown in Figure \ref{fig:fma_complex}.
 %%%%%%%%FIGURE%%%%%%%%%%%%%
 \begin{figure}[H]
-\includegraphics[width=0.49\textwidth]{figures/graphs/fma_0_5000.pdf}
-\includegraphics[width=0.49\textwidth]{figures/graphs/fma_2k_20k.pdf}
+\subfigure[Range 0 - 2000]{ \label{fig:fma_complex_a} \includegraphics[width=0.49\textwidth]{figures/graphs/fma_0_5000.pdf}}
+\subfigure[Range 0 - 20,000]{\label{fig:fma_complex_b} \includegraphics[width=0.49\textwidth]{figures/graphs/fma_2k_20k.pdf}}
 \caption{The \fma's performance over the group of systems in the range 0 to 5,000 particles, and 0 to 20,000.}
 \label{fig:fma_complex}
 \end{figure}
+
+The graphs here show the initialisation time and total time for the \fma{} on a set of problems. The initialisation time is the time required to compute the multipole and local expansions, and the total time is the initialisation time, with the time taken to evaluate these expansions included.
+
+Figure \ref{fig:fma_complex_a} shows the same range as Figure \ref{fig:basic_algo_complex}, the basic algorithm's complexity. In it, we see that the initialisation time is taking most of the computation time. Each data point is an average of 20 trials, with the error bar indicating the standard deviation.
+
+Figure \ref{fig:fma_complex_b} shows the \fma's run time for much larger problems, with up to 20,000 particles. We can see the initialisation time stay constant, while the total time grows linearly. So, we confirm that our implementation of the \fma is in the complexity class $O(n)$ \newline
+
+Using \texttt{VisualVM} \cite{VisualVM}, the table below of running times spent in each method was produced.
+
+\begin{table}[H]
+    \begin{tabular}{|l|l|l|}
+        Method                       & Proportion of running time & Method description \\ \hline
+        \texttt{fma.LocalExpansion()}         & 31.6\%                      & Local expansion initialisation        \\ 
+        \texttt{math.Complex.power()}         & 27.8\%                      & Calculates $c^x$             \\ 
+        \texttt{math.Complex.ln()}            & 24.9\%                      & Calculates $\text{log}(c)$ \\
+        \texttt{math.Binomial.binomial()}     & 9.6\%                       & Calculates binomial function \\ 
+        \texttt{fma.MultipoleExpansion.add()} & 1\%                         & Adds multipole expansions
+    \end{tabular}
+    \label{tab:time_breakdown}
+    \caption{The proportion of the running time spent in each method for the \fma while benchmarking.}
+\end{table}
+
+We can see that most of the running time is spent forming local expansions, and doing complex arithmetic. The run time is split over several different methods, which indicates there are no severe efficiency concerns. Most of the run time is spent performing complex arithmetic, which is what should be expected.
+
+\subsection{Accuracy analysis}
+The \fma has two main parameters that control accuracy - the number of mesh levels, and the number of terms in the multipole expansion. We call the number of mesh levels $N$ and the number of terms in the multipole expansion $p$. For reasonable accuracy, we should expect $N \approx \text{log}_4(N)$ and $p \approx \text{log}_2(\epsilon)$, where $\epsilon$ is the desired precision. \cite{greengard:315}
+\subsubsection{Maximum mesh level}
+We plot the accuracy of the method as a function of these two parameters. In figures \ref{fig:fma_mesh_acc} and \ref{fig:fma_fixed_mesh_acc}, we demonstrate the effect the mesh level has on the error. 
+
+%%%%%%%%FIGURE%%%%%%%%%%%%%
+\begin{figure}[H]
+\bcen \includegraphics[width=0.75\textwidth]{figures/graphs/fma_mesh_acc.pdf} \ecen
+\caption{The relationship between $N$, mesh levels, and the error, when comparied with the basic algorithm.}
+\label{fig:fma_mesh_acc}
+\end{figure}
+
+Figure \ref{fig:fma_mesh_acc} shows the error \emph{increasing} with mesh level. This seems counter intuitive, however, according to The \fma algorithm from Section \ref{sec:fma_alg}, we calculate interactions directly for cells that are not Well separated (See Section \ref{sec:well_sep}). With low mesh levels, such as $N=2$, this would include the entire simulation unit, which leads to the error of 0 we see at $N=2$. Increasing from here, we see the error level out to approximately 0.075. This graph shows that increasing Mesh level does not necessarily lead to improved accuracy.
+
+%%%%%%%%FIGURE%%%%%%%%%%%%%
+\begin{figure}[H]
+\bcen \includegraphics[width=0.75\textwidth]{figures/graphs/fma_fixed_mesh_acc.pdf} \ecen
+\caption{The error for the \fma with a fixed mesh level $N=3$, with an increasing system size}
+\label{fig:fma_fixed_mesh_acc}
+\end{figure}
+
+Figure \ref{fig:fma_fixed_mesh_acc} above, shows the effect of an increasing system size for a fixed $N$. We can see that the error grows linearly as we increase the number of particles if we keep $N$ and $p$ constant. From this we can confirm that a good rule is $N \approx \text{log}_4(n)$, with $n$ being the total number of particles in our system. This is recommended, as it keeps the number of particles per cell approximately constant. %TODO: a graph could show this.
+
+\subsubsection{Number of terms}
+Next we examine the effect the number of terms we truncate our multipole expansion at, $p$, has on the accuracy of our simulation.
+%%%%%%%%FIGURE%%%%%%%%%%%%%
+\begin{figure}[H]
+\bcen \includegraphics[width=0.65\textwidth]{figures/graphs/fma_terms_acc.pdf} \ecen
+\caption{The error, on a logarithmic scale, vs. the number of terms in the multipole expansion, with a system size of is 5000 particles}
+\label{fig:fma_terms_acc}
+\end{figure}
+
+From figure \ref{fig:fma_terms_acc} we see that the accuracy of the \fma increases exponentially as we increase the number of terms in our expansion. The improvement in accuracy as we increase the number of expansion terms decreases after $N \approx 20$, however, as we approach the machine precision
 
 \chapter{Comparison of the algorithms}
 \label{chap:compare}

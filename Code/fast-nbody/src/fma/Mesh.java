@@ -139,35 +139,9 @@ public class Mesh {
 				combinedMultipoleExpansion = combinedMultipoleExpansion.add(meshCells[topLeftX+1][topLeftY].multipoleExpansion.shift(newCenter));
 				combinedMultipoleExpansion = combinedMultipoleExpansion.add(meshCells[topLeftX+1][topLeftY+1].multipoleExpansion.shift(newCenter));
 				coarserMesh.meshCells[x][y].multipoleExpansion = combinedMultipoleExpansion;
-
-				if(coarserMesh.meshCells[x][y].multipoleExpansion.getNumerators().get(0).re() != 0.0 && level==1){
-//					System.out.println("LEVEL "+(level-1)+" - " +x + " " + y + "," + coarserMesh.meshCells[x][y].multipoleExpansion);
-//					System.out.println("\t "+meshCells[topLeftX][topLeftY].multipoleExpansion.potential(Complex.zero));
-//					System.out.println("\t "+meshCells[topLeftX+1][topLeftY].multipoleExpansion.potential(Complex.zero));
-//					System.out.println("\t "+meshCells[topLeftX][topLeftY+1].multipoleExpansion.potential(Complex.zero));
-//					System.out.println("\t "+meshCells[topLeftX+1][topLeftY+1].multipoleExpansion.potential(Complex.zero));
-
-				}
-				if(level == 5 && x==1 && y==3)
-				{
-					//meshCells[topLeftX+1][topLeftY].multipoleExpansion.shift(newCenter).getNumerators().get(0).re() != 0.0 && 
-//					System.out.println("LEVEL "+level+" coarser mesh - " +x + " " + y + "," + meshCells[topLeftX+1][topLeftY].multipoleExpansion);
-//					System.out.println("LEVEL "+level+" coarser mesh - " +x + " " + y + "," + meshCells[topLeftX+1][topLeftY].multipoleExpansion.shift(newCenter));
-//					System.out.println(meshCells[topLeftX+1][topLeftY].multipoleExpansion.potential(Complex.zero));
-//					System.out.println(meshCells[topLeftX+1][topLeftY].multipoleExpansion.shift(newCenter).potential(Complex.zero));
-//					System.out.println(meshCells[topLeftX+1][topLeftY].multipoleExpansion.getCenter());
-//					System.out.println(newCenter);
-				}
-				
 			}
 		}
-//		for(int x=0; x < boxesOnSide; x++)
-//		{
-//			for(int y = 0; y < boxesOnSide; y++)
-//			{
-//				
-//			}
-//		}
+
 		
 		return coarserMesh;
 	}

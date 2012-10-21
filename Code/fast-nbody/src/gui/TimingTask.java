@@ -4,6 +4,8 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.PrintWriter;
 import javax.swing.SwingWorker;
+
+import math.Complex;
 import particles.Particle;
 import particles.ParticleList;
 
@@ -52,12 +54,22 @@ public class TimingTask extends SwingWorker<Void,Void>{
 			//Initialisation
 			particleList.init();
 			long endInitTime = System.currentTimeMillis();
+			
+			//Other
+			double totalPotential = 0;
+			double[] potentials = new double[particleList.size()];
 			for(Particle p : particleList){
-				particleList.potential(p.getPosition());
+				potentials[i] = particleList.potential(p.getPosition().scale(0.99)); //We get infinity if we put it directly on top
+				totalPotential += potentials[i];
 				i++;
 				progress = (int) (100 * (double)i / (double)particleList.size()-1);
 				setProgress(Math.max(Math.min(progress, 100), 0)*(rep+1) / repetitions);
 			}
+			double averagePotential = totalPotential/(double)particleList.size();
+			double stdDev = 0;
+			for(int j = 0; j<particleList.size(); j++) stdDev += Math.abs(potentials[j]-averagePotential) / (double)(particleList.size());
+			System.out.format("[TimingTask] average potential: %.20f %n",averagePotential);
+			System.out.println("[TimingTask] std dev potentia: "+stdDev);
 			long endTime = System.currentTimeMillis();
 			
 			long initTime = (endInitTime-startTime);

@@ -83,13 +83,14 @@ public class MultipoleExpansion {
 	{
 		ArrayList<Complex> newNumerators = new ArrayList<Complex>();
 		Complex offset = center.sub(newCenter); //Shifting the coordinate system so it's origin is at newCenter, z_0 (G&R)
+		
 		for(int l = 1; l <= numberOfTerms; l++)
 		{
-			Complex thisTerm = Complex.zero;
+			Complex thisTerm = offset.power(l).scale(-chargeSum / (double)(l));
 			for(int k = 1; k <= l; k++)
 			{
 				int kIndex = k-1; //we start at 1, but our arrays are indexed at 0
-				thisTerm = thisTerm.add(expansionNumerators.get(kIndex).mult(offset.power(l-k)).scale(Binomial.binomial(l-1,k-1)).sub(offset.power(l).scale((double)(chargeSum)/(double)(l))));
+				thisTerm = thisTerm.add(expansionNumerators.get(kIndex).mult(offset.power(l-k)).scale(Binomial.binomial(l-1,k-1)));
 			}
 			
 			newNumerators.add(thisTerm);
@@ -132,7 +133,7 @@ public class MultipoleExpansion {
 	
 	public ArrayList<Complex> getNumerators()
 	{
-		return (ArrayList<Complex>)expansionNumerators.clone();
+		return expansionNumerators;
 	}
 	
 	@Override

@@ -11,6 +11,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -22,6 +23,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JProgressBar;
+import javax.swing.KeyStroke;
 import javax.swing.SwingWorker;
 
 import fma.FastMultipoleList;
@@ -36,7 +38,7 @@ public class GUI implements ActionListener, PropertyChangeListener{
 	//Window
 	static Dimension WINDOW_SIZE = new Dimension(512,512);
 	static int RANDOM_PARTICLE_NUMBER = 50; //The number of particles to distribute randomly by default
-	
+	static int REGULAR_PARTICLE_NUMER = 5000;
 	//Benchmarking
 	static int BENCHMARK_INCREMENT = 1000;
 	static int BENCHMARK_MAXIMUM = 20000;
@@ -51,6 +53,8 @@ public class GUI implements ActionListener, PropertyChangeListener{
 	JMenu timingMenu;
 	JMenu timingOnceSubMenu;
 	JMenu timingBenchmarkSubMenu;
+	JMenu distributeRegularlyMenu;
+	JMenu distributeRandomlyMenu;
 	
 	JMenu potentialsMenu;
 	JMenu particlesMenu;
@@ -61,6 +65,7 @@ public class GUI implements ActionListener, PropertyChangeListener{
 	JMenuItem distributeRandomlyItem;
 	JMenuItem distributeNItem;
 	JMenuItem distributeRegularlyItem;
+	JMenuItem distributeManyRegularlyItem;
 	JCheckBoxMenuItem requireNeutralItem;
 	
 	JMenuItem timeBasicItem;
@@ -93,6 +98,9 @@ public class GUI implements ActionListener, PropertyChangeListener{
 		jMenuBar = new JMenuBar();
 		potentialsMenu = new JMenu("Potentials");
 		particlesMenu = new JMenu("Particles");
+		distributeRegularlyMenu = new JMenu("Distribute regularly");
+		distributeRandomlyMenu = new JMenu("Distribute randomly");
+		
 		timingMenu = new JMenu("Timings");
 		timingOnceSubMenu = new JMenu("Time on this configuration");
 		timingBenchmarkSubMenu = new JMenu("Benchmark");
@@ -115,8 +123,11 @@ public class GUI implements ActionListener, PropertyChangeListener{
 		distributeNItem = new JMenuItem("Distribute N particles randomly");
 		distributeNItem.addActionListener(this);
 		
-		distributeRegularlyItem = new JMenuItem("Distribute particles regularly");
+		distributeRegularlyItem = new JMenuItem("Distribute 6 particles regularly");
 		distributeRegularlyItem.addActionListener(this);
+		
+		distributeManyRegularlyItem = new JMenuItem("Distribute "+REGULAR_PARTICLE_NUMER+" particles regularly");
+		distributeManyRegularlyItem.addActionListener(this);
 		
 		
 		//Timing menu
@@ -144,10 +155,14 @@ public class GUI implements ActionListener, PropertyChangeListener{
 		potentialsMenu.add(calculateChargesItem);
 		potentialsMenu.add(calculateFMAItem);
 		potentialsMenu.add(calculatePMEItem);
-
-		particlesMenu.add(distributeRandomlyItem);
-		particlesMenu.add(distributeNItem);
-		particlesMenu.add(distributeRegularlyItem);
+		
+		//Particles menu
+		distributeRandomlyMenu.add(distributeRandomlyItem);
+		distributeRandomlyMenu.add(distributeNItem);
+		distributeRegularlyMenu.add(distributeRegularlyItem);
+		distributeRegularlyMenu.add(distributeManyRegularlyItem);
+		particlesMenu.add(distributeRandomlyMenu);
+		particlesMenu.add(distributeRegularlyMenu);
 		particlesMenu.add(requireNeutralItem);
 		particlesMenu.add(clearParticlesItem);
 		
@@ -162,6 +177,20 @@ public class GUI implements ActionListener, PropertyChangeListener{
 		
 		timingMenu.add(timingOnceSubMenu);
 		timingMenu.add(timingBenchmarkSubMenu);
+		
+		//Shortcuts
+		distributeManyRegularlyItem.setAccelerator(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_E,
+                java.awt.Event.CTRL_MASK));
+		distributeRandomlyItem.setAccelerator(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_R,
+                java.awt.Event.CTRL_MASK));
+		clearParticlesItem.setAccelerator(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_C,
+                java.awt.Event.CTRL_MASK));
+		timeFMAItem.setAccelerator(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F,
+                java.awt.Event.CTRL_MASK));
+		timeBasicItem.setAccelerator(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_B,
+                java.awt.Event.CTRL_MASK));
+		timePMEItem.setAccelerator(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_P,
+                java.awt.Event.CTRL_MASK));
 
 		//Interface
 		progressBar = new JProgressBar(0,100);
@@ -204,6 +233,8 @@ public class GUI implements ActionListener, PropertyChangeListener{
 			distributeRandomly();
 		if (e.getSource() == distributeRegularlyItem)
 			distributeRegularly();
+		if (e.getSource() == distributeManyRegularlyItem)
+			distributeManyRegularly();
 		if (e.getSource() == timeBasicItem)
 			timeBasic();
 		if (e.getSource() == timeFMAItem)
@@ -219,9 +250,8 @@ public class GUI implements ActionListener, PropertyChangeListener{
 		if (e.getSource() == requireNeutralItem)
 			requireNeutralSystem = !requireNeutralSystem;
 	}
-	//Button actions
-
 	
+	//Button actions
 	private void calculateList(ParticleList pl)
 	{
 		printSeparator();
@@ -254,7 +284,7 @@ public class GUI implements ActionListener, PropertyChangeListener{
 	 */
 	private void doBenchmarkIteration(Class<? extends ParticleList> c)
 	{
-		distributeN(BENCHMARK_INCREMENT); //Start filling up the particles array list
+		distributeN(BENCHMARK_INCREMENT, true); //Start filling up the particles array list
 		ParticleList pl = new NSquaredList(); //Only initialise it if we have to. If it didn't get initialised, the method fails.
 		
 		//Create a particle list from the class object we're given
@@ -305,7 +335,7 @@ public class GUI implements ActionListener, PropertyChangeListener{
 		currentBenchmarkLogFileName = getNewLogFileName(c); //The name of the log file for this benchmark
 		benchmarkClass = c; //Save this in the GUI so we know which class we're benchmarking at the moment
 		clearParticles();
-		distributeN(BENCHMARK_MINIMUM); //Make sure we start at the minimum
+		distributeN(BENCHMARK_MINIMUM, true); //Make sure we start at the minimum
 		doBenchmarkIteration(c);					
 	}
 	
@@ -351,16 +381,22 @@ public class GUI implements ActionListener, PropertyChangeListener{
 	{
 		calculateList(new FastMultipoleList(particles,new SpaceSize(simulationCanvas.canvasSize.width,simulationCanvas.canvasSize.height)));		
 	}
-	private void distributeN(int N)
+	private void distributeN(int N, boolean randomly)
 	{
 		if(requireNeutralSystem && N%2==1)
 			N++;//Don't allow odd number of particles in a neutral system
+		Random r;
+		if(!randomly){
+			r = new Random(N);
+		}else{
+			r = new Random((long)(Math.random()*10000));
+		}
 		for(int i = 0; i < N; i++)
 		{
 			Particle p;
-			double chance = requireNeutralSystem ? i % 2 : Math.random() * 2; //Alternate if we require a neutral system
+			double chance = requireNeutralSystem ? i % 2 : r.nextDouble() * 2; //Alternate if we require a neutral system
 			int charge =chance < 0.5? -Particle.DEFAULT_CHARGE:Particle.DEFAULT_CHARGE;
-			p = new Particle(Math.random()*simulationCanvas.getWidth(),Math.random()*simulationCanvas.getWidth(),Particle.DEFAULT_MASS,charge);
+			p = new Particle(r.nextDouble()*simulationCanvas.getWidth(),r.nextDouble()*simulationCanvas.getWidth(),Particle.DEFAULT_MASS,charge);
 			particles.add(p);
 		}
 		simulationCanvas.repaint();
@@ -369,7 +405,7 @@ public class GUI implements ActionListener, PropertyChangeListener{
 	{
 		try{
 			int N = Integer.parseInt(JOptionPane.showInputDialog(jFrame,"Number of particles to distribute"));
-			distributeN(N);
+			distributeN(N, true);
 			simulationCanvas.repaint();
 		}catch(NumberFormatException e){
 			JOptionPane.showMessageDialog(jFrame, "Invalid integer");
@@ -377,7 +413,7 @@ public class GUI implements ActionListener, PropertyChangeListener{
 	}
 	public void distributeRandomly()
 	{
-		distributeN(RANDOM_PARTICLE_NUMBER);
+		distributeN(RANDOM_PARTICLE_NUMBER, true);
 	}
 	
 	public void clearParticles()
@@ -385,6 +421,11 @@ public class GUI implements ActionListener, PropertyChangeListener{
 		System.out.println("[GUI] Clearing particles");
 		particles.clear();
 		redraw();
+	}
+	
+	public void distributeManyRegularly()
+	{
+		distributeN(REGULAR_PARTICLE_NUMER,false);
 	}
 	
 	public void distributeRegularly()

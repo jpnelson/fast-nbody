@@ -55,12 +55,12 @@ public class Complex {
 	}
 	
 	public Complex power(int k) {
-		if (k == 0) {
-			return new Complex(1.0,0.0);
+		if (k > 1) {
+			return power(k-1).mult(this);
 		} else if (k == 1) {
 			return this;
 		} else {
-			return power(k-1).mult(this);
+			return new Complex(1.0,0.0);
 		}
 	}
 	
