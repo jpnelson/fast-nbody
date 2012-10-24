@@ -59,6 +59,13 @@ volume = {73},
 pages = {325-348}
 }
 
+@article{ewald,
+author = {P. Ewald},
+journal = {Ann. Phys.},
+volume = {24},
+pages = {325-348},
+year = {1921}
+}
 @MISC{Ihler04,
     author = {Alexander T. Ihler},
     title = {An Overview of Fast Multipole Methods},
@@ -71,6 +78,20 @@ pages = {325-348}
     school = {Emory University},
     year = {2011},
     note = "\url{http://sourceforge.net/projects/jtransforms}"
+}
+
+@article{samaj,
+    author = {L. Samaj},
+    journal = {J. Phys. A: Math. Gen.},
+    volume = {36},
+    pages = {5913},
+    year = {2003}
+}
+
+@MISC{VisualVM,
+    title = {VisualVM 1.3.4 profiling software}
+    year = {2012}
+    note = "\url{http://visualvm.java.net/}"
 }
 
 
@@ -86,12 +107,27 @@ number = {},
 pages = {73-92}
 }
 
+@article{principia,
+author = {Sir Isaac Newton},
+title = {Newton's principia: the mathematical principles of natural philosophy},
+year = {1846},
+}
+
+@article{poincare,
+author = {Henri Poincar\`{e}},
+title = {Les méthodes nouvelles de la mécanique céleste},
+year = {1899},
+volume = {3},
+publisher = {Gauthier-Villars et fils},
+
+}
+
 
 
 @article{darden:10089,
 author = {Tom Darden and Darrin York and Lee Pedersen},
 collaboration = {},
-title = {Particle mesh Ewald: An N [center-dot] log(N) method for Ewald sums in large systems},
+title = {Particle mesh Ewald: An N log(N) method for Ewald sums in large systems},
 publisher = {AIP},
 year = {1993},
 journal = {The Journal of Chemical Physics},

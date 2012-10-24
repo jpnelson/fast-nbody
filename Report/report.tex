@@ -1,6 +1,7 @@
 \documentclass[pdftex,twoside,a4paper]{report}
 \usepackage[pdftex]{graphicx}
 \usepackage[margin=3.0cm]{geometry}
+\usepackage{times}
 \usepackage[english]{babel}
 \usepackage[normalem]{ulem}
 \usepackage{algorithm2e}
@@ -34,7 +35,7 @@
 \begin{center}
 
 \includegraphics[width=0.8\textwidth]{logoWhite.png}\\[0.5cm]
-\textsc{\Large School of Computer Science}\\[0.5cm]
+\textsc{\Large Research School of Computer Science}\\[0.5cm]
 \textsc{\Large College of Engineering and}\\[0.2cm]
 \textsc{\Large Computer Science}\\[0.5cm]
 
@@ -46,11 +47,11 @@
 
 \vspace{1.4cm}
 
-{ \huge \bfseries The Fast Multipole Algorithm vs the Particle Mesh Ewald method} \\
+{ \huge \bfseries The Fast Multipole Algorithm vs. the Particle Mesh Ewald method} \\
 
 \vspace{0.4cm}
 
-{ \LARGE \bfseries Joshua \textsc{Nelson} - u4850020} \\
+{ \LARGE \bfseries Joshua Nelson - u4850020} \\
 
 \vspace{1.4cm}
 
@@ -92,13 +93,31 @@ The N body problem is common across the fields of physics, biology and chemistry
 
 %_____________INTRODUCTION CHAPTER________________
 \chapter{Introduction}
+This chapter introduces the N body problem, approaches that have been made in the past, and gives background on related literature.
 \section{The N body problem}
+    \subsection{Problem summary}
     Suppose we have a collection of $n$ bodies in some space, that interact with each other. Each body interacts with every other body in the system in a pairwise way. Often this pairwise interaction is a function of the distance between the bodies, and their properties, such as mass or electric charge. The task is to calculate the total effect on each body from every other body.\\
     
-    The N body problem is key to the simulation of many different scientific environments. The bodies may be astrophysical objects, such as planets or galaxies, interacting based on distance and body mass \cite{MilleniumRun}, or atoms in a molecular dynamics simulation, based on distance and particle charge.\cite{NAMD}. For the remainder of the report, we will discuss the N body problem in regards to Molecular dynamics, however the approaches can be generalised.
+    The N body problem is key to the simulation of many different scientific environments. The bodies may be astrophysical objects, such as planets or galaxies, interacting based on distance and body mass \cite{MilleniumRun}, or atoms in a molecular dynamics simulation, based on distance and particle charge.\cite{NAMD}. During the report, we will mostly discuss the N body problem in regards to Molecular dynamics, however the approaches can be generalised to other fiields.
+    \subsection{History of the problem}
+    The N body problem was first formulated mathematically in Isaac Newton's Principia Mathematica. \cite{principia}. Later, H. Poincar\`{e} showed the impossibility of an analytical solution using first order integrals for $N \geq 3$. \cite{poincare}. This led to the development of several approximation methods. These methods can be roughly classified as either tree methods, or mesh methods.\\
+    
+    Tree methods are methods that break the simulation space into cells, and use a tree structure to organise these cells, allowing close interactions to be calculated directly, and far ones approximated. The \fma{}, first described by L. Greengard and V. Rokhlin \cite{greengard:315}, is such a method, using multipole expansions to approximate far cells.\\
+    
+    Mesh methods are ones that discretize the simulation space onto a mesh, and the potential is then solved over the mesh. The \pmem{}, developed by T. Darden et al.\ \cite{darden:10089} is such a method, and is based on Ewald summation, developed by P. Ewald \cite{ewald}. The variation of this known as the Smooth \pmem{} was developed by U. Essman et al.\ \cite{essmann:8577}\\
+    \subsection{Related work}
+    Comparisons of the \fma{} and the \pmem{} that have been made previously have found that the \pmem{} outperforms the \fma{} in the range $10^4$ - $10^5$. (H. Petersen, \cite{petersen:3668}). A. Toukmaji et al.\ \cite{toukmaji:73} claim that the mesh methods are faster in the range $10^3$ - $10^4$, and the multipole tree methods faster for $N > 10^5$.
+    \subsection{Contribution}
+    The contribution to this section of work that this paper provides includes a basic Java implementation of the \pmem{} and the \fma{}. This software allows direct comparison of the two algorithms in terms of speed and accuracy. Additionally, the code was written with readibility in mind, rather than focusing on excessive optimisation, which inhibits readibility and understanding of the code.
+    
+    The report seeks to give insight into the approaches from a Computer Science perspective, while giving the background necessary to understand it from a Computational Chemistry perspective.
+    
+    
+    
 
 %_____________ALGORITHMS CHAPTER________________
-\chapter{Algorithms for the n body problem}
+\chapter{Algorithms for the N body problem}
+This chapter describes the mathematics and the implementation of the main algorithms discussed in this report: The basic algorithm, the \fma{}. and the \pmem{}. For each of these methods, we examine their running times and accuracy individually, and discuss the details of their implementations in Java.
 \section{The $O(n^2)$ solution}
 \subsection{The algorithm}
         
@@ -108,7 +127,7 @@ The N body problem is common across the fields of physics, biology and chemistry
 \caption{The na\"{\i}ve approach to the n body problem - calculate each interaction for each particle}
 \end{figure}
 
-The simplest solution to the N body problem is the basic $O(n^2)$ approach of calculating each interaction directly. Pseudocode for the algorithm is given below.\\
+The simplest solution to the N body problem is the basic $O(n^2)$ approach of calculating each interaction directly. Pseudocode for this soltuion is given in Algorithm \ref{alg:basic}.\\
 
 %%%%%PSEUDOCODE%%%%%%%%%
 \begin{algorithm}[H]
@@ -123,9 +142,10 @@ The simplest solution to the N body problem is the basic $O(n^2)$ approach of ca
   }
  }
  \caption{The basic approach to the N body problem}
+ \label{alg:basic}
 \end{algorithm}
 
-The advantages to the $O(n^2)$ approach are it's simplicity, ease of implementation, and it's low overhead. However, it's primary disadvantage is that it is limited to small numbers of particles by it's $O(n^2)$ complexity. These advantages and disadvantages are further discussed in Chapter \ref{chap:compare}
+The advantages to the $O(n^2)$ approach are it's simplicity, ease of implementation, and it's low initialisation overhead. This low overhead can be seen in Figure \ref{fig:basic_algo_complex}. However, it's primary disadvantage is that it is limited to small numbers of particles by it's $O(n^2)$ complexity. These advantages and disadvantages are further discussed in Chapter \ref{chap:compare}
 
 \subsection{Implementation analysis}
 The $O(n^2)$ algorithm was run on increasing system sizes for one time step, and the time taken to calculate the potential at each atom's position was calculated. It is easy to turn this process into a dynamic simulation, using the relationship between potential energy, a particle's charge, and force.
@@ -136,23 +156,27 @@ The $O(n^2)$ algorithm was run on increasing system sizes for one time step, and
 \label{fig:basic_algo_complex}
 \end{figure}
 
+We can see in Figure \ref{fig:basic_algo_complex} that the running time increases porportionally to $N^2$. We can also see the low overhead when N is in the range $N < 1000$, where the total computation time $\approx 100$ms.
+
+Details of the computer these measurements were taken on can be found in Appendix \ref{ap:implement}. By sampling Figure \ref{fig:basic_algo_complex} at various points, we find that the rate of computation for the implementation is approximately 38.9 Mflops.
+
 %_____________PME Section________________
 \section{The particle mesh ewald method}
 \subsection{Background}
 \subsubsection{Potential vs. Energy}
 Energy and potential are related but different concepts. They both describe effects charged particles have on their surrounding environment, however, \emph{Energy} is a property of a particle, and \emph{Potential} is a property of a field. \emph{Energy} is defined in terms of a particle-particle interaction, while \emph{Potential} describes a field from one charged particle.\\
-Coulomb's law describes the potential from at $r_2$ from a charge $q_1$ at $r_1$ as 
+Coulomb's law describes the potential at $r_2$ from a charge $q_1$ at $r_1$ as 
 \[V=\frac{1}{4\pi \epsilon_0} \frac{q_1}{|r_2 - r_1|}\]
 And energy from a particle with charge $q_2$ at $r_2$ as $E = q_2 V$.\\
 For our purposes, the constant term $\frac{1}{4\pi \epsilon_0}$ is material dependent, and is discarded.
 \subsubsection{Ewald summation}
-The key concept behind the \pmem{} is that of \emph{Ewald Summation}. Ewald Summation splits the energy between two particles into two components, the long range force and the short range force. \cite{petersen:3668}
+The key concept behind the \pmem{} is that of \emph{Ewald Summation}. Ewald Summation splits the potential $\phi$ at a position $r$ into two components, the long range potential and the short range potential. \cite{petersen:3668}.
 \[
 \phi(r) = \phi_{\text{sr}}(r) + \phi_{\text{lr}}(r)
 \]
-The advantage of doing this is that $\phi_{\text{sr}}$, the short range term, can be converges quickly in real space, while $\phi_{\text{lr}}$ converges quickly in reciprocal space. The \pmem{} takes advantage of this by calculating the $\phi_{\text{sr}}$ term by calculating potential directly for nearby particles, and uses a grid based direct fourier transformation to calculate the long range component.
+The advantage of doing this is that $\phi_{\text{sr}}$, the short range term, converges quickly in real space (effects from charges far away from $r$ quickly decrease), while $\phi_{\text{lr}}$ converges quickly in reciprocal space. The \pmem{} takes advantage of this by calculating the $\phi_{\text{sr}}$ term by calculating potential directly for nearby particles, and uses a grid based direct fourier transformation to calculate the long range component.
 \subsubsection{Real space computation}
-The short range potential at a point can be computed by considering only particles within a small radius of the point. We can keep the radius small as $\phi_{\text{sr}}$ converges quickly in real space. This is also important, as we need to keep the number of particles considered less than $N$, in order to reduce the algorithm from $O(n^2)$ complexity. This is the case though, as the radius we consider is constant and less than the size of the simulation cell width, and we assume the particles are distributed randomly within the simulation cell.
+The short range potential at a point can be computed by considering only particles within a small radius of the point. We can keep the radius small as $\phi_{\text{sr}}$ converges quickly in real space. This is also important, as we need to keep the number of particles considered less than $N$, in order to reduce the algorithm from $O(n^2)$ to $O(n)$ complexity. This is the case though, as the radius we consider is constant and less than the size of the simulation cell width, and we assume the particles are distributed randomly within the simulation cell.
 %%%%%%%%FIGURE%%%%%%%%%%%%%
 \begin{figure}[H]
 \bcen \includegraphics{figures/cutoff.pdf} \ecen
@@ -160,7 +184,7 @@ The short range potential at a point can be computed by considering only particl
 \end{figure}
 
 \subsubsection{Reciprocal space computation}
-The reciprocal space is the long range part of the potential computation, and which converges slowly in real space. However, in reciprocal space, it converges quickly, so we use discrete fourier transformations to calculate this part of the sum.\\
+The reciprocal space is the long range part of the potential computation, which converges slowly in real space. However, in reciprocal space, it converges quickly, so we use discrete fourier transformations to calculate this part of the sum.\\
 
 Discrete fourier transformations require a discrete space to transform, however, our real space is continuous. So for this, we need to discretise the charges onto a grid. The approach taken in the original paper was to use Lagrangian interpolation to achieve this. Close mesh cells receive most of the charge from each particle, and this amount decreases to zero at some point, depending on the interpolation order. This is described in detail in Section \ref{sec:math_desc_lagrange}.\\
 %%%%%%%%FIGURE%%%%%%%%%%%%%
@@ -173,11 +197,11 @@ An alternative to using lagrange interpolation is to use cardinal B splines. Thi
 
 
 \subsubsection{Periodic boundary conditions}
-One advantage that the Particle Mesh Ewald method has is the ability to simulate \emph{Periodic Boundary Conditions} \cite{essmann:8577}. Periodic Boundary Conditions have a wrap around behaviour - that is, instead of treating the walls of the simulation unit as empty space, we can allow them to loop around to the other side of the box again, effectively allowing infinite replication of the simulation unit. This is helpful practically, as many applications are interested in the effects on a small portion of a large system \cite{toukmaji:73} (For example, simulation of water at a molecular scale). Simulating the entire system would be time consuming if not impossible, and simulating only a small portion without Periodic Boundary Conditions would produce unrealistic results (Molecules may disperse into empty space over time). While useful practically, Periodic Boundary Conditions do not change the complexity or performance, and as our interest is in a comparison with the \fma{}, we do not implement Periodic Boundary Conditions in this paper.
+One feature of the \pmem{} is the ability to simulate \emph{Periodic Boundary Conditions} \cite{essmann:8577}. Periodic Boundary Conditions have a wrap around behaviour - that is, instead of treating the walls of the simulation unit as empty space, we can allow them to loop around to the other side of the box again, effectively allowing infinite replication of the simulation unit. This is helpful practically, as many applications are interested in the effects on a small portion of a large system \cite{toukmaji:73} (For example, simulation of water at a molecular scale). Simulating the entire system would be time consuming if not impossible, and simulating only a small portion without Periodic Boundary Conditions would produce unrealistic results (Molecules may disperse into empty space over time). While useful practically, Periodic Boundary Conditions do not change the complexity or performance, and as our interest is in a comparison with the \fma{}, we reduce the effects of Periodic Boundary Conditions by placing all particles within a larger, mostly empty, simulation cell. This extra padding mostly negates the effects of the Periodic Boundary Conditions.
 %%%%%%%%FIGURE%%%%%%%%%%%%%
 \begin{figure}[H]
 \bcen \includegraphics[width=0.75\textwidth]{figures/pbc.pdf} \ecen
-\caption{A particle (in red) interacting with it's nearest neighbours, with periodic boundary conditions in one dimension (x axis)}
+\caption{A particle interacting with it's nearest neighbours, with periodic boundary conditions in one dimension (x axis)}
 \end{figure}
 
 \subsection{Mathematical description}
@@ -187,12 +211,15 @@ We first present the formulation of the Q array based on lagrangian interpolatio
 \begin{equation} \label{eq:q_array}
 Q(k_x,k_y) = \sum_{i=1} ^N q_i W_{2p}(u_{xi} - k_x) * W_{2p}(u_{yi} - k_y)
 \end{equation}
-Where $N$ is the number of particles,\\
-$n_1,n_2$ are integers $< N$,\\
-$W_{2p}$ is a Lagrangian polynomial of order $p$ with a value in the range $[0,1]$,\\
-$K$ is the number of cells we split the grid into,\\
-$u_{xi}, u_{yi}$ are scaled fractional coordinates of particle $i$ (Scaled fractional coordinate coordinates meaning $u_{xi} = K * (r_{xi} / (\text{simulation width}))$, $r_{xi}$ is the particle i's $x$ coordiante, so $0 \leq u_{xi} \leq K$).\\
-More information can be found in \cite{essmann:8577}\\
+Where,
+\begin{itemize}
+    \item $N$ is the number of particles,
+    \item $n_1,n_2$ are integers $< N$,
+    \item $W_{2p}$ is a Lagrangian polynomial of order $p$ with a value in the range $[0,1]$,
+    \item $K$ is the number of cells we split the grid into,
+    \item $u_{xi}, u_{yi}$ are scaled fractional coordinates of particle $i$ (Scaled fractional coordinate coordinates meaning $u_{xi} = K * (r_{xi} / (\text{simulation width}))$, $r_{xi}$ is the particle i's $x$ coordiante, so $0 \leq u_{xi} \leq K$).
+\end{itemize}
+More information can be found in \cite{essmann:8577}.\\
 
 We can replace $W_{2p}$ in the above with $M_n$, a cardinal B spline of order $n$, and the formulation of the Q array is the same. This modification is known as the Smooth \pmem{}. From this point forward, we will use cardinal B spline interpolation.
 
@@ -203,10 +230,13 @@ The reciprocal space contribution to the electrostatic energy can be written as,
 \begin{equation}
 E_{\text{rec}} = \frac{1}{2*\pi*V} \sum_{m \not= 0} \frac{\text{exp}(- \pi^2 m^2 / \beta^2)}{m^2} B(m_1,m_2) S(m) S(-m)
   \label{eq:primitive_rec_energy} \end{equation}
-Where $V$ is the volume (or in the two dimensional case, area) of the simulation cell,\\
-$\beta$ is the ewald coefficient,\\
-$S$ is the structure factor.\\
-$B$ is the matrix of B spline inverse fourier transform moduli, $B(m_1,m_2) = |b_1(m_1)|^2 * |b_2(m_2)|^2$. More detail on this can be found in \cite{essmann:8577}.\\
+Where
+\begin{itemize}
+    \item $V$ is the volume (or in the two dimensional case, area) of the simulation cell,
+    \item $\beta$ is the ewald coefficient,
+    \item $S$ is the structure factor.
+    \item $B$ is the matrix of B spline inverse fourier transform moduli, $B(m_1,m_2) = |b_1(m_1)|^2 * |b_2(m_2)|^2$. More detail on this can be found in \cite{essmann:8577}.
+\end{itemize}
 It is shown in \cite{essmann:8577} that $S(m) \approx F(Q(m))$, so we can rewrite this as a convolution\\
 \begin{equation}
 E_{\text{rec}} = \frac{1}{2} \sum_{m_1 = 0}^K \sum_{m_2 = 0}^K Q(m_1,m_2) * (\theta_{\text{rec}} \star Q)(m_1,m_2)
@@ -288,10 +318,10 @@ The following algorithm utilises a list known as a \emph{Verlet list} to keep tr
     }
 }
 \end{algorithm}
-After this, the array closeParticles[x][y] contains all particles within $r_cut$ distance from a particle contained in mesh cell $x,y$.
+After this, the array closeParticles[x][y] contains all particles within $r_{\text{cut}}$ distance from a particle contained in mesh cell $x,y$.
 
 \subsection{The implementation}
-The \pmem{} method was implemented in Java, with a GUI front end. In this section, we break down the \pmem{}, and look at the interesting data structures and methods used in initialisation and potential calculations.
+The \pmem{} was implemented in Java, with a GUI front end. In this section, we break down the \pmem{}, and look at the interesting data structures and methods used in initialisation and potential calculations.
 
 \subsubsection{The Cardinal B Spline}
 The Cardinal B Spline was implemented by means of recursion. The class \texttt{BSpline.java} contains the methods required for evaluating the B Spline and it's derivative, as well as the Euler Exponential splines (the B matrix in Eq. \ref{eq:primitive_rec_energy}). This recursion is performed many times, and is costly at high accuracies (high B Spline orders). This makes it a target for optimisation (See section \ref{sec:optimisations})
@@ -300,18 +330,39 @@ The ewald coefficient is calculated by means of a binary search for a coefficien
 \[
 \left| \frac{\text{erfc}(\beta * r_{\text{cut}})}{r_\text{cut}} - \epsilon_\text{tol} \right| 
 \]
-In a binary search
+This can be done using a binary search method. Details of this algorithm can be found in Appendix \ref{ap:implementation}. %TODO: write out the algorithm for the binary search
 \subsubsection{Fast Fourier Transformations}
-\cite{JTransform}
-The chosen library for Fast Fourier Transformations (Required for calculation of the reciprocal space potential) was the JTransforms library. \cite{JTransform}. This library has the advantage of being implemented in pure Java code, allowing simpler integration and debugging. The Fourier Transformation operation is the core of the run time for the \pmem{}, and so and optimised library is essential for performance reasons.
-\subsection{Implementation analysis}
-\subsubsection{Running time analysis}
-\subsubsection{Accuracy analysis}
+The chosen library for Fast Fourier Transformations (Required for calculation of the reciprocal space potential) was the JTransforms library\footnote{JTransforms FFT Library, \url{http://sourceforge.net/projects/jtransforms}}. This library has the advantage of being implemented in pure Java code, allowing simpler integration and debugging. The Fourier Transformation operation is the core of the run time for the \pmem{}, and so and optimised library is essential for performance reasons.
+\subsection{Running time analysis}
+\subsubsection{Cardinal B spline}
+%TODO: recursive defintion given where?
+With a basic implementation of the B spline, implemented directly from the recursive definition given, we notice a dramatically decreased run time. Computing the B spline coefficients is costly in terms of time, and must be computed repeatedly. A method to reduce this running time was implemented, with a HashMap saving values that had already been evaluated. This hash table had a hit rate of approximately $98\%$, as we evaluate fractional coordinates for the same particles often in the \pmem. The hash function converted the double keys to integer keys, which provides some collisions, but the B spline function is smooth, so similar $x_1, x_2$ values produce similar $M_n(x_1)$ and $M_n(x_2)$ values. The goal of this was to reduce the running time, as hashing full doubles is expensive.
+\subsubsection{Algorithm complexity}
+%%%%%%%%FIGURE%%%%%%%%%%%%%
+\begin{figure}[H]
+\bcen \includegraphics[width=0.75\textwidth]{figures/graphs/pme_algo_complex.pdf} \ecen
+\caption{The running time of the \pmem{} with increasing system size}
+\label{fig:pme_alg_complex}
+\end{figure}
+Figure \ref{fig:pme_alg_complex} shows the running time of the \pmem{}, with the hash table functions implemented. We can see that the rate at which the running time increases is proportional to $n\text{log}(n)$. It would be easy to fit a linear function to this data also, as in this range, $\text{log}(n)$ is a slowly growing factor compared to $n$.
+\subsubsection{Method analysis}
+We also present an analysis of the time taken by various functions in the \pmem{} using VisualVM\footnote{VisualVM, \url{http://visualvm.java.net/}}.
+\begin{table}[H]
+    \begin{tabular}{|l|l|l|}
+        Method                       & Proportion of running time & Method description \\ \hline
+        \texttt{pme.initQMatrix()}         & 53.2\%                      & Assigns charges to the grid using BSplines        \\ 
+        \texttt{math.Complex.ln()}         & 43.6\%                      & Calculates $\text{log}(c)$             \\ 
+        \texttt{math.initProximityList()}            & 3.2\%                      &  Compiles in range particle lists\\
+    \end{tabular}
+    \label{tab:time_breakdown}
+    \caption{The proportion of the running time spent in each method for the \fma while benchmarking.}
+\end{table}
+\subsection{Accuracy analysis}
 \label{sec:optimisations}
 %_________________ FMA SECTION __________________
 \section{The Fast multipole algorithm}
 \subsection{Background}
-The \fma{} is similar to the \pmem{} in that both use a grid structure, and bounded approximations, to speed up computation. However, they are different in the ways they use the mesh, and the approximations that are made.
+The \fma{} is similar to the \pmem{} in that both use a grid structure, and bounded approximations, to speed up computation. However, they are different in the ways they use the mesh, and the way approximations are made.
 \subsubsection{Complex plane}
 It should be noted that for this algorithm, it is simplest to implement in two dimensions. It is possible to to implement in three dimensions, with Spherical Harmonics \cite{Ihler04}, however this is not discussed in this paper. Instead, we work in two dimensions, on the complex plane. We give a point $(x,y)$ on the Real plane the value $z = x + yi$ on the Complex plane. This way, we can represent each point as a single number, and use complex versions of functions while calculating the multipole expansions.
 
@@ -344,9 +395,11 @@ These \emph{well separated} cells are the ones which we will use the expansions 
 \subsubsection{Potential and the multipole expansion approximation}
 We describe the potential at a point $x_0 \in \mathbb{C}$ from the charge $q$ at $x \in \mathbb{C}$ by
 \begin{equation}
-\phi_{x_0} = -q\text{log}{|x - x_0|}
+\phi_{x_0}(x) = -q\text{log}{|x - x_0|}
 \label{eq:potential}
 \end{equation}
+This function describes the logarithmic potential in 2 dimensions. \cite{greengard:315} \cite{samaj}.\\
+
 A multipole expansion for this function is derived in \cite{greengard:315}. Suppose that $m$ charges of strength $\{q_i,i=1,...,m\}$ are located at points $\{z_i, i=1,...,m\}$, with $|z_i| < r$. Then for any $z \in \mathbb{C}$ with $|z| > r$, the potential $\phi(z)$ is given by
 \begin{equation}
 \phi(z) = Q \text{log}(z) + \sum_{k=1} ^{\infty} \frac{a_k}{z^k}
@@ -432,6 +485,7 @@ A more object oriented approach was taken in the implementation of the \fma{} th
 An object for a mesh is implemented in \texttt{Mesh.java}, which contains a 2D array of cells, defined in \texttt{Cell.java}. The \texttt{Mesh} class contains a function called \texttt{makeCoarserMesh()} which creates a coarser mesh, shifting and merging multipole expansion in the process. This coarser mesh is saved into an array of each mesh level, from the maximum depth, to zero.
 
 \subsection{Running time analysis}
+\subsubsection{Complexity analysis}
 The \fma{} was run over the class of problems with sizes in the range [0,5000] with an increment of 250, and [0, 20000] with an increment of 1000. The results are shown in Figure \ref{fig:fma_complex}.
 %%%%%%%%FIGURE%%%%%%%%%%%%%
 \begin{figure}[H]
@@ -446,8 +500,8 @@ The graphs here show the initialisation time and total time for the \fma{} on a 
 Figure \ref{fig:fma_complex_a} shows the same range as Figure \ref{fig:basic_algo_complex}, the basic algorithm's complexity. In it, we see that the initialisation time is taking most of the computation time. Each data point is an average of 20 trials, with the error bar indicating the standard deviation.
 
 Figure \ref{fig:fma_complex_b} shows the \fma's run time for much larger problems, with up to 20,000 particles. We can see the initialisation time stay constant, while the total time grows linearly. So, we confirm that our implementation of the \fma is in the complexity class $O(n)$ \newline
-
-Using \texttt{VisualVM} \cite{VisualVM}, the table below of running times spent in each method was produced.
+\subsubsection{Method analysis}
+Using \texttt{VisualVM} \footnote{VisualVM, \url{http://visualvm.java.net/}}, the table below of running times spent in each method was produced.
 
 \begin{table}[H]
     \begin{tabular}{|l|l|l|}
@@ -465,7 +519,7 @@ Using \texttt{VisualVM} \cite{VisualVM}, the table below of running times spent 
 We can see that most of the running time is spent forming local expansions, and doing complex arithmetic. The run time is split over several different methods, which indicates there are no severe efficiency concerns. Most of the run time is spent performing complex arithmetic, which is what should be expected.
 
 \subsection{Accuracy analysis}
-The \fma has two main parameters that control accuracy - the number of mesh levels, and the number of terms in the multipole expansion. We call the number of mesh levels $N$ and the number of terms in the multipole expansion $p$. For reasonable accuracy, we should expect $N \approx \text{log}_4(N)$ and $p \approx \text{log}_2(\epsilon)$, where $\epsilon$ is the desired precision. \cite{greengard:315}
+The \fma{} has two main parameters that control accuracy - the number of mesh levels, and the number of terms in the multipole expansion. We call the number of mesh levels $N$ and the number of terms in the multipole expansion $p$. For reasonable accuracy, we should expect $N \approx \text{log}_4(n)$, where $n$ is the number of particles, and $p \approx \text{log}_2(\epsilon)$, where $\epsilon$ is the desired precision. \cite{greengard:315}
 \subsubsection{Maximum mesh level}
 We plot the accuracy of the method as a function of these two parameters. In figures \ref{fig:fma_mesh_acc} and \ref{fig:fma_fixed_mesh_acc}, we demonstrate the effect the mesh level has on the error. 
 
@@ -476,7 +530,7 @@ We plot the accuracy of the method as a function of these two parameters. In fig
 \label{fig:fma_mesh_acc}
 \end{figure}
 
-Figure \ref{fig:fma_mesh_acc} shows the error \emph{increasing} with mesh level. This seems counter intuitive, however, according to The \fma algorithm from Section \ref{sec:fma_alg}, we calculate interactions directly for cells that are not Well separated (See Section \ref{sec:well_sep}). With low mesh levels, such as $N=2$, this would include the entire simulation unit, which leads to the error of 0 we see at $N=2$. Increasing from here, we see the error level out to approximately 0.075. This graph shows that increasing Mesh level does not necessarily lead to improved accuracy.
+Figure \ref{fig:fma_mesh_acc} shows the error \emph{increasing} with mesh level. This seems counter intuitive, however, according to The \fma{} from Section \ref{sec:fma_alg}, we calculate interactions directly for cells that are not well separated (See Section \ref{sec:well_sep}). With low mesh levels, such as $N=2$, this would include the entire simulation unit, which leads to the error of 0 we see at $N=2$. Increasing from here, we see the error level out to approximately 0.075. This graph shows that increasing maximum mesh level does not necessarily lead to improved accuracy.
 
 %%%%%%%%FIGURE%%%%%%%%%%%%%
 \begin{figure}[H]
@@ -485,18 +539,18 @@ Figure \ref{fig:fma_mesh_acc} shows the error \emph{increasing} with mesh level.
 \label{fig:fma_fixed_mesh_acc}
 \end{figure}
 
-Figure \ref{fig:fma_fixed_mesh_acc} above, shows the effect of an increasing system size for a fixed $N$. We can see that the error grows linearly as we increase the number of particles if we keep $N$ and $p$ constant. From this we can confirm that a good rule is $N \approx \text{log}_4(n)$, with $n$ being the total number of particles in our system. This is recommended, as it keeps the number of particles per cell approximately constant. %TODO: a graph could show this.
+Figure \ref{fig:fma_fixed_mesh_acc} shows the effect of an increasing system size for a fixed $N$. We can see that the error grows linearly as we increase the number of particles if we keep $N$ and $p$ constant. From this we can confirm that a good rule is $N \approx \text{log}_4(n)$, with $n$ being the total number of particles in our system. This is recommended, as it keeps the number of particles per cell approximately constant. %TODO: a graph could show this.
 
 \subsubsection{Number of terms}
 Next we examine the effect the number of terms we truncate our multipole expansion at, $p$, has on the accuracy of our simulation.
 %%%%%%%%FIGURE%%%%%%%%%%%%%
 \begin{figure}[H]
 \bcen \includegraphics[width=0.65\textwidth]{figures/graphs/fma_terms_acc.pdf} \ecen
-\caption{The error, on a logarithmic scale, vs. the number of terms in the multipole expansion, with a system size of is 5000 particles}
+\caption{The error, on a logarithmic scale, vs. the number of terms in the multipole expansion, with a system size of 5000 particles}
 \label{fig:fma_terms_acc}
 \end{figure}
 
-From figure \ref{fig:fma_terms_acc} we see that the accuracy of the \fma increases exponentially as we increase the number of terms in our expansion. The improvement in accuracy as we increase the number of expansion terms decreases after $N \approx 20$, however, as we approach the machine precision.
+From Figure \ref{fig:fma_terms_acc} we see that the accuracy of the \fma{} increases exponentially as we increase the number of terms in our expansion. However, after $N \approx 20$, the improvement slows down. This is because we reach the machine precision in our accuracy at these levels.
 
 %TODO: show the effect these parameters have on the running time?
 
@@ -504,6 +558,25 @@ From figure \ref{fig:fma_terms_acc} we see that the accuracy of the \fma increas
 \label{chap:compare}
 \chapter{Discussion}
 
+%%%%%%_________APPENDICES____________
+\appendix
+\chapter{Implementation}
+\label{ap:implement}
+\section{Benchmark computer details}
+\begin{table}[H]
+
+    \begin{tabular}{l|l}
+        CPU         & Intel(R) Core(TM) i7 CPU 950  @ 3.07GHz        \\ 
+        L1 Cache                               & 256KB, 4-way set associative, write-through             \\ 
+        L2 Cache                               & 1024KB, 8-way set associative, write-through \\
+        L3 Cache                               & 8192KB, 16-way set associative, write-back \\ 
+        Main memory                            & 6GB DDR3 1333Mhz\\ 
+        Mflops/s                               & 64.424 Mflops/s
+    \end{tabular}
+    \caption{The relevant specifications for the computer used to benchmark the algorithms presented in the paper.}
+\end{table}
+\chapter{Mathematics}
+\label{ap:math}
 \bibliographystyle{plain}	
 \bibliography{references}	
 

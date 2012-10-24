@@ -24,6 +24,8 @@ public class SPMEList extends ParticleList {
 	static double CUTOFF_DISTANCE = 0.25;//Used to calculate ewaldCoefficient. In unit cell dimensions
 	final int directRange; //will be CUTOFF_DISTANCE / meshWidth. In mesh cells
 
+	ArrayList[][] proximityList;
+	
 	final ArrayList<Particle> nonUnitParticles; //We keep a copy of this for drawing
 
 	ArrayList<Particle> cellList[][];
@@ -63,7 +65,7 @@ public class SPMEList extends ParticleList {
 		//init(); we'll call it when needed
 	}
 
-	//subroutine ewaldcof from http://chem.skku.ac.kr/~wkpark/tutor/chem/tinker/source/kewald.f
+	//subroutine ewaldcof translated from http://chem.skku.ac.kr/~wkpark/tutor/chem/tinker/source/kewald.f
 	private double calculateEwaldCoefficient(double cutoffDistance, double tolerance)
 	{
 		int i,k;
@@ -106,6 +108,7 @@ public class SPMEList extends ParticleList {
 		
 		
 		initCellList();
+		initProximityList(directRange);
 		initQMatrix();
 		invertQMatrixFFT();
 		getRecEnergy(); //Important part of the process, as it creates the convoluted matrix while calculating the energy.
@@ -204,7 +207,7 @@ public class SPMEList extends ParticleList {
 		fft.complexForward(convolutedDoubles);
 		convolutedMatrix = Complex.doubleToComplexArray2D(convolutedDoubles); //F(B C F^-1(Q)) Pg. 182 Lee[05]
 		
-		for(Particle p : this){
+		/*for(Particle p : this){
 			//Pg 183 Lee[05]
 			//For each grid point that this particle has been interpolated to
 			for(int dx = -ASSIGNMENT_SCHEME_ORDER; dx < ASSIGNMENT_SCHEME_ORDER; dx++)
@@ -225,7 +228,7 @@ public class SPMEList extends ParticleList {
 					}
 				}
 			}
-		}
+		}*/
 		
 	}
 	
@@ -372,25 +375,37 @@ public class SPMEList extends ParticleList {
 		}
 		return 0.5*sum;
 	}
+	
+	public void initProximityList(int range)
+	{
+		proximityList = new ArrayList[CELL_SIDE_COUNT][CELL_SIDE_COUNT];
+		for(int cellX = 0; cellX < CELL_SIDE_COUNT; cellX++){
+			for(int cellY = 0; cellY < CELL_SIDE_COUNT; cellY++){
+				
+				ArrayList<Particle> nearParticles = new ArrayList<Particle>();
+				for(int dx= -range; dx < range; dx++)
+				{
+					for(int dy= -range; dy < range; dy++)
+					{
+						int thisX = (cellX + dx);
+						int thisY = (cellY + dy);
+						if(thisX >= 0 && thisY >= 0 && thisX < CELL_SIDE_COUNT && thisY < CELL_SIDE_COUNT){
+							nearParticles.addAll(cellList[thisX][thisY]);
+						}
+					}
+				}
+				proximityList[cellX][cellY] = nearParticles;
+			}
+		}
+		
+	}
 
 	//Uses a cell list method
 	public ArrayList<Particle> getNearParticles(Complex p, int range)
 	{
 		int cellX = (int)Math.floor(p.re() / meshWidth);
 		int cellY = (int)Math.floor(p.im() / meshWidth);
-		ArrayList<Particle> nearParticles = new ArrayList<Particle>();
-		for(int dx= -range; dx < range; dx++)
-		{
-			for(int dy= -range; dy < range; dy++)
-			{
-				int thisX = (cellX + dx);
-				int thisY = (cellY + dy);
-				if(thisX >= 0 && thisY >= 0 && thisX < CELL_SIDE_COUNT && thisY < CELL_SIDE_COUNT){
-					nearParticles.addAll(cellList[thisX][thisY]);
-				}
-			}
-		}
-		return nearParticles;
+		return proximityList[cellX][cellY];
 	}
 	
 	//Using b spline interpolation, take a point and return the interpolated matrix's values

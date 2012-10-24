@@ -14,11 +14,12 @@ with open(fileName) as f:
         'names': ('part', 'acc'),
         'formats': ('i', 'd')}, delimiter=',', skiprows=0)
 
-plt.plot(data['part'], data['acc'],'-o')
+plt.plot(data['part'], data['acc'],'-o',label="PME performance")
+plt.plot(data['part'], data['part'] * (data['part'])*1.25e-4,'--',label="0.1 * n log(n)")
 ax = plt.axes()
-ax.set_xlabel("N: Mesh level")
+ax.set_xlabel("Particles")
 #ax.set_yscale('log')
-ax.set_ylabel("Error (Average P.E difference)")
+ax.set_ylabel("Running time (ms)")
 ax.set_title(title)
 legend()
 plt.show()

@@ -7,7 +7,7 @@ import math.Complex;
 public class BSpline {
 	final int order;
 	public double[] bspmod;
-	HashMap<Double, Double> evaluateValues = new HashMap<Double, Double>(); //used to prevent re evaluation
+	HashMap<Integer, Double> evaluateValues = new HashMap<Integer, Double>(); //used to prevent re evaluation
 	public int hits=0;
 	public int misses=0;//Debug variables
 	public BSpline(int order)
@@ -15,12 +15,15 @@ public class BSpline {
 		this.order = order;
 	}
 	
+	private static int getDoubleHash(Double d){
+		return (int) (d * 1e2);
+	}
 	
 	//TODO: this is pretty inefficient
 	//Eq 4.1 Essman[95]
 	public double evaluate(double x)
 	{
-		Double mx = evaluateValues.get(x);
+		Double mx = evaluateValues.get(getDoubleHash(x));
 		if(mx != null)
 		{
 			hits++;
@@ -40,7 +43,7 @@ public class BSpline {
 		}
 		BSpline lowerOrderSpline = new BSpline(order-1);
 		double value = (u / (n-1)) * lowerOrderSpline.evaluate(u) + ((n-u)/(n-1)) * lowerOrderSpline.evaluate(u-1);
-		evaluateValues.put(x, value);
+		evaluateValues.put(getDoubleHash(x), value);
 		return value;
 	}
 	
