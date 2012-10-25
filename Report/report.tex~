@@ -1,7 +1,7 @@
 \documentclass[pdftex,twoside,a4paper]{report}
 \usepackage[pdftex]{graphicx}
 \usepackage[margin=3.0cm]{geometry}
-\usepackage{times}
+%\usepackage{times}
 \usepackage[english]{babel}
 \usepackage[normalem]{ulem}
 \usepackage{algorithm2e}
@@ -108,7 +108,7 @@ This chapter introduces the N body problem, approaches that have been made in th
     \subsection{Related work}
     Comparisons of the \fma{} and the \pmem{} that have been made previously have found that the \pmem{} outperforms the \fma{} in the range $10^4$ - $10^5$. (H. Petersen, \cite{petersen:3668}). A. Toukmaji et al.\ \cite{toukmaji:73} claim that the mesh methods are faster in the range $10^3$ - $10^4$, and the multipole tree methods faster for $N > 10^5$.
     \subsection{Contribution}
-    The contribution to this section of work that this paper provides includes a basic Java implementation of the \pmem{} and the \fma{}. This software allows direct comparison of the two algorithms in terms of speed and accuracy. Additionally, the code was written with readibility in mind, rather than focusing on excessive optimisation, which inhibits readibility and understanding of the code.
+    The contribution to this section of work that this paper provides includes a basic Java implementation of the \pmem{} and the \fma{}. This software allows direct comparison of the two algorithms in terms of speed and accuracy. The code was written with readibility in mind, rather than focusing on excessive optimisation, which obscures the algorithm the code implements.
     
     The report seeks to give insight into the approaches from a Computer Science perspective, while giving the background necessary to understand it from a Computational Chemistry perspective.
     
@@ -501,7 +501,7 @@ Figure \ref{fig:fma_complex_a} shows the same range as Figure \ref{fig:basic_alg
 
 Figure \ref{fig:fma_complex_b} shows the \fma's run time for much larger problems, with up to 20,000 particles. We can see the initialisation time stay constant, while the total time grows linearly. So, we confirm that our implementation of the \fma is in the complexity class $O(n)$ \newline
 \subsubsection{Method analysis}
-Using \texttt{VisualVM} \cite{VisualVM}, the table below of running times spent in each method was produced.
+Using \texttt{VisualVM} \footnote{VisualVM, \url{http://visualvm.java.net/}}, the table below of running times spent in each method was produced.
 
 \begin{table}[H]
     \begin{tabular}{|l|l|l|}

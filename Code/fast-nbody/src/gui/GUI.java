@@ -40,8 +40,8 @@ public class GUI implements ActionListener, PropertyChangeListener{
 	static int RANDOM_PARTICLE_NUMBER = 50; //The number of particles to distribute randomly by default
 	static int REGULAR_PARTICLE_NUMER = 5000;
 	//Benchmarking
-	static int BENCHMARK_INCREMENT = 1000;
-	static int BENCHMARK_MAXIMUM = 20000;
+	static int BENCHMARK_INCREMENT = 50;
+	static int BENCHMARK_MAXIMUM = 2000;
 	static int BENCHMARK_MINIMUM = 0;
 	TimingTask currentBenchmarkingTask;
 	Class<? extends ParticleList> benchmarkClass;

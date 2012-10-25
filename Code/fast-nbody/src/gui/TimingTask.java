@@ -100,7 +100,7 @@ public class TimingTask extends SwingWorker<Void,Void>{
 				}
 				out.close();
 			}
-			System.out.println("[Timing Task] N="+particleList.size()+"\t Total time: "+average(totalTimes) + 
+			System.out.println("[TimingTask] N="+particleList.size()+"\t Total time: "+average(totalTimes) + 
 					"\t Initialisation time: "+average(initTimes)+" ms"); //If it's a timing task, the average will be the avg from one array
 	        return null;
 	}

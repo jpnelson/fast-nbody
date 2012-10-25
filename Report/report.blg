@@ -12,50 +12,53 @@ I was expecting a `,' or a `}'---line 93 of file references.bib
  :     year = {2012}
 (Error may have been on previous line)
 I'm skipping whatever remains of this entry
+Warning--I'm ignoring spherical's extra "title" field
+--line 127 of file references.bib
+Warning--empty journal in spherical
 Warning--empty title in ewald
 Warning--empty journal in lee05
 Warning--empty journal in principia
 Warning--empty journal in poincare
 Warning--empty title in samaj
-You've used 13 entries,
+You've used 14 entries,
             2118 wiz_defined-function locations,
-            572 strings with 5489 characters,
-and the built_in function-call counts, 3492 in all, are:
-= -- 331
-> -- 140
+            579 strings with 5678 characters,
+and the built_in function-call counts, 3798 in all, are:
+= -- 361
+> -- 147
 < -- 0
-+ -- 62
-- -- 44
-* -- 215
-:= -- 610
-add.period$ -- 38
-call.type$ -- 13
-change.case$ -- 59
++ -- 65
+- -- 46
+* -- 240
+:= -- 659
+add.period$ -- 41
+call.type$ -- 14
+change.case$ -- 63
 chr.to.int$ -- 0
-cite$ -- 18
-duplicate$ -- 127
-empty$ -- 297
-format.name$ -- 44
-if$ -- 716
+cite$ -- 20
+duplicate$ -- 138
+empty$ -- 326
+format.name$ -- 46
+if$ -- 780
 int.to.chr$ -- 0
-int.to.str$ -- 13
-missing$ -- 10
-newline$ -- 67
-num.names$ -- 26
-pop$ -- 74
+int.to.str$ -- 14
+missing$ -- 11
+newline$ -- 72
+num.names$ -- 28
+pop$ -- 78
 preamble$ -- 1
-purify$ -- 48
+purify$ -- 51
 quote$ -- 0
-skip$ -- 88
+skip$ -- 95
 stack$ -- 0
-substring$ -- 205
+substring$ -- 237
 swap$ -- 10
 text.length$ -- 0
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 52
-warning$ -- 5
-while$ -- 32
-width$ -- 15
-write$ -- 132
+type$ -- 56
+warning$ -- 6
+while$ -- 35
+width$ -- 16
+write$ -- 142
 (There were 2 error messages)

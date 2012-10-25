@@ -18,7 +18,7 @@ import particles.ParticleList;
 
 public class SPMEList extends ParticleList {
 	static int CELL_SIDE_COUNT = 64; //K (Essman[95])
-	static int ASSIGNMENT_SCHEME_ORDER = 6;
+	static int ASSIGNMENT_SCHEME_ORDER = 4;
 	public final double ewaldCoefficient; //The ewald coefficient
 	static double TOLERANCE = 1e-8;//Used to calculate ewaldCoefficient
 	static double CUTOFF_DISTANCE = 0.25;//Used to calculate ewaldCoefficient. In unit cell dimensions
@@ -112,9 +112,8 @@ public class SPMEList extends ParticleList {
 		initQMatrix();
 		invertQMatrixFFT();
 		getRecEnergy(); //Important part of the process, as it creates the convoluted matrix while calculating the energy.
-		calculateRecForces(); //Also important as it does the forward fourier transformation.
+		convoluteMatrix(); //Does the forward fourier transformation.
 		System.out.println("[SPMEList] BSpline hit ratio: "+100*(double)((double)(M.hits)/(double)(M.hits+M.misses))+"%");
-
 		//Starting Eq 4.7 Essman[95]
 		//The matrix approach (commented out currently)
 		/*double[][] BC = MatrixOperations.straightMultiply(B, C);
@@ -164,7 +163,6 @@ public class SPMEList extends ParticleList {
 						//Just before Eq 3.1 Essman[95]
 						double uX = (CELL_SIDE_COUNT) * (particleX / 1.0);//Unit cell already in fractional coordinates
 						double uY = (CELL_SIDE_COUNT) * (particleY / 1.0);
-						//Removed periodic images? Seems to be off by a grid cell in x/y? FIXME?
 						double a = M.evaluate(uX-x);
 						double b = M.evaluate(uY-y);
 						sum += p.getCharge() * a * b;
@@ -197,17 +195,22 @@ public class SPMEList extends ParticleList {
 		return x*x;
 	}
 	
-	
-	//Requires getRecEnergy to have been called, which fills the convolutedMatrix
-	private void calculateRecForces(){
+	private void convoluteMatrix(){
 		//Perform a FFT on convolutedMatrix to make theta * Q from B C F^-1(Q)
 		//Make IFTQ ourselves
 		DoubleFFT_2D fft = new DoubleFFT_2D(CELL_SIDE_COUNT,CELL_SIDE_COUNT);
 		double[][] convolutedDoubles = Complex.complexToDoubleArray2D(convolutedMatrix);
 		fft.complexForward(convolutedDoubles);
 		convolutedMatrix = Complex.doubleToComplexArray2D(convolutedDoubles); //F(B C F^-1(Q)) Pg. 182 Lee[05]
+	}
+	
+	
+	//Requires getRecEnergy to have been called, which fills the convolutedMatrix
+	//Requires convoluteMatrix to have been called, which performs the FFT to do the convolution
+	private void calculateRecForces(){
 		
-		/*for(Particle p : this){
+		
+		for(Particle p : this){
 			//Pg 183 Lee[05]
 			//For each grid point that this particle has been interpolated to
 			for(int dx = -ASSIGNMENT_SCHEME_ORDER; dx < ASSIGNMENT_SCHEME_ORDER; dx++)
@@ -228,7 +231,7 @@ public class SPMEList extends ParticleList {
 					}
 				}
 			}
-		}*/
+		}
 		
 	}
 	
@@ -397,7 +400,6 @@ public class SPMEList extends ParticleList {
 				proximityList[cellX][cellY] = nearParticles;
 			}
 		}
-		
 	}
 
 	//Uses a cell list method
@@ -429,9 +431,6 @@ public class SPMEList extends ParticleList {
 		}
 		return sum;
 	}
-
-
-
 
 	@Override
 	public double potential(Complex position) { //position is in coordinates out of the original dimensions given
