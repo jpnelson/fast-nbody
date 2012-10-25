@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2012.5.5)  26 OCT 2012 00:04
+This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2012.5.5)  26 OCT 2012 00:24
 entering extended mode
  %&-line parsing enabled.
 **report.tex
@@ -702,53 +702,61 @@ Underfull \hbox (badness 10000) in paragraph at lines 378--380
  []
 
 [14 <./figures/fma_mesh.pdf> <./figures/wellsep.pdf>]
-Underfull \hbox (badness 10000) detected at line 458
+Underfull \hbox (badness 10000) detected at line 460
 [][]
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 461--462
+Underfull \hbox (badness 10000) in paragraph at lines 425--461
 
  []
 
-[15] [16] <figures/graphs/fma_0_5000.pdf, id=527, 587.19376pt x 442.65375pt>
+
+Underfull \vbox (badness 3375) has occurred while \output is active []
+
+ [15]
+Underfull \hbox (badness 10000) in paragraph at lines 463--464
+
+ []
+
+<figures/graphs/fma_0_5000.pdf, id=522, 587.19376pt x 442.65375pt>
 File: figures/graphs/fma_0_5000.pdf Graphic file (type pdf)
 
 <use figures/graphs/fma_0_5000.pdf>
-<figures/graphs/fma_2k_20k.pdf, id=528, 587.19376pt x 442.65375pt>
+<figures/graphs/fma_2k_20k.pdf, id=523, 587.19376pt x 442.65375pt>
 File: figures/graphs/fma_2k_20k.pdf Graphic file (type pdf)
 
-<use figures/graphs/fma_2k_20k.pdf>
-Underfull \hbox (badness 10000) in paragraph at lines 480--481
+<use figures/graphs/fma_2k_20k.pdf> [16]
+Underfull \hbox (badness 10000) in paragraph at lines 482--483
 
  []
 
 
-Overfull \hbox (4.48616pt too wide) in paragraph at lines 485--494
+Overfull \hbox (4.48616pt too wide) in paragraph at lines 487--496
 [][]
  []
 
-[17 <./figures/graphs/fma_0_5000.pdf> <./figures/graphs/fma_2k_20k.pdf>]
-<figures/graphs/fma_mesh_acc.pdf, id=628, 587.19376pt x 442.65375pt>
+<figures/graphs/fma_mesh_acc.pdf, id=539, 587.19376pt x 442.65375pt>
 File: figures/graphs/fma_mesh_acc.pdf Graphic file (type pdf)
 
-<use figures/graphs/fma_mesh_acc.pdf>
-<figures/graphs/fma_fixed_mesh_acc.pdf, id=632, 587.19376pt x 442.65375pt>
+<use figures/graphs/fma_mesh_acc.pdf> [17 <./figures/graphs/fma_0_5000.pdf> <./
+figures/graphs/fma_2k_20k.pdf>]
+<figures/graphs/fma_fixed_mesh_acc.pdf, id=634, 587.19376pt x 442.65375pt>
 File: figures/graphs/fma_fixed_mesh_acc.pdf Graphic file (type pdf)
 
 <use figures/graphs/fma_fixed_mesh_acc.pdf>
-<figures/graphs/fma_terms_acc.pdf, id=634, 587.19376pt x 442.65375pt>
+<figures/graphs/fma_terms_acc.pdf, id=636, 587.19376pt x 442.65375pt>
 File: figures/graphs/fma_terms_acc.pdf Graphic file (type pdf)
 
 <use figures/graphs/fma_terms_acc.pdf> [18 <./figures/graphs/fma_mesh_acc.pdf>]
 [19 <./figures/graphs/fma_fixed_mesh_acc.pdf> <./figures/graphs/fma_terms_acc.p
 df>]
 Chapter 3.
-<figures/graphs/comp_graph.pdf, id=785, 587.19376pt x 442.65375pt>
+<figures/graphs/comp_graph.pdf, id=789, 587.19376pt x 442.65375pt>
 File: figures/graphs/comp_graph.pdf Graphic file (type pdf)
 
 <use figures/graphs/comp_graph.pdf>
-<figures/graphs/comp_graph_low.pdf, id=787, 587.19376pt x 442.65375pt>
+<figures/graphs/comp_graph_low.pdf, id=791, 587.19376pt x 442.65375pt>
 File: figures/graphs/comp_graph_low.pdf Graphic file (type pdf)
 
 <use figures/graphs/comp_graph_low.pdf> [20
@@ -761,24 +769,24 @@ Appendix A.
 ]
 Appendix B.
 
-Underfull \hbox (badness 10000) in paragraph at lines 620--621
+Underfull \hbox (badness 10000) in paragraph at lines 625--626
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 631--633
+Underfull \hbox (badness 10000) in paragraph at lines 636--638
 
  []
 
 
-Underfull \hbox (badness 10000) detected at line 679
+Underfull \hbox (badness 10000) detected at line 684
 [][]
  []
 
 [24
 
 ]
-Underfull \hbox (badness 10000) detected at line 714
+Underfull \hbox (badness 10000) detected at line 719
 [][]
  []
 
@@ -795,33 +803,47 @@ Missing character: There is no © in font ptmr7t!
 
 LaTeX Warning: There were undefined references.
 
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
  ) 
 Here is how much of TeX's memory you used:
- 8554 strings out of 495061
- 122340 string characters out of 1182622
- 236674 words of memory out of 3000000
- 11378 multiletter control sequences out of 15000+50000
+ 8558 strings out of 495061
+ 122400 string characters out of 1182622
+ 234723 words of memory out of 3000000
+ 11379 multiletter control sequences out of 15000+50000
  41502 words of font info for 84 fonts, out of 3000000 for 9000
  28 hyphenation exceptions out of 8191
  38i,23n,39p,1236b,448s stack positions out of 5000i,500n,10000p,200000b,50000s
-{/usr/share/texmf-texlive/fonts/enc/dvips/base/8r.enc}</usr/share/texmf-texli
-ve/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texmf-texlive/fonts/ty
-pe1/public/amsfonts/cm/cmmi10.pfb></usr/share/texmf-texlive/fonts/type1/public/
-amsfonts/cm/cmmi12.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm
-/cmmi7.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmr10.pfb><
-/usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/t
-exmf-texlive/fonts/type1/public/amsfonts/cm/cmr5.pfb></usr/share/texmf-texlive/
-fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/share/texmf-texlive/fonts/type1/p
-ublic/amsfonts/cm/cmsy10.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfo
-nts/cm/cmsy5.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmsy7
-.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/symbols/msbm10.pfb><
-/usr/share/texmf-texlive/fonts/type1/urw/courier/ucrr8a.pfb></usr/share/texmf-t
-exlive/fonts/type1/urw/times/utmb8a.pfb></usr/share/texmf-texlive/fonts/type1/u
-rw/times/utmr8a.pfb></usr/share/texmf-texlive/fonts/type1/urw/times/utmri8a.pfb
->
-Output written on report.pdf (27 pages, 2500530 bytes).
+pdfTeX warning (dest): name{figure.caption.46} has been referenced but does n
+ot exist, replaced by a fixed one
+
+pdfTeX warning (dest): name{figure.caption.42} has been referenced but does not
+ exist, replaced by a fixed one
+
+pdfTeX warning (dest): name{figure.caption.37} has been referenced but does not
+ exist, replaced by a fixed one
+
+pdfTeX warning (dest): name{algocf.caption.35} has been referenced but does not
+ exist, replaced by a fixed one
+
+{/usr/share/texmf-texlive/fonts/enc/dvips/base/8r.enc}</usr/share/texmf-texlive
+/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texmf-texlive/fonts/type
+1/public/amsfonts/cm/cmmi10.pfb></usr/share/texmf-texlive/fonts/type1/public/am
+sfonts/cm/cmmi12.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/c
+mmi7.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmr10.pfb></u
+sr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/tex
+mf-texlive/fonts/type1/public/amsfonts/cm/cmr5.pfb></usr/share/texmf-texlive/fo
+nts/type1/public/amsfonts/cm/cmr7.pfb></usr/share/texmf-texlive/fonts/type1/pub
+lic/amsfonts/cm/cmsy10.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfont
+s/cm/cmsy5.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmsy7.p
+fb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/symbols/msbm10.pfb></u
+sr/share/texmf-texlive/fonts/type1/urw/courier/ucrr8a.pfb></usr/share/texmf-tex
+live/fonts/type1/urw/times/utmb8a.pfb></usr/share/texmf-texlive/fonts/type1/urw
+/times/utmr8a.pfb></usr/share/texmf-texlive/fonts/type1/urw/times/utmri8a.pfb>
+Output written on report.pdf (27 pages, 2501380 bytes).
 PDF statistics:
- 1020 PDF objects out of 1200 (max. 8388607)
- 160 named destinations out of 1000 (max. 500000)
+ 1025 PDF objects out of 1200 (max. 8388607)
+ 163 named destinations out of 1000 (max. 500000)
  414 words of extra memory for PDF output out of 10000 (max. 10000000)
 

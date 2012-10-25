@@ -422,9 +422,9 @@ b_0 = \sum_{k=1} ^{\infty} \frac{a^k}{z^k_0} (-1)^k + a_0 \log(-z_0)
 
 \subsection{The algorithm}
 \label{sec:fma_alg}
-The basic flow of the algorithm is given below\\
+The basic flow of the \fma{} is given in Algorithm \ref{alg:fma}\\
 %%%%%PSEUDOCODE%%%%%%%%%
-\begin{algorithm}
+\begin{algorithm}[H]
 \SetLine
 \KwData{level-count: the number of mesh levels we create, $P$: the set of particles, $r$: a point at which we wish to calculate the potential}
 \For{i=0 to level-count}{Initialise mesh[i] by adding all particles $p \in P$ to the appropriate cells}
@@ -455,6 +455,8 @@ Set the cumulative potential to 0\;
     }
 }
 Return the cumulative potential\;
+\caption{The \fma{}}
+\label{alg:fma}
 \end{algorithm}
 
 \subsection{The implementation}
@@ -590,11 +592,11 @@ The obvious disadvantage to the Basic Algorithm is it's complexity of $O(n^2)$, 
 \section{Conclusion}
 For the system sizes tested, the Basic Algorithm was the fastest up to a system size with approximately 750 particles, and the \fma{} was consistently the fastest after this, by a factor of roughly 2 to 3. The \fma{} is recommended if algorithmic simplicity is sought, if the simulation environment is 2-Dimensional, or if a multi cpu architecture is not used.
 
-However, the \pmem{} enjoys many advantages that cater it to high perfomance scientific computing, and particularly computational chemistry. While the \pmem{} is slower in this implementation, other implementations with a focus on optimisation could make the \pmem{} competitive with the \fma{}. 
+However, the \pmem{} enjoys many advantages that make it suitable for high perfomance scientific computing, and particularly computational chemistry. While the \pmem{} is slower in this implementation, other implementations with a focus on optimisation could make the \pmem{} competitive with the \fma{}. 
 
 %%%%%%_________APPENDICES____________
 \appendix
-\chapter{Implementation}
+\chapter{Technical details}
 \label{ap:implement}
 \section{Benchmark computer details}
 \begin{table}[h]
@@ -609,6 +611,9 @@ However, the \pmem{} enjoys many advantages that cater it to high perfomance sci
     \end{tabular}
     \caption{The relevant specifications for the computer used to benchmark the algorithms presented in the paper.}
 \end{table}
+
+All calculations were carried out to \texttt{double} precision.
+
 
 %_______MATHS APPENDIX_______
 \chapter{Algorithms and Mathematics}
