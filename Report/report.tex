@@ -86,7 +86,7 @@ Dr Eric \textsc{McCreath} \\
 
 
 \begin{abstract}
-The N body problem is common across the fields of physics, biology and chemistry. The classic solution to this problem has an inhibitive complexity in the class $O(n^2)$. Two alternative methods were examined: The Fast Multipole Algorithm, and the Particle Mesh Ewald Method, with better complexities of $O(n)$ and $O(n \text{log}(n))$, respectively. These algorithms were implemented in Java, and their efficiencies were discussed and compared. The algorithms were run over typical molecular dynamics simulations to determine the most efficient algorithm for the N-body problem.
+The N body problem is common across the fields of physics, biology and chemistry. The classic solution to this problem has an inhibitive complexity in the class $O(n^2)$. Two alternative methods were examined: The Fast Multipole Algorithm, and the Particle Mesh Ewald Method, with better complexities of $O(n)$ and $O(n \text{log}(n))$, respectively. These algorithms were implemented in Java, and their efficiencies were discussed and compared. The algorithms were run over typical molecular dynamics simulations to determine the most efficient algorithm for the N-body problem. It was found that the \fma{} was the most efficient algorithm for this architecture and implementation, but the \pmem{} may be preferable in high perfomance parallel applications. The algorithms and their advantages / disadvantages were discussed in detail.
 \end{abstract}
 
 \tableofcontents

@@ -13,7 +13,7 @@ Tom Darden, Darrin York, and Lee Pedersen.
 
 \bibitem{spherical}
 T.F. Eibert.
-\newblock Antennas and propagation, ieee transactions on.
+\newblock Antennas and propagation, {IEEE} transactions on.
 \newblock 53(2):814 -- 817, feb. 2005.
 
 \bibitem{essmann:8577}
@@ -43,7 +43,7 @@ Max~Planck institute~of Astrophysics.
 
 \bibitem{lee05}
 Sam Lee.
-\newblock An fpga implementation of the smooth particle mesh ewald reciprocal
+\newblock An {FPGA} implementation of the smooth particle mesh ewald reciprocal
   sum compute engine (rsce).
 \newblock 2005.
 
@@ -69,7 +69,7 @@ L.~Samaj.
 
 \bibitem{NAMD}
 Theoretical and Computational~Biophysics group.
-\newblock Namd scalable molecular dynamics.
+\newblock {NAMD} scalable molecular dynamics.
 \newblock \url{http://www.ks.uiuc.edu/Research/namd/}.
 \newblock Accessed: 10/10/2012.
 
