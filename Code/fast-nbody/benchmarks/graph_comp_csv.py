@@ -15,8 +15,8 @@ with open(fileName) as f:
         'formats': ('i', 'i', 'i', 'i', 'i', 'i', 'i')}, delimiter=',', skiprows=0)
 
 plt.plot(data['particles'], data['spme_total'],'-o',label="PME")
-plt.plot(data['particles'], data['fma_total'],'-o',label="FMA")
-plt.plot(data['particles'], data['bas_total'],'-o',label="Basic algorithm")
+plt.plot(data['particles'], data['fma_total'],'-v',label="FMA")
+plt.plot(data['particles'], data['bas_total'],'-s',label="Basic algorithm")
 ax = plt.axes()
 ax.set_xlabel("Particles")
 #ax.set_yscale('log')

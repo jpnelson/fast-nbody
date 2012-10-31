@@ -15,8 +15,6 @@
 \@writefile{toc}{\select@language{english}}
 \@writefile{lof}{\select@language{english}}
 \@writefile{lot}{\select@language{english}}
-\@writefile{loa}{\addvspace {10\p@ }}
-\@writefile{loa}{\addvspace {10\p@ }}
 \citation{MilleniumRun}
 \citation{NAMD}
 \citation{principia}
@@ -35,14 +33,13 @@
 \@writefile{toc}{\contentsline {subsection}{\numberline {1.1.2}History of the problem}{3}{subsection.1.1.2}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {1.1.3}Related work}{4}{subsection.1.1.3}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {1.1.4}Contribution}{4}{subsection.1.1.4}}
-\@writefile{loa}{\addvspace {10\p@ }}
 \@writefile{toc}{\contentsline {chapter}{\numberline {2}Algorithms for the N body problem}{5}{chapter.2}}
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \@writefile{toc}{\contentsline {section}{\numberline {2.1}The $O(n^2)$ solution}{5}{section.2.1}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.1.1}The algorithm}{5}{subsection.2.1.1}}
-\@writefile{loa}{\contentsline {algocf}{\numberline {1}{\ignorespaces The basic approach to the N body problem\relax }}{5}{algocf.1}}
-\newlabel{alg:basic}{{1}{5}{The algorithm\relax }{algocf.1}{}}
+\@writefile{loa}{\contentsline {algocf}{\numberline {1}{\ignorespaces The basic approach to the N body problem\relax }}{5}{algocf.caption.3}}
+\newlabel{alg:basic}{{1}{5}{The algorithm\relax }{algocf.caption.3}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.1.2}Implementation analysis}{5}{subsection.2.1.2}}
 \@writefile{lof}{\contentsline {figure}{\numberline {2.1}{\ignorespaces The na\"{\i }ve approach to the n body problem - calculate each interaction for each particle\relax }}{6}{figure.caption.2}}
 \providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
@@ -51,26 +48,25 @@
 \newlabel{fig:basic_algo_complex}{{2.2}{6}{The basic algorithm's run time compared to a function of $N^2$. It is easy to see that the basic algorithms run time grows proportionally to $N^2$, as we would expect from it's complexity class $O(n^2)$\relax \relax }{figure.caption.4}{}}
 \citation{petersen:3668}
 \citation{essmann:8577}
-\citation{essmann:8577}
-\citation{toukmaji:73}
 \@writefile{toc}{\contentsline {section}{\numberline {2.2}The particle mesh ewald method}{7}{section.2.2}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.2.1}Background}{7}{subsection.2.2.1}}
 \@writefile{toc}{\contentsline {subsubsection}{Potential vs. Energy}{7}{section*.5}}
 \@writefile{toc}{\contentsline {subsubsection}{Ewald summation}{7}{section*.6}}
 \@writefile{toc}{\contentsline {subsubsection}{Real space computation}{7}{section*.7}}
 \@writefile{toc}{\contentsline {subsubsection}{Reciprocal space computation}{7}{section*.9}}
-\@writefile{toc}{\contentsline {subsubsection}{Periodic boundary conditions}{7}{section*.11}}
-\newlabel{sec:pme_period_bound_cond}{{2.2.1}{7}{Periodic boundary conditions\relax }{section*.11}{}}
 \@writefile{lof}{\contentsline {figure}{\numberline {2.3}{\ignorespaces A particle and the particles that we consider it's interactions with, based on the cutoff distance\relax }}{8}{figure.caption.8}}
 \@writefile{lof}{\contentsline {figure}{\numberline {2.4}{\ignorespaces A distribution of continuous charges, and an interpretation of them as discrete charges\relax }}{8}{figure.caption.10}}
 \citation{essmann:8577}
+\citation{toukmaji:73}
+\citation{essmann:8577}
 \@writefile{lof}{\contentsline {figure}{\numberline {2.5}{\ignorespaces A particle interacting with it's nearest neighbours, with periodic boundary conditions in one dimension (x axis)\relax }}{9}{figure.caption.12}}
 \newlabel{fig:pme_pbc}{{2.5}{9}{A particle interacting with it's nearest neighbours, with periodic boundary conditions in one dimension (x axis)\relax \relax }{figure.caption.12}{}}
+\@writefile{toc}{\contentsline {subsubsection}{Periodic boundary conditions}{9}{section*.11}}
+\newlabel{sec:pme_period_bound_cond}{{2.2.1}{9}{Periodic boundary conditions\relax }{section*.11}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.2.2}Mathematical description}{9}{subsection.2.2.2}}
 \@writefile{toc}{\contentsline {subsubsection}{Interpolating the charges to the Q array}{9}{section*.13}}
 \newlabel{sec:math_desc_lagrange}{{2.2.2}{9}{Interpolating the charges to the Q array\relax }{section*.13}{}}
 \newlabel{eq:q_array}{{2.1}{9}{Interpolating the charges to the Q array\relax }{equation.2.2.1}{}}
-\@writefile{toc}{\contentsline {subsubsection}{Calculating electrostatic potential from the Q array}{9}{section*.14}}
 \citation{essmann:8577}
 \citation{lee05}
 \citation{darden:10089}
@@ -78,6 +74,7 @@
 \citation{essmann:8577}
 \citation{essmann:8577}
 \citation{lee05}
+\@writefile{toc}{\contentsline {subsubsection}{Calculating electrostatic potential from the Q array}{10}{section*.14}}
 \newlabel{eq:energy_rec}{{2.2}{10}{Calculating electrostatic potential from the Q array\relax }{equation.2.2.2}{}}
 \@writefile{toc}{\contentsline {subsubsection}{Interpolating energies back from the mesh in real space}{10}{section*.15}}
 \newlabel{sec:interpolate_from_grid}{{2.2.2}{10}{Interpolating energies back from the mesh in real space\relax }{section*.15}{}}
@@ -89,137 +86,137 @@
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.2.3}The algorithm}{11}{subsection.2.2.3}}
 \@writefile{toc}{\contentsline {subsubsection}{Main particle mesh ewald flow}{11}{section*.17}}
 \newlabel{alg:pme}{{2}{11}{Main particle mesh ewald flow\relax }{algocfline.2}{}}
-\@writefile{loa}{\contentsline {algocf}{\numberline {2}{\ignorespaces The Particle Mesh Ewald Method\relax }}{11}{algocf.2}}
+\@writefile{loa}{\contentsline {algocf}{\numberline {2}{\ignorespaces The Particle Mesh Ewald Method\relax }}{11}{algocfline.2}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.2.4}The implementation}{11}{subsection.2.2.4}}
 \@writefile{toc}{\contentsline {subsubsection}{The Cardinal B Spline}{11}{section*.18}}
 \@writefile{toc}{\contentsline {subsubsection}{Fast Fourier Transformations}{11}{section*.19}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.2.5}Running time analysis}{11}{subsection.2.2.5}}
 \@writefile{toc}{\contentsline {subsubsection}{Cardinal B spline}{11}{section*.20}}
 \newlabel{sec:optimisations}{{2.2.5}{11}{Cardinal B spline\relax }{section*.20}{}}
+\citation{essmann:8577}
 \@writefile{lof}{\contentsline {figure}{\numberline {2.6}{\ignorespaces The running time of the Particle Mesh Ewald method{} with increasing system size\relax }}{12}{figure.caption.22}}
 \newlabel{fig:pme_alg_complex}{{2.6}{12}{The running time of the \pmem {} with increasing system size\relax \relax }{figure.caption.22}{}}
-\citation{essmann:8577}
+\@writefile{toc}{\contentsline {subsubsection}{Algorithm complexity}{12}{section*.21}}
+\@writefile{toc}{\contentsline {subsubsection}{Method analysis}{12}{section*.23}}
+\@writefile{lot}{\contentsline {table}{\numberline {2.1}{\ignorespaces The proportion of the running time spent in each method for the Fast Multipole Algorithmwhile benchmarking.\relax }}{12}{table.caption.24}}
+\newlabel{tab:pme_time_breakdown}{{2.1}{12}{The proportion of the running time spent in each method for the \fma while benchmarking.\relax \relax }{table.caption.24}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2.6}Accuracy analysis}{12}{subsection.2.2.6}}
 \citation{Ihler04}
 \citation{greengard:315}
-\@writefile{toc}{\contentsline {subsubsection}{Algorithm complexity}{13}{section*.21}}
-\@writefile{toc}{\contentsline {subsubsection}{Method analysis}{13}{section*.23}}
-\@writefile{lot}{\contentsline {table}{\numberline {2.1}{\ignorespaces The proportion of the running time spent in each method for the Fast Multipole Algorithmwhile benchmarking.\relax }}{13}{table.caption.24}}
-\newlabel{tab:pme_time_breakdown}{{2.1}{13}{The proportion of the running time spent in each method for the \fma while benchmarking.\relax \relax }{table.caption.24}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.2.6}Accuracy analysis}{13}{subsection.2.2.6}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.7}{\ignorespaces A visual comparison of the error of the Particle Mesh Ewald method{}. The different contours represent levels of potential.\relax }}{13}{figure.caption.25}}
+\newlabel{fig:fig:pme_acc}{{2.7}{13}{A visual comparison of the error of the \pmem {}. The different contours represent levels of potential.\relax \relax }{figure.caption.25}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {2.3}The Fast multipole algorithm}{13}{section.2.3}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.3.1}Background}{13}{subsection.2.3.1}}
 \@writefile{toc}{\contentsline {subsubsection}{Complex plane}{13}{section*.26}}
 \@writefile{toc}{\contentsline {subsubsection}{Multipole expansions}{13}{section*.27}}
-\@writefile{lof}{\contentsline {figure}{\numberline {2.7}{\ignorespaces A visual comparison of the error of the Particle Mesh Ewald method{}. The different contours represent levels of potential.\relax }}{14}{figure.caption.25}}
-\newlabel{fig:fig:pme_acc}{{2.7}{14}{A visual comparison of the error of the \pmem {}. The different contours represent levels of potential.\relax \relax }{figure.caption.25}{}}
-\@writefile{toc}{\contentsline {subsubsection}{The mesh}{15}{section*.28}}
-\@writefile{lof}{\contentsline {figure}{\numberline {2.8}{\ignorespaces A simulation cell, with meshes up to level 2 displayed, giving $2^n = 2^2 = 4$ boxes per side\relax }}{15}{figure.caption.29}}
-\@writefile{toc}{\contentsline {subsubsection}{Well separated cells}{15}{section*.30}}
-\newlabel{sec:well_sep}{{2.3.1}{15}{Well separated cells\relax }{section*.30}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {2.9}{\ignorespaces A cell, marked with a circle, and the squares that are well separated from it, marked with crosses.\relax }}{15}{figure.caption.31}}
-\newlabel{fig:pme_wellsep}{{2.9}{15}{A cell, marked with a circle, and the squares that are well separated from it, marked with crosses.\relax \relax }{figure.caption.31}{}}
+\@writefile{toc}{\contentsline {subsubsection}{The mesh}{13}{section*.28}}
 \citation{greengard:315}
 \citation{samaj}
 \citation{greengard:315}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.8}{\ignorespaces A simulation cell, with meshes up to level 2 displayed, giving $2^n = 2^2 = 4$ boxes per side\relax }}{14}{figure.caption.29}}
+\@writefile{toc}{\contentsline {subsubsection}{Well separated cells}{14}{section*.30}}
+\newlabel{sec:well_sep}{{2.3.1}{14}{Well separated cells\relax }{section*.30}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.9}{\ignorespaces A cell, marked with a circle, and the squares that are well separated from it, marked with crosses.\relax }}{14}{figure.caption.31}}
+\newlabel{fig:pme_wellsep}{{2.9}{14}{A cell, marked with a circle, and the squares that are well separated from it, marked with crosses.\relax \relax }{figure.caption.31}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3.2}Mathematical description}{14}{subsection.2.3.2}}
+\newlabel{sec:fma_math}{{2.3.2}{14}{Mathematical description\relax }{subsection.2.3.2}{}}
+\@writefile{toc}{\contentsline {subsubsection}{Potential and the multipole expansion approximation}{14}{section*.32}}
+\newlabel{eq:potential}{{2.7}{14}{Potential and the multipole expansion approximation\relax }{equation.2.3.7}{}}
 \citation{greengard:315}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.3.2}Mathematical description}{16}{subsection.2.3.2}}
-\newlabel{sec:fma_math}{{2.3.2}{16}{Mathematical description\relax }{subsection.2.3.2}{}}
-\@writefile{toc}{\contentsline {subsubsection}{Potential and the multipole expansion approximation}{16}{section*.32}}
-\newlabel{eq:potential}{{2.7}{16}{Potential and the multipole expansion approximation\relax }{equation.2.3.7}{}}
-\newlabel{eq:multipole_expansion}{{2.8}{16}{Potential and the multipole expansion approximation\relax }{equation.2.3.8}{}}
-\@writefile{toc}{\contentsline {subsubsection}{Shifting multipole expansions}{16}{section*.33}}
-\newlabel{eq:pre_shift_multipole}{{2.10}{16}{Shifting multipole expansions\relax }{equation.2.3.10}{}}
-\newlabel{eq:shifted_multipole}{{2.11}{16}{Shifting multipole expansions\relax }{equation.2.3.11}{}}
-\newlabel{eq:b_descr}{{2.12}{16}{Shifting multipole expansions\relax }{equation.2.3.12}{}}
-\@writefile{toc}{\contentsline {subsubsection}{Local expansions}{16}{section*.34}}
-\newlabel{local_expansion}{{2.13}{16}{Local expansions\relax }{equation.2.3.13}{}}
-\newlabel{where_local_expansion}{{2.14}{16}{Local expansions\relax }{equation.2.3.14}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.3.3}The algorithm}{17}{subsection.2.3.3}}
-\newlabel{sec:fma_alg}{{2.3.3}{17}{The algorithm\relax }{subsection.2.3.3}{}}
-\@writefile{loa}{\contentsline {algocf}{\numberline {3}{\ignorespaces The Fast Multipole Algorithm{}\relax }}{17}{algocf.3}}
-\newlabel{alg:fma}{{3}{17}{The algorithm\relax }{algocf.3}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.3.4}The implementation}{17}{subsection.2.3.4}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.3.5}Running time analysis}{17}{subsection.2.3.5}}
-\@writefile{toc}{\contentsline {subsubsection}{Complexity analysis}{17}{section*.35}}
-\newlabel{fig:fma_complex_a}{{\caption@xref {fig:fma_complex_a}{ on input line 474}}{18}{Complexity analysis\relax }{figure.caption.36}{}}
-\newlabel{fig:fma_complex_b}{{\caption@xref {fig:fma_complex_b}{ on input line 475}}{18}{Complexity analysis\relax }{figure.caption.36}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {2.10}{\ignorespaces The Fast Multipole Algorithm's performance over the group of systems in the range 0 to 5,000 particles, and 0 to 20,000.\relax }}{18}{figure.caption.36}}
-\newlabel{fig:fma_complex}{{2.10}{18}{The \fma 's performance over the group of systems in the range 0 to 5,000 particles, and 0 to 20,000.\relax \relax }{figure.caption.36}{}}
+\newlabel{eq:multipole_expansion}{{2.8}{15}{Potential and the multipole expansion approximation\relax }{equation.2.3.8}{}}
+\@writefile{toc}{\contentsline {subsubsection}{Shifting multipole expansions}{15}{section*.33}}
+\newlabel{eq:pre_shift_multipole}{{2.10}{15}{Shifting multipole expansions\relax }{equation.2.3.10}{}}
+\newlabel{eq:shifted_multipole}{{2.11}{15}{Shifting multipole expansions\relax }{equation.2.3.11}{}}
+\newlabel{eq:b_descr}{{2.12}{15}{Shifting multipole expansions\relax }{equation.2.3.12}{}}
+\@writefile{toc}{\contentsline {subsubsection}{Local expansions}{15}{section*.34}}
+\newlabel{local_expansion}{{2.13}{15}{Local expansions\relax }{equation.2.3.13}{}}
+\newlabel{where_local_expansion}{{2.14}{15}{Local expansions\relax }{equation.2.3.14}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3.3}The algorithm}{16}{subsection.2.3.3}}
+\newlabel{sec:fma_alg}{{2.3.3}{16}{The algorithm\relax }{subsection.2.3.3}{}}
+\@writefile{loa}{\contentsline {algocf}{\numberline {3}{\ignorespaces The Fast Multipole Algorithm{}\relax }}{16}{algocfline.3}}
+\newlabel{alg:fma}{{3}{16}{The algorithm\relax }{algocfline.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3.4}The implementation}{16}{subsection.2.3.4}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3.5}Running time analysis}{16}{subsection.2.3.5}}
+\@writefile{toc}{\contentsline {subsubsection}{Complexity analysis}{16}{section*.35}}
 \citation{greengard:315}
-\newlabel{tab:time_breakdown}{{\caption@xref {tab:time_breakdown}{ on input line 497}}{19}{Method analysis\relax }{table.caption.38}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {2.2}{\ignorespaces The proportion of the running time spent in each method for the Fast Multipole Algorithmwhile benchmarking.\relax }}{19}{table.caption.38}}
-\@writefile{toc}{\contentsline {subsubsection}{Method analysis}{19}{section*.37}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.3.6}Accuracy analysis}{19}{subsection.2.3.6}}
-\@writefile{toc}{\contentsline {subsubsection}{Maximum mesh level}{19}{section*.39}}
-\@writefile{toc}{\contentsline {subsubsection}{Number of terms}{19}{section*.42}}
-\@writefile{lof}{\contentsline {figure}{\numberline {2.11}{\ignorespaces The relationship between $N$, mesh levels, and the error, when comparied with the basic algorithm.\relax }}{20}{figure.caption.40}}
-\newlabel{fig:fma_mesh_acc}{{2.11}{20}{The relationship between $N$, mesh levels, and the error, when comparied with the basic algorithm.\relax \relax }{figure.caption.40}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {2.12}{\ignorespaces The error for the Fast Multipole Algorithmwith a fixed mesh level $N=3$, with an increasing system size\relax }}{20}{figure.caption.41}}
-\newlabel{fig:fma_fixed_mesh_acc}{{2.12}{20}{The error for the \fma with a fixed mesh level $N=3$, with an increasing system size\relax \relax }{figure.caption.41}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {2.13}{\ignorespaces The error, on a logarithmic scale, vs. the number of terms in the multipole expansion, with a system size of 5000 particles\relax }}{21}{figure.caption.43}}
-\newlabel{fig:fma_terms_acc}{{2.13}{21}{The error, on a logarithmic scale, vs. the number of terms in the multipole expansion, with a system size of 5000 particles\relax \relax }{figure.caption.43}{}}
-\@writefile{loa}{\addvspace {10\p@ }}
-\@writefile{toc}{\contentsline {chapter}{\numberline {3}Comparison of the algorithms}{22}{chapter.3}}
+\newlabel{fig:fma_complex_a}{{2.10(a)}{17}{Subfigure 2 2.10(a)\relax }{subfigure.2.10.1}{}}
+\newlabel{sub@fig:fma_complex_a}{{(a)}{17}{Subfigure 2 2.10(a)\relax }{subfigure.2.10.1}{}}
+\newlabel{fig:fma_complex_b}{{2.10(b)}{17}{Subfigure 2 2.10(b)\relax }{subfigure.2.10.2}{}}
+\newlabel{sub@fig:fma_complex_b}{{(b)}{17}{Subfigure 2 2.10(b)\relax }{subfigure.2.10.2}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.10}{\ignorespaces The Fast Multipole Algorithm's performance over the group of systems in the range 0 to 5,000 particles, and 0 to 20,000.\relax }}{17}{figure.caption.36}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(a)}{\ignorespaces {Range 0 - 2000}}}{17}{figure.caption.36}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(b)}{\ignorespaces {Range 0 - 20,000}}}{17}{figure.caption.36}}
+\newlabel{fig:fma_complex}{{2.10}{17}{The \fma 's performance over the group of systems in the range 0 to 5,000 particles, and 0 to 20,000.\relax \relax }{figure.caption.36}{}}
+\newlabel{tab:time_breakdown}{{\caption@xref {tab:time_breakdown}{ on input line 499}}{17}{Method analysis\relax }{table.caption.38}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {2.2}{\ignorespaces The proportion of the running time spent in each method for the Fast Multipole Algorithmwhile benchmarking.\relax }}{17}{table.caption.38}}
+\@writefile{toc}{\contentsline {subsubsection}{Method analysis}{17}{section*.37}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3.6}Accuracy analysis}{17}{subsection.2.3.6}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.11}{\ignorespaces The relationship between $N$, mesh levels, and the error, when comparied with the basic algorithm.\relax }}{18}{figure.caption.40}}
+\newlabel{fig:fma_mesh_acc}{{2.11}{18}{The relationship between $N$, mesh levels, and the error, when comparied with the basic algorithm.\relax \relax }{figure.caption.40}{}}
+\@writefile{toc}{\contentsline {subsubsection}{Maximum mesh level}{18}{section*.39}}
+\@writefile{toc}{\contentsline {subsubsection}{Number of terms}{18}{section*.42}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.12}{\ignorespaces The error for the Fast Multipole Algorithmwith a fixed mesh level $N=3$, with an increasing system size\relax }}{19}{figure.caption.41}}
+\newlabel{fig:fma_fixed_mesh_acc}{{2.12}{19}{The error for the \fma with a fixed mesh level $N=3$, with an increasing system size\relax \relax }{figure.caption.41}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.13}{\ignorespaces The error, on a logarithmic scale, vs. the number of terms in the multipole expansion, with a system size of 5000 particles\relax }}{19}{figure.caption.43}}
+\newlabel{fig:fma_terms_acc}{{2.13}{19}{The error, on a logarithmic scale, vs. the number of terms in the multipole expansion, with a system size of 5000 particles\relax \relax }{figure.caption.43}{}}
+\@writefile{toc}{\contentsline {chapter}{\numberline {3}Comparison of the algorithms}{20}{chapter.3}}
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\newlabel{chap:compare}{{3}{22}{Comparison of the algorithms\relax }{chapter.3}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {3.1}Comparison of the running times}{22}{section.3.1}}
-\newlabel{sec:run_comp}{{3.1}{22}{Comparison of the running times\relax }{section.3.1}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.1}{\ignorespaces A comparison of the running times for each algorithm, set to give accuracies on the order of $10^{-12}$, with increments of 500 particles, going up to 10,000 particles.\relax }}{22}{figure.caption.44}}
-\newlabel{fig:comp_graph}{{3.1}{22}{A comparison of the running times for each algorithm, set to give accuracies on the order of $10^{-12}$, with increments of 500 particles, going up to 10,000 particles.\relax \relax }{figure.caption.44}{}}
+\newlabel{chap:compare}{{3}{20}{Comparison of the algorithms\relax }{chapter.3}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {3.1}Comparison of the running times}{20}{section.3.1}}
+\newlabel{sec:run_comp}{{3.1}{20}{Comparison of the running times\relax }{section.3.1}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.1}{\ignorespaces A comparison of the running times for each algorithm, set to give accuracies on the order of $10^{-12}$, with increments of 500 particles, going up to 10,000 particles.\relax }}{20}{figure.caption.44}}
+\newlabel{fig:comp_graph}{{3.1}{20}{A comparison of the running times for each algorithm, set to give accuracies on the order of $10^{-12}$, with increments of 500 particles, going up to 10,000 particles.\relax \relax }{figure.caption.44}{}}
 \citation{darden:10089}
 \citation{spherical}
 \citation{NAMD}
 \citation{lee05}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.2}{\ignorespaces A comparison of the running times for each algorithm, set to give accuracies on the order of $10^{-12}$, with increments of 50 particles, going up to 2000 particles.\relax }}{23}{figure.caption.45}}
-\newlabel{fig:comp_graph_low}{{3.2}{23}{A comparison of the running times for each algorithm, set to give accuracies on the order of $10^{-12}$, with increments of 50 particles, going up to 2000 particles.\relax \relax }{figure.caption.45}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {3.2}Discussion}{23}{section.3.2}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.1}The Particle Mesh Ewald method{}}{23}{subsection.3.2.1}}
-\@writefile{toc}{\contentsline {subsubsection}{Advantages}{23}{section*.46}}
 \citation{toukmaji:73}
 \citation{lee05}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.2}{\ignorespaces A comparison of the running times for each algorithm, set to give accuracies on the order of $10^{-12}$, with increments of 50 particles, going up to 2000 particles.\relax }}{21}{figure.caption.45}}
+\newlabel{fig:comp_graph_low}{{3.2}{21}{A comparison of the running times for each algorithm, set to give accuracies on the order of $10^{-12}$, with increments of 50 particles, going up to 2000 particles.\relax \relax }{figure.caption.45}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {3.2}Discussion}{21}{section.3.2}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.1}The Particle Mesh Ewald method{}}{21}{subsection.3.2.1}}
+\@writefile{toc}{\contentsline {subsubsection}{Advantages}{21}{section*.46}}
+\@writefile{toc}{\contentsline {subsubsection}{Disadvantages}{21}{section*.47}}
 \citation{spherical}
-\@writefile{toc}{\contentsline {subsubsection}{Disadvantages}{24}{section*.47}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.2}The Fast Multipole Algorithm{}}{24}{subsection.3.2.2}}
-\@writefile{toc}{\contentsline {subsubsection}{Advantages}{24}{section*.48}}
-\@writefile{toc}{\contentsline {subsubsection}{Disadvantages}{24}{section*.49}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.3}The Basic Algorithm}{24}{subsection.3.2.3}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.4}Advantages}{24}{subsection.3.2.4}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.5}Disadvantages}{24}{subsection.3.2.5}}
-\@writefile{toc}{\contentsline {section}{\numberline {3.3}Conclusion}{24}{section.3.3}}
-\@writefile{loa}{\addvspace {10\p@ }}
-\@writefile{toc}{\contentsline {chapter}{\numberline {A}Technical details}{26}{appendix.A}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.2}The Fast Multipole Algorithm{}}{22}{subsection.3.2.2}}
+\@writefile{toc}{\contentsline {subsubsection}{Advantages}{22}{section*.48}}
+\@writefile{toc}{\contentsline {subsubsection}{Disadvantages}{22}{section*.49}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.3}The Basic Algorithm}{22}{subsection.3.2.3}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.4}Advantages}{22}{subsection.3.2.4}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.5}Disadvantages}{22}{subsection.3.2.5}}
+\@writefile{toc}{\contentsline {section}{\numberline {3.3}Conclusion}{22}{section.3.3}}
+\@writefile{toc}{\contentsline {chapter}{\numberline {A}Technical details}{23}{appendix.A}}
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\newlabel{ap:implement}{{A}{26}{Technical details\relax }{appendix.A}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {A.1}Benchmark computer details}{26}{section.A.1}}
-\@writefile{lot}{\contentsline {table}{\numberline {A.1}{\ignorespaces The relevant specifications for the computer used to benchmark the algorithms presented in the paper.\relax }}{26}{table.caption.50}}
-\@writefile{loa}{\addvspace {10\p@ }}
+\newlabel{ap:implement}{{A}{23}{Technical details\relax }{appendix.A}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {A.1}Benchmark computer details}{23}{section.A.1}}
+\@writefile{lot}{\contentsline {table}{\numberline {A.1}{\ignorespaces The relevant specifications for the computer used to benchmark the algorithms presented in the paper.\relax }}{23}{table.caption.50}}
 \citation{essmann:8577}
 \citation{essmann:8577}
 \citation{essmann:8577}
 \citation{lee05}
 \citation{essmann:8577}
 \citation{lee05}
-\@writefile{toc}{\contentsline {chapter}{\numberline {B}Algorithms and Mathematics}{27}{appendix.B}}
+\@writefile{toc}{\contentsline {chapter}{\numberline {B}Algorithms and Mathematics}{24}{appendix.B}}
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\newlabel{ap:math}{{B}{27}{Algorithms and Mathematics\relax }{appendix.B}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {B.1}The Particle Mesh Ewald method{}}{27}{section.B.1}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {B.1.1}Derivation of the reciprocal energy formula}{27}{subsection.B.1.1}}
-\newlabel{ap:deriv_rec_energy}{{B.1.1}{27}{Derivation of the reciprocal energy formula\relax }{subsection.B.1.1}{}}
-\newlabel{eq:ap_primitive_rec_energy}{{B.1}{27}{Derivation of the reciprocal energy formula\relax }{equation.B.1.1}{}}
-\newlabel{eq:ap_energy_rec}{{B.2}{27}{Derivation of the reciprocal energy formula\relax }{equation.B.1.2}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {B.1.2}Evaluation of the B spline}{27}{subsection.B.1.2}}
-\newlabel{sec:eval_bspline}{{B.1.2}{27}{Evaluation of the B spline\relax }{subsection.B.1.2}{}}
+\newlabel{ap:math}{{B}{24}{Algorithms and Mathematics\relax }{appendix.B}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {B.1}The Particle Mesh Ewald method{}}{24}{section.B.1}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {B.1.1}Derivation of the reciprocal energy formula}{24}{subsection.B.1.1}}
+\newlabel{ap:deriv_rec_energy}{{B.1.1}{24}{Derivation of the reciprocal energy formula\relax }{subsection.B.1.1}{}}
+\newlabel{eq:ap_primitive_rec_energy}{{B.1}{24}{Derivation of the reciprocal energy formula\relax }{equation.B.1.1}{}}
+\newlabel{eq:ap_energy_rec}{{B.2}{24}{Derivation of the reciprocal energy formula\relax }{equation.B.1.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {B.1.2}Evaluation of the B spline}{24}{subsection.B.1.2}}
+\newlabel{sec:eval_bspline}{{B.1.2}{24}{Evaluation of the B spline\relax }{subsection.B.1.2}{}}
 \bibstyle{plain}
 \bibdata{references}
-\@writefile{toc}{\contentsline {subsection}{\numberline {B.1.3}Verlet list algorithm}{28}{subsection.B.1.3}}
-\newlabel{sec:verlet}{{B.1.3}{28}{Verlet list algorithm\relax }{subsection.B.1.3}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {B.1.4}Ewald coefficient estimation algorithm}{28}{subsection.B.1.4}}
-\newlabel{sec:alg_ewald_coeff}{{B.1.4}{28}{Ewald coefficient estimation algorithm\relax }{subsection.B.1.4}{}}
-\newlabel{eq:ap_ewald_coeff}{{B.3}{28}{Ewald coefficient estimation algorithm\relax }{equation.B.1.3}{}}
-\@writefile{loa}{\addvspace {10\p@ }}
+\@writefile{toc}{\contentsline {subsection}{\numberline {B.1.3}Verlet list algorithm}{25}{subsection.B.1.3}}
+\newlabel{sec:verlet}{{B.1.3}{25}{Verlet list algorithm\relax }{subsection.B.1.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {B.1.4}Ewald coefficient estimation algorithm}{25}{subsection.B.1.4}}
+\newlabel{sec:alg_ewald_coeff}{{B.1.4}{25}{Ewald coefficient estimation algorithm\relax }{subsection.B.1.4}{}}
+\newlabel{eq:ap_ewald_coeff}{{B.3}{25}{Ewald coefficient estimation algorithm\relax }{equation.B.1.3}{}}
 \bibcite{toukmaji:73}{1}
 \bibcite{darden:10089}{2}
 \bibcite{spherical}{3}

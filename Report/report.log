@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2011.4.6)  31 OCT 2012 13:20
+This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2012.5.5)  31 OCT 2012 15:21
 entering extended mode
  %&-line parsing enabled.
 **report.tex
@@ -43,7 +43,7 @@ File: graphics.cfg 2009/08/28 v1.8 graphics configuration of TeX Live
 Package graphics Info: Driver file: pdftex.def on input line 91.
 
 (/usr/share/texmf-texlive/tex/latex/pdftex-def/pdftex.def
-File: pdftex.def 2009/08/25 v0.04m Graphics/color for pdfTeX
+File: pdftex.def 2010/03/12 v0.04p Graphics/color for pdfTeX
 \Gread@gobject=\count88
 ))
 \Gin@req@height=\dimen103
@@ -100,62 +100,42 @@ File: babel.def 2008/07/06 v3.8l Babel common definitions
 Package: ulem 2000/05/26
 \ULdepth=\dimen111
 )
-
-! LaTeX Error: File `algorithm2e.sty' not found.
-
-Type X to quit or <RETURN> to proceed,
-or enter new name. (Default extension: sty)
-
-Enter file name: algorithm2e.sty
-(./algorithm2e.sty
-Package: algorithm2e 2008/00/00 v3.10 algorithms environments
+(/usr/share/texmf-texlive/tex/latex/algorithm2e/algorithm2e.sty
+Package: algorithm2e 2005/10/04 v3.9 algorithms environments
 \c@AlgoLine=\count94
- (/usr/share/texmf-texlive/tex/latex/base/ifthen.sty
+
+(/usr/share/texmf-texlive/tex/latex/base/ifthen.sty
 Package: ifthen 2001/05/26 v1.1c Standard LaTeX ifthen package (DPC)
 )
 (/usr/share/texmf-texlive/tex/latex/tools/xspace.sty
 Package: xspace 2006/05/08 v1.12 Space after command names (DPC,MH)
 )
-(/usr/share/texmf-texlive/tex/latex/ltxmisc/relsize.sty
-Package: relsize 2003/07/04 ver 3.1
-)
 ********************************************************
-Package `algorithm2e' Release 4.01 -- december 14 2009 --
+Package `algorithm2e' Release 3.9 -- october 04 2005 --
 - algorithm2e-announce@lirmm.fr mailing list for announcement about releases
 - algorithm2e-discussion@lirmm.fr mailing list for discussion about package
 subscribe by emailing sympa@lirmm.fr with 'subscribe <list> <firstname name>'
 - Author: Christophe Fiorio (fiorio@lirmm.fr)
 ********************************************************
 \skiptotal=\skip44
-\skiplinenumber=\skip45
-\skiprule=\skip46
-\skiphlne=\skip47
-\skiptext=\skip48
-\skiplength=\skip49
-\algomargin=\skip50
-\skipalgocfslide=\skip51
+\skiprule=\skip45
+\skiphlne=\skip46
+\skiptext=\skip47
+\skiplength=\skip48
+\algomargin=\skip49
+\skipalgocfslide=\skip50
 \algowidth=\dimen112
 \inoutsize=\dimen113
 \inoutline=\dimen114
-\interspacetitleruled=\dimen115
-\interspacealgoruled=\dimen116
-\interspacetitleboxruled=\dimen117
 \algocf@inoutbox=\box29
 \algocf@inputbox=\box30
-\AlCapSkip=\skip52
-\AlCapHSkip=\skip53
-\algocf@nlbox=\box31
-\algocf@hangingbox=\box32
-\algocf@capbox=\box33
-\algoheightruledefault=\skip54
-\algoheightrule=\skip55
-\algotitleheightruledefault=\skip56
-\algotitleheightrule=\skip57
+\AlCapSkip=\skip51
+\AlCapHSkip=\skip52
+\algocf@capbox=\box31
 \c@algocfline=\count95
-\c@algocfproc=\count96
-\c@algocf=\count97
-\algocf@algoframe=\box34
-\algocf@algobox=\box35
+\c@algocf=\count96
+\algocf@algoframe=\box32
+\algocf@algobox=\box33
 ) (/usr/share/texmf-texlive/tex/latex/amsfonts/amsfonts.sty
 Package: amsfonts 2009/06/22 v3.00 Basic AMSFonts support
 \@emptytoks=\toks17
@@ -166,7 +146,7 @@ LaTeX Font Info:    Overwriting math alphabet `\mathfrak' in version `bold'
 )
 (/usr/share/texmf-texlive/tex/latex/amsmath/amsmath.sty
 Package: amsmath 2000/07/18 v2.13 AMS math features
-\@mathmargin=\skip58
+\@mathmargin=\skip53
 
 For additional information on amsmath, use the `?' option.
 (/usr/share/texmf-texlive/tex/latex/amsmath/amstext.sty
@@ -175,49 +155,49 @@ Package: amstext 2000/06/29 v2.01
 (/usr/share/texmf-texlive/tex/latex/amsmath/amsgen.sty
 File: amsgen.sty 1999/11/30 v2.0
 \@emptytoks=\toks18
-\ex@=\dimen118
+\ex@=\dimen115
 ))
 (/usr/share/texmf-texlive/tex/latex/amsmath/amsbsy.sty
 Package: amsbsy 1999/11/29 v1.2d
-\pmbraise@=\dimen119
+\pmbraise@=\dimen116
 )
 (/usr/share/texmf-texlive/tex/latex/amsmath/amsopn.sty
 Package: amsopn 1999/12/14 v2.01 operator names
 )
-\inf@bad=\count98
+\inf@bad=\count97
 LaTeX Info: Redefining \frac on input line 211.
-\uproot@=\count99
-\leftroot@=\count100
+\uproot@=\count98
+\leftroot@=\count99
 LaTeX Info: Redefining \overline on input line 307.
-\classnum@=\count101
-\DOTSCASE@=\count102
+\classnum@=\count100
+\DOTSCASE@=\count101
 LaTeX Info: Redefining \ldots on input line 379.
 LaTeX Info: Redefining \dots on input line 382.
 LaTeX Info: Redefining \cdots on input line 467.
-\Mathstrutbox@=\box36
-\strutbox@=\box37
-\big@size=\dimen120
+\Mathstrutbox@=\box34
+\strutbox@=\box35
+\big@size=\dimen117
 LaTeX Font Info:    Redeclaring font encoding OML on input line 567.
 LaTeX Font Info:    Redeclaring font encoding OMS on input line 568.
-\macc@depth=\count103
-\c@MaxMatrixCols=\count104
+\macc@depth=\count102
+\c@MaxMatrixCols=\count103
 \dotsspace@=\muskip10
-\c@parentequation=\count105
-\dspbrk@lvl=\count106
+\c@parentequation=\count104
+\dspbrk@lvl=\count105
 \tag@help=\toks19
-\row@=\count107
-\column@=\count108
-\maxfields@=\count109
+\row@=\count106
+\column@=\count107
+\maxfields@=\count108
 \andhelp@=\toks20
-\eqnshift@=\dimen121
-\alignsep@=\dimen122
-\tagshift@=\dimen123
-\tagwidth@=\dimen124
-\totwidth@=\dimen125
-\lineht@=\dimen126
+\eqnshift@=\dimen118
+\alignsep@=\dimen119
+\tagshift@=\dimen120
+\tagwidth@=\dimen121
+\totwidth@=\dimen122
+\lineht@=\dimen123
 \@envbody=\toks21
-\multlinegap=\skip59
-\multlinetaggap=\skip60
+\multlinegap=\skip54
+\multlinetaggap=\skip55
 \mathdisplay@stack=\toks22
 LaTeX Info: Redefining \[ on input line 2666.
 LaTeX Info: Redefining \] on input line 2667.
@@ -230,18 +210,18 @@ Package: tabularx 1999/01/07 v2.07 `tabularx' package (DPC)
 
 (/usr/share/texmf-texlive/tex/latex/tools/array.sty
 Package: array 2008/09/09 v2.4c Tabular extension package (FMi)
-\col@sep=\dimen127
-\extrarowheight=\dimen128
+\col@sep=\dimen124
+\extrarowheight=\dimen125
 \NC@list=\toks23
-\extratabsurround=\skip61
-\backup@length=\skip62
+\extratabsurround=\skip56
+\backup@length=\skip57
 )
-\TX@col@width=\dimen129
-\TX@old@table=\dimen130
-\TX@old@col=\dimen131
-\TX@target=\dimen132
-\TX@delta=\dimen133
-\TX@cols=\count110
+\TX@col@width=\dimen126
+\TX@old@table=\dimen127
+\TX@old@col=\dimen128
+\TX@target=\dimen129
+\TX@delta=\dimen130
+\TX@cols=\count109
 \TX@ftn=\toks24
 )
 (/usr/share/texmf-texlive/tex/latex/graphics/color.sty
@@ -252,13 +232,9 @@ File: color.cfg 2007/01/18 v1.5 color configuration of teTeX/TeXLive
 )
 Package color Info: Driver file: pdftex.def on input line 130.
 )
-
-! LaTeX Error: File `tabto.sty' not found.
-
-Type X to quit or <RETURN> to proceed,
-or enter new name. (Default extension: sty)
-
-Enter file name: 
+(/usr/share/texmf-texlive/tex/latex/tabto-ltx/tabto.sty
+\CurrentLineWidth=\dimen131
+)
 (/usr/share/texmf-texlive/tex/latex/hyperref/hyperref.sty
 Package: hyperref 2009/10/09 v6.79a Hypertext links for LaTeX
 
@@ -272,9 +248,9 @@ O)
 (/usr/share/texmf-texlive/tex/latex/oberdiek/xcolor-patch.sty
 Package: xcolor-patch 2009/10/02 xcolor patch
 ))
-\@linkdim=\dimen134
-\Hy@linkcounter=\count111
-\Hy@pagecounter=\count112
+\@linkdim=\dimen132
+\Hy@linkcounter=\count110
+\Hy@pagecounter=\count111
 
 (/usr/share/texmf-texlive/tex/latex/hyperref/pd1enc.def
 File: pd1enc.def 2009/10/09 v6.79a Hyperref: PDFDocEncoding definition (HO)
@@ -339,9 +315,9 @@ Package pdftexcmds Info: LuaTeX not detected.
 Package pdftexcmds Info: \pdf@primitive is available.
 Package pdftexcmds Info: \pdf@ifprimitive is available.
 )))
-\Fld@menulength=\count113
-\Field@Width=\dimen135
-\Fld@charsize=\dimen136
+\Fld@menulength=\count112
+\Field@Width=\dimen133
+\Fld@charsize=\dimen134
 \Field@toks=\toks25
 Package hyperref Info: Hyper figures OFF on input line 4377.
 Package hyperref Info: Link nesting OFF on input line 4382.
@@ -354,21 +330,21 @@ Package hyperref Info: PDF/A mode OFF on input line 4407.
 (/usr/share/texmf-texlive/tex/generic/oberdiek/atbegshi.sty
 Package: atbegshi 2008/07/31 v1.9 At begin shipout hook (HO)
 )
-\Hy@abspage=\count114
-\c@Item=\count115
+\Hy@abspage=\count113
+\c@Item=\count114
 )
 *hyperref using driver hpdftex*
 (/usr/share/texmf-texlive/tex/latex/hyperref/hpdftex.def
 File: hpdftex.def 2009/10/09 v6.79a Hyperref driver for pdfTeX
-\Fld@listcount=\count116
+\Fld@listcount=\count115
 )
 (/usr/share/texmf-texlive/tex/latex/float/float.sty
 Package: float 2001/11/08 v1.3d Float enhancements (AL)
-\c@float@type=\count117
+\c@float@type=\count116
 \float@exts=\toks26
-\float@box=\box38
+\float@box=\box36
 \@float@everytoks=\toks27
-\@floatcapt=\box39
+\@floatcapt=\box37
 )
 (/usr/share/texmf-texlive/tex/latex/oberdiek/epstopdf.sty
 Package: epstopdf 2009/10/17 v2.4 Conversion with epstopdf on the fly (HO)
@@ -394,25 +370,37 @@ Package: caption 2009/10/09 v3.1k Customizing captions (AR)
 
 (/usr/share/texmf-texlive/tex/latex/caption/caption3.sty
 Package: caption3 2009/10/09 v3.1k caption3 kernel (AR)
-\captionmargin=\dimen137
-\captionmargin@=\dimen138
-\captionwidth=\dimen139
-\caption@indent=\dimen140
-\caption@parindent=\dimen141
-\caption@hangindent=\dimen142
+\captionmargin=\dimen135
+\captionmargin@=\dimen136
+\captionwidth=\dimen137
+\caption@indent=\dimen138
+\caption@parindent=\dimen139
+\caption@hangindent=\dimen140
 )
-\c@ContinuedFloat=\count118
+\c@ContinuedFloat=\count117
 Package caption Info: float package is loaded.
 Package caption Info: hyperref package is loaded.
 )
+(/usr/share/texmf-texlive/tex/latex/subfigure/subfigure.sty
+Package: subfigure 2002/03/15 v2.1.5 subfigure package
+\subfigtopskip=\skip58
+\subfigcapskip=\skip59
+\subfigcaptopadj=\dimen141
+\subfigbottomskip=\skip60
+\subfigcapmargin=\dimen142
+\subfiglabelskip=\skip61
+\c@subfigure=\count118
+\c@lofdepth=\count119
+\c@subtable=\count120
+\c@lotdepth=\count121
 
-! LaTeX Error: File `subfigure.sty' not found.
-
-Type X to quit or <RETURN> to proceed,
-or enter new name. (Default extension: sty)
-
-Enter file name: 
-(./report.aux)
+****************************************
+* Local config file subfigure.cfg used *
+****************************************
+(/usr/share/texmf-texlive/tex/latex/subfigure/subfigure.cfg)
+\subfig@top=\skip62
+\subfig@bottom=\skip63
+) (./report.aux)
 \openout1 = `report.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 31.
@@ -430,20 +418,21 @@ LaTeX Font Info:    ... okay on input line 31.
 LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 31.
 LaTeX Font Info:    ... okay on input line 31.
 LaTeX Font Info:    Try loading font information for OT1+ptm on input line 31.
- (/usr/share/texmf-texlive/tex/latex/psnfss/ot1ptm.fd
+
+(/usr/share/texmf-texlive/tex/latex/psnfss/ot1ptm.fd
 File: ot1ptm.fd 2001/06/04 font definitions for OT1/ptm.
 )
 (/usr/share/texmf-texlive/tex/context/base/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count119
+\scratchcounter=\count122
 \scratchdimen=\dimen143
-\scratchbox=\box40
-\nofMPsegments=\count120
-\nofMParguments=\count121
+\scratchbox=\box38
+\nofMPsegments=\count123
+\nofMParguments=\count124
 \everyMPshowfont=\toks28
-\MPscratchCnt=\count122
+\MPscratchCnt=\count125
 \MPscratchDim=\dimen144
-\MPnumerator=\count123
+\MPnumerator=\count126
 \everyMPtoPDFconversion=\toks29
 )
 *geometry detected driver: pdftex*
@@ -493,7 +482,7 @@ Package: nameref 2007/05/29 v2.31 Cross-referencing by name of section
 (/usr/share/texmf-texlive/tex/latex/oberdiek/refcount.sty
 Package: refcount 2008/08/11 v3.1 Data extraction from references (HO)
 )
-\c@section@level=\count124
+\c@section@level=\count127
 )
 LaTeX Info: Redefining \ref on input line 31.
 LaTeX Info: Redefining \pageref on input line 31.
@@ -502,28 +491,14 @@ LaTeX Info: Redefining \pageref on input line 31.
 \@outlinefile=\write3
 \openout3 = `report.out'.
 
-\AtBeginShipoutBox=\box41
+\AtBeginShipoutBox=\box39
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: subfigure package is loaded.
-
-
-! Package caption Error: For a successful cooperation we need at least version
-(caption)                `2002/01/23 v2.1' of package subfigure,
-(caption)                but only version
-(caption)                `'
-(caption)                is available.
-
-See the caption package documentation for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.31 \begin{document}
-                     
-? 
 Package caption Info: End \AtBeginDocument code.
-<logoWhite.png, id=167, 1317.92375pt x 515.9275pt>
+ <logoWhite.png, id=167, 1317.92375pt x 515.9275pt>
 File: logoWhite.png Graphic file (type png)
- <use logoWhite.png>
+
+<use logoWhite.png>
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <20.74> not available
 (Font)              Font shape `OT1/ptm/b/n' tried instead on input line 50.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <17.28> not available
@@ -535,8 +510,7 @@ LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <17.28> not available
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <10> not available
 (Font)              Font shape `OT1/ptm/b/n' tried instead on input line 88.
 LaTeX Font Info:    Try loading font information for U+msa on input line 89.
-
-(/usr/share/texmf-texlive/tex/latex/amsfonts/umsa.fd
+ (/usr/share/texmf-texlive/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2009/06/22 v3.00 AMS symbols A
 )
 LaTeX Font Info:    Try loading font information for U+msb on input line 89.
@@ -589,15 +563,15 @@ Underfull \hbox (badness 10000) in paragraph at lines 109--110
 Chapter 2.
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 123.
+(hyperref)                removing `math shift' on input line 125.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `superscript' on input line 123.
+(hyperref)                removing `superscript' on input line 125.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 123.
+(hyperref)                removing `math shift' on input line 125.
 
 
 
@@ -607,307 +581,251 @@ pdfTeX warning: pdflatex (file ./figures/nbodies.pdf): PDF inclusion: found PDF
 File: figures/nbodies.pdf Graphic file (type pdf)
 
 <use figures/nbodies.pdf>
-Underfull \hbox (badness 10000) in paragraph at lines 133--134
+Underfull \hbox (badness 10000) in paragraph at lines 135--136
 
  []
 
-! Undefined control sequence.
-<recently read> \SetLine 
-                         
-l.137  \SetLine
-               
-? 
+Package hyperref Info: bookmark level for unknown algocf defaults to 0 on input
+ line 149.
+
+Underfull \hbox (badness 10000) detected at line 151
+[][]
+ []
+
 <figures/graphs/basic_algo_complex.pdf, id=263, 587.19376pt x 442.65375pt>
 File: figures/graphs/basic_algo_complex.pdf Graphic file (type pdf)
 
 <use figures/graphs/basic_algo_complex.pdf> [5
 
 ] [6 <./figures/nbodies.pdf> <./figures/graphs/basic_algo_complex.pdf>]
-<figures/cutoff.pdf, id=326, 350.04109pt x 210.8795pt>
+<figures/cutoff.pdf, id=325, 350.04109pt x 210.8795pt>
 File: figures/cutoff.pdf Graphic file (type pdf)
 
 <use figures/cutoff.pdf>
-Underfull \hbox (badness 10000) in paragraph at lines 190--191
+Underfull \hbox (badness 10000) in paragraph at lines 192--193
 
  []
 
-<figures/Qarray.jpg, id=329, 1031.855pt x 513.92pt>
+<figures/Qarray.jpg, id=328, 1031.855pt x 513.92pt>
 File: figures/Qarray.jpg Graphic file (type jpg)
  <use figures/Qarray.jpg>
-<figures/pbc.pdf, id=334, 550.86449pt x 160.6pt>
+[7] [8 <./figures/cutoff.pdf> <./figures/Qarray.jpg>]
+<figures/pbc.pdf, id=350, 550.86449pt x 160.6pt>
 File: figures/pbc.pdf Graphic file (type pdf)
- <use figures/pbc.pdf> [7]
-[8 <./figures/cutoff.pdf> <./figures/Qarray.jpg>]
-LaTeX Font Info:    Try loading font information for OMS+ptm on input line 221.
+ <use figures/pbc.pdf>
+LaTeX Font Info:    Try loading font information for OMS+ptm on input line 223.
 
 
 (/usr/share/texmf-texlive/tex/latex/psnfss/omsptm.fd
 File: omsptm.fd 
 )
 LaTeX Font Info:    Font shape `OMS/ptm/m/n' in size <10> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 221.
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 223.
 
-Underfull \hbox (badness 10000) in paragraph at lines 227--228
+Underfull \hbox (badness 10000) in paragraph at lines 229--230
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 233--234
+Underfull \hbox (badness 10000) in paragraph at lines 235--236
 
  []
 
 [9 <./figures/pbc.pdf>]
-Underfull \hbox (badness 10000) in paragraph at lines 250--252
+Underfull \hbox (badness 10000) in paragraph at lines 252--254
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 258--259
+Underfull \hbox (badness 10000) in paragraph at lines 260--261
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 262--264
+Underfull \hbox (badness 10000) in paragraph at lines 264--266
 
  []
 
-! Undefined control sequence.
-l.285 \SetLine
-              
-? 
 
-Underfull \vbox (badness 2253) has occurred while \output is active []
-
- [10]
-LaTeX Font Info:    Try loading font information for OT1+pcr on input line 305.
+Underfull \hbox (badness 10000) detected at line 301
+[][]
+ []
 
 
-(/usr/share/texmf-texlive/tex/latex/psnfss/ot1pcr.fd
+Underfull \hbox (badness 10000) in paragraph at lines 283--302
+
+ []
+
+[10]
+LaTeX Font Info:    Try loading font information for OT1+pcr on input line 307.
+
+ (/usr/share/texmf-texlive/tex/latex/psnfss/ot1pcr.fd
 File: ot1pcr.fd 2001/06/04 font definitions for OT1/pcr.
 )
+<figures/graphs/pme_algo_complex.pdf, id=402, 587.19376pt x 442.65375pt>
+File: figures/graphs/pme_algo_complex.pdf Graphic file (type pdf)
 
-LaTeX Warning: File `figures/graphs/pme_algo_complex.pdf' not found on input li
-ne 316.
-
-
-! Package pdftex.def Error: File `figures/graphs/pme_algo_complex.pdf' not foun
-d.
-
-See the pdftex.def package documentation for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.316 ...dth]{figures/graphs/pme_algo_complex.pdf}
-                                                   \ecen
-? 
-[11] [12]
-Overfull \hbox (33.23584pt too wide) in paragraph at lines 324--330
+<use figures/graphs/pme_algo_complex.pdf> [11]
+Overfull \hbox (33.23584pt too wide) in paragraph at lines 326--332
 [][] 
  []
 
 
-LaTeX Warning: Reference `fig:pme_acc' on page 13 undefined on input line 334.
+LaTeX Warning: Reference `fig:pme_acc' on page 12 undefined on input line 336.
 
+<figures/PMEscreenshot.jpg, id=417, 525.965pt x 262.9825pt>
+File: figures/PMEscreenshot.jpg Graphic file (type jpg)
 
-LaTeX Warning: File `figures/PMEscreenshot.jpg' not found on input line 337.
-
-
-! Package pdftex.def Error: File `figures/PMEscreenshot.jpg' not found.
-
-See the pdftex.def package documentation for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.337 ....75\textwidth]{figures/PMEscreenshot.jpg}
-                                                   \ecen
-? 
-<figures/fma_mesh.pdf, id=426, 402.85507pt x 477.75905pt>
+<use figures/PMEscreenshot.jpg> [12 <./figures/graphs/pme_algo_complex.pdf>]
+<figures/fma_mesh.pdf, id=466, 402.85507pt x 477.75905pt>
 File: figures/fma_mesh.pdf Graphic file (type pdf)
 
-<use figures/fma_mesh.pdf> [13] [14]
-<figures/wellsep.pdf, id=444, 321.77718pt x 322.12846pt>
+<use figures/fma_mesh.pdf>
+Underfull \vbox (badness 5274) has occurred while \output is active []
+
+ [13 <./figures/PMEscreenshot.jpg>]
+<figures/wellsep.pdf, id=478, 321.77718pt x 322.12846pt>
 File: figures/wellsep.pdf Graphic file (type pdf)
 
 <use figures/wellsep.pdf>
-Underfull \hbox (badness 10000) in paragraph at lines 361--372
+Underfull \hbox (badness 10000) in paragraph at lines 363--374
 
  []
 
 
-Underfull \vbox (badness 3138) has occurred while \output is active []
-
- [15 <./figures/fma_mesh.pdf> <./figures/wellsep.pdf>]
-Underfull \hbox (badness 10000) in paragraph at lines 380--382
+Underfull \hbox (badness 10000) in paragraph at lines 382--384
 
  []
 
-! Undefined control sequence.
-l.430 \SetLine
-              
-? 
-[16]
-Underfull \hbox (badness 10000) in paragraph at lines 465--466
-
- []
-
-! Undefined control sequence.
-<recently read> \subfigure 
-                           
-l.474 \subfigure
-                [Range 0 - 2000]{ \label{fig:fma_complex_a} \includegraphics...
-
-? 
-<figures/graphs/fma_0_5000.pdf, id=489, 587.19376pt x 442.65375pt>
-File: figures/graphs/fma_0_5000.pdf Graphic file (type pdf)
-
-<use figures/graphs/fma_0_5000.pdf>
-! Undefined control sequence.
-l.475 \subfigure
-                [Range 0 - 20,000]{\label{fig:fma_complex_b} \includegraphic...
-
-? 
-<figures/graphs/fma_2k_20k.pdf, id=490, 587.19376pt x 442.65375pt>
-File: figures/graphs/fma_2k_20k.pdf Graphic file (type pdf)
-
-<use figures/graphs/fma_2k_20k.pdf>
-Underfull \hbox (badness 10000) in paragraph at lines 474--476
-[]\OT1/ptm/m/n/10 [Range 0 - 2000] [][] [Range 0 - 20,000][]
- []
-
-[17] [18 <./figures/graphs/fma_0_5000.pdf> <./figures/graphs/fma_2k_20k.pdf>]
-Underfull \hbox (badness 10000) in paragraph at lines 484--485
-
- []
-
-
-Overfull \hbox (4.48616pt too wide) in paragraph at lines 489--498
+[14 <./figures/fma_mesh.pdf> <./figures/wellsep.pdf>]
+Underfull \hbox (badness 10000) detected at line 464
 [][]
  []
 
-<figures/graphs/fma_mesh_acc.pdf, id=593, 587.19376pt x 442.65375pt>
+
+Underfull \hbox (badness 10000) in paragraph at lines 429--465
+
+ []
+
+
+Underfull \vbox (badness 3375) has occurred while \output is active []
+
+ [15]
+Underfull \hbox (badness 10000) in paragraph at lines 467--468
+
+ []
+
+<figures/graphs/fma_0_5000.pdf, id=522, 587.19376pt x 442.65375pt>
+File: figures/graphs/fma_0_5000.pdf Graphic file (type pdf)
+
+<use figures/graphs/fma_0_5000.pdf>
+<figures/graphs/fma_2k_20k.pdf, id=523, 587.19376pt x 442.65375pt>
+File: figures/graphs/fma_2k_20k.pdf Graphic file (type pdf)
+
+<use figures/graphs/fma_2k_20k.pdf> [16]
+Underfull \hbox (badness 10000) in paragraph at lines 486--487
+
+ []
+
+
+Overfull \hbox (4.48616pt too wide) in paragraph at lines 491--500
+[][]
+ []
+
+<figures/graphs/fma_mesh_acc.pdf, id=538, 587.19376pt x 442.65375pt>
 File: figures/graphs/fma_mesh_acc.pdf Graphic file (type pdf)
 
-<use figures/graphs/fma_mesh_acc.pdf>
-<figures/graphs/fma_fixed_mesh_acc.pdf, id=597, 587.19376pt x 442.65375pt>
+<use figures/graphs/fma_mesh_acc.pdf> [17 <./figures/graphs/fma_0_5000.pdf> <./
+figures/graphs/fma_2k_20k.pdf>]
+<figures/graphs/fma_fixed_mesh_acc.pdf, id=632, 587.19376pt x 442.65375pt>
 File: figures/graphs/fma_fixed_mesh_acc.pdf Graphic file (type pdf)
 
 <use figures/graphs/fma_fixed_mesh_acc.pdf>
-<figures/graphs/fma_terms_acc.pdf, id=599, 587.19376pt x 442.65375pt>
+<figures/graphs/fma_terms_acc.pdf, id=634, 587.19376pt x 442.65375pt>
 File: figures/graphs/fma_terms_acc.pdf Graphic file (type pdf)
 
-<use figures/graphs/fma_terms_acc.pdf> [19] [20 <./figures/graphs/fma_mesh_acc.
-pdf> <./figures/graphs/fma_fixed_mesh_acc.pdf>] [21 <./figures/graphs/fma_terms
-_acc.pdf>]
+<use figures/graphs/fma_terms_acc.pdf> [18 <./figures/graphs/fma_mesh_acc.pdf>]
+[19 <./figures/graphs/fma_fixed_mesh_acc.pdf> <./figures/graphs/fma_terms_acc.p
+df>]
 Chapter 3.
+<figures/graphs/comp_graph.pdf, id=785, 587.19376pt x 442.65375pt>
+File: figures/graphs/comp_graph.pdf Graphic file (type pdf)
 
-LaTeX Warning: File `figures/graphs/comp_graph.pdf' not found on input line 546
-.
+<use figures/graphs/comp_graph.pdf>
+<figures/graphs/comp_graph_low.pdf, id=787, 587.19376pt x 442.65375pt>
+File: figures/graphs/comp_graph_low.pdf Graphic file (type pdf)
 
+<use figures/graphs/comp_graph_low.pdf> [20
 
-! Package pdftex.def Error: File `figures/graphs/comp_graph.pdf' not found.
-
-See the pdftex.def package documentation for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.546 ...textwidth]{figures/graphs/comp_graph.pdf}
-                                                   \ecen
-? 
-[22
-
-]
-
-LaTeX Warning: File `figures/graphs/comp_graph_low.pdf' not found on input line
- 558.
-
-
-! Package pdftex.def Error: File `figures/graphs/comp_graph_low.pdf' not found.
-
-
-See the pdftex.def package documentation for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.558 ...width]{figures/graphs/comp_graph_low.pdf}
-                                                   \ecen
-? 
-[23] [24] [25]
+ <./figures/graphs/comp_graph.pdf>]
+[21 <./figures/graphs/comp_graph_low.pdf>] [22]
 Appendix A.
-[26
+[23
 
 ]
 Appendix B.
 
-Underfull \hbox (badness 10000) in paragraph at lines 627--628
+Underfull \hbox (badness 10000) in paragraph at lines 629--630
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 638--640
+Underfull \hbox (badness 10000) in paragraph at lines 640--642
 
  []
 
-! Undefined control sequence.
-<recently read> \SetLine 
-                         
-l.673 \SetLine
-              
-? 
-[27
+
+Underfull \hbox (badness 10000) detected at line 688
+[][]
+ []
+
+[24
 
 ]
-! Undefined control sequence.
-l.701 \SetLine
-              
-? 
-(./report.bbl [28]
+Underfull \hbox (badness 10000) detected at line 723
+[][]
+ []
+
+(./report.bbl [25]
 Missing character: There is no Ã in font ptmr7t!
 Missing character: There is no © in font ptmr7t!
 Missing character: There is no Ã in font ptmr7t!
 Missing character: There is no © in font ptmr7t!
 Missing character: There is no Ã in font ptmr7t!
 Missing character: There is no © in font ptmr7t!
-) [29
+) [26
 
 ] (./report.aux)
 
 LaTeX Warning: There were undefined references.
 
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
-
  ) 
 Here is how much of TeX's memory you used:
- 8511 strings out of 495061
- 121646 string characters out of 1182622
- 230215 words of memory out of 3000000
- 11337 multiletter control sequences out of 15000+50000
+ 8554 strings out of 495061
+ 122332 string characters out of 1182622
+ 234718 words of memory out of 3000000
+ 11379 multiletter control sequences out of 15000+50000
  41502 words of font info for 84 fonts, out of 3000000 for 9000
  28 hyphenation exceptions out of 8191
- 38i,23n,39p,1236b,458s stack positions out of 5000i,500n,10000p,200000b,50000s
-pdfTeX warning (dest): name{subfigure.2.10.2} has been referenced but does no
-t exist, replaced by a fixed one
-
-pdfTeX warning (dest): name{subfigure.2.10.1} has been referenced but does not 
-exist, replaced by a fixed one
-
-{/usr/share/texmf-texlive/fonts/enc/dvips/base/8r.enc}</usr/share/texmf-texlive
-/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texmf-texlive/fonts/type
-1/public/amsfonts/cm/cmmi10.pfb></usr/share/texmf-texlive/fonts/type1/public/am
-sfonts/cm/cmmi12.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/c
-mmi7.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmr10.pfb></u
-sr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/tex
-mf-texlive/fonts/type1/public/amsfonts/cm/cmr5.pfb></usr/share/texmf-texlive/fo
-nts/type1/public/amsfonts/cm/cmr7.pfb></usr/share/texmf-texlive/fonts/type1/pub
-lic/amsfonts/cm/cmsy10.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfont
-s/cm/cmsy5.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmsy7.p
-fb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/symbols/msbm10.pfb></u
-sr/share/texmf-texlive/fonts/type1/urw/courier/ucrr8a.pfb></usr/share/texmf-tex
-live/fonts/type1/urw/times/utmb8a.pfb></usr/share/texmf-texlive/fonts/type1/urw
-/times/utmr8a.pfb></usr/share/texmf-texlive/fonts/type1/urw/times/utmri8a.pfb>
-Output written on report.pdf (30 pages, 2441972 bytes).
+ 38i,23n,39p,1236b,448s stack positions out of 5000i,500n,10000p,200000b,50000s
+{/usr/share/texmf-texlive/fonts/enc/dvips/base/8r.enc}</usr/share/texmf-texli
+ve/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texmf-texlive/fonts/ty
+pe1/public/amsfonts/cm/cmmi10.pfb></usr/share/texmf-texlive/fonts/type1/public/
+amsfonts/cm/cmmi12.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm
+/cmmi7.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmr10.pfb><
+/usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/t
+exmf-texlive/fonts/type1/public/amsfonts/cm/cmr5.pfb></usr/share/texmf-texlive/
+fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/share/texmf-texlive/fonts/type1/p
+ublic/amsfonts/cm/cmsy10.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfo
+nts/cm/cmsy5.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmsy7
+.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/symbols/msbm10.pfb><
+/usr/share/texmf-texlive/fonts/type1/urw/courier/ucrr8a.pfb></usr/share/texmf-t
+exlive/fonts/type1/urw/times/utmb8a.pfb></usr/share/texmf-texlive/fonts/type1/u
+rw/times/utmr8a.pfb></usr/share/texmf-texlive/fonts/type1/urw/times/utmri8a.pfb
+>
+Output written on report.pdf (27 pages, 2502240 bytes).
 PDF statistics:
- 916 PDF objects out of 1000 (max. 8388607)
- 165 named destinations out of 1000 (max. 500000)
- 394 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 1022 PDF objects out of 1200 (max. 8388607)
+ 159 named destinations out of 1000 (max. 500000)
+ 414 words of extra memory for PDF output out of 10000 (max. 10000000)
 

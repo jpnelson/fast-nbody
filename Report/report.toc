@@ -15,10 +15,10 @@
 \contentsline {subsubsection}{Ewald summation}{7}{section*.6}
 \contentsline {subsubsection}{Real space computation}{7}{section*.7}
 \contentsline {subsubsection}{Reciprocal space computation}{7}{section*.9}
-\contentsline {subsubsection}{Periodic boundary conditions}{7}{section*.11}
+\contentsline {subsubsection}{Periodic boundary conditions}{9}{section*.11}
 \contentsline {subsection}{\numberline {2.2.2}Mathematical description}{9}{subsection.2.2.2}
 \contentsline {subsubsection}{Interpolating the charges to the Q array}{9}{section*.13}
-\contentsline {subsubsection}{Calculating electrostatic potential from the Q array}{9}{section*.14}
+\contentsline {subsubsection}{Calculating electrostatic potential from the Q array}{10}{section*.14}
 \contentsline {subsubsection}{Interpolating energies back from the mesh in real space}{10}{section*.15}
 \contentsline {subsubsection}{The ewald coefficient}{10}{section*.16}
 \contentsline {subsection}{\numberline {2.2.3}The algorithm}{11}{subsection.2.2.3}
@@ -28,45 +28,45 @@
 \contentsline {subsubsection}{Fast Fourier Transformations}{11}{section*.19}
 \contentsline {subsection}{\numberline {2.2.5}Running time analysis}{11}{subsection.2.2.5}
 \contentsline {subsubsection}{Cardinal B spline}{11}{section*.20}
-\contentsline {subsubsection}{Algorithm complexity}{13}{section*.21}
-\contentsline {subsubsection}{Method analysis}{13}{section*.23}
-\contentsline {subsection}{\numberline {2.2.6}Accuracy analysis}{13}{subsection.2.2.6}
+\contentsline {subsubsection}{Algorithm complexity}{12}{section*.21}
+\contentsline {subsubsection}{Method analysis}{12}{section*.23}
+\contentsline {subsection}{\numberline {2.2.6}Accuracy analysis}{12}{subsection.2.2.6}
 \contentsline {section}{\numberline {2.3}The Fast multipole algorithm}{13}{section.2.3}
 \contentsline {subsection}{\numberline {2.3.1}Background}{13}{subsection.2.3.1}
 \contentsline {subsubsection}{Complex plane}{13}{section*.26}
 \contentsline {subsubsection}{Multipole expansions}{13}{section*.27}
-\contentsline {subsubsection}{The mesh}{15}{section*.28}
-\contentsline {subsubsection}{Well separated cells}{15}{section*.30}
-\contentsline {subsection}{\numberline {2.3.2}Mathematical description}{16}{subsection.2.3.2}
-\contentsline {subsubsection}{Potential and the multipole expansion approximation}{16}{section*.32}
-\contentsline {subsubsection}{Shifting multipole expansions}{16}{section*.33}
-\contentsline {subsubsection}{Local expansions}{16}{section*.34}
-\contentsline {subsection}{\numberline {2.3.3}The algorithm}{17}{subsection.2.3.3}
-\contentsline {subsection}{\numberline {2.3.4}The implementation}{17}{subsection.2.3.4}
-\contentsline {subsection}{\numberline {2.3.5}Running time analysis}{17}{subsection.2.3.5}
-\contentsline {subsubsection}{Complexity analysis}{17}{section*.35}
-\contentsline {subsubsection}{Method analysis}{19}{section*.37}
-\contentsline {subsection}{\numberline {2.3.6}Accuracy analysis}{19}{subsection.2.3.6}
-\contentsline {subsubsection}{Maximum mesh level}{19}{section*.39}
-\contentsline {subsubsection}{Number of terms}{19}{section*.42}
-\contentsline {chapter}{\numberline {3}Comparison of the algorithms}{22}{chapter.3}
-\contentsline {section}{\numberline {3.1}Comparison of the running times}{22}{section.3.1}
-\contentsline {section}{\numberline {3.2}Discussion}{23}{section.3.2}
-\contentsline {subsection}{\numberline {3.2.1}The Particle Mesh Ewald method{}}{23}{subsection.3.2.1}
-\contentsline {subsubsection}{Advantages}{23}{section*.46}
-\contentsline {subsubsection}{Disadvantages}{24}{section*.47}
-\contentsline {subsection}{\numberline {3.2.2}The Fast Multipole Algorithm{}}{24}{subsection.3.2.2}
-\contentsline {subsubsection}{Advantages}{24}{section*.48}
-\contentsline {subsubsection}{Disadvantages}{24}{section*.49}
-\contentsline {subsection}{\numberline {3.2.3}The Basic Algorithm}{24}{subsection.3.2.3}
-\contentsline {subsection}{\numberline {3.2.4}Advantages}{24}{subsection.3.2.4}
-\contentsline {subsection}{\numberline {3.2.5}Disadvantages}{24}{subsection.3.2.5}
-\contentsline {section}{\numberline {3.3}Conclusion}{24}{section.3.3}
-\contentsline {chapter}{\numberline {A}Technical details}{26}{appendix.A}
-\contentsline {section}{\numberline {A.1}Benchmark computer details}{26}{section.A.1}
-\contentsline {chapter}{\numberline {B}Algorithms and Mathematics}{27}{appendix.B}
-\contentsline {section}{\numberline {B.1}The Particle Mesh Ewald method{}}{27}{section.B.1}
-\contentsline {subsection}{\numberline {B.1.1}Derivation of the reciprocal energy formula}{27}{subsection.B.1.1}
-\contentsline {subsection}{\numberline {B.1.2}Evaluation of the B spline}{27}{subsection.B.1.2}
-\contentsline {subsection}{\numberline {B.1.3}Verlet list algorithm}{28}{subsection.B.1.3}
-\contentsline {subsection}{\numberline {B.1.4}Ewald coefficient estimation algorithm}{28}{subsection.B.1.4}
+\contentsline {subsubsection}{The mesh}{13}{section*.28}
+\contentsline {subsubsection}{Well separated cells}{14}{section*.30}
+\contentsline {subsection}{\numberline {2.3.2}Mathematical description}{14}{subsection.2.3.2}
+\contentsline {subsubsection}{Potential and the multipole expansion approximation}{14}{section*.32}
+\contentsline {subsubsection}{Shifting multipole expansions}{15}{section*.33}
+\contentsline {subsubsection}{Local expansions}{15}{section*.34}
+\contentsline {subsection}{\numberline {2.3.3}The algorithm}{16}{subsection.2.3.3}
+\contentsline {subsection}{\numberline {2.3.4}The implementation}{16}{subsection.2.3.4}
+\contentsline {subsection}{\numberline {2.3.5}Running time analysis}{16}{subsection.2.3.5}
+\contentsline {subsubsection}{Complexity analysis}{16}{section*.35}
+\contentsline {subsubsection}{Method analysis}{17}{section*.37}
+\contentsline {subsection}{\numberline {2.3.6}Accuracy analysis}{17}{subsection.2.3.6}
+\contentsline {subsubsection}{Maximum mesh level}{18}{section*.39}
+\contentsline {subsubsection}{Number of terms}{18}{section*.42}
+\contentsline {chapter}{\numberline {3}Comparison of the algorithms}{20}{chapter.3}
+\contentsline {section}{\numberline {3.1}Comparison of the running times}{20}{section.3.1}
+\contentsline {section}{\numberline {3.2}Discussion}{21}{section.3.2}
+\contentsline {subsection}{\numberline {3.2.1}The Particle Mesh Ewald method{}}{21}{subsection.3.2.1}
+\contentsline {subsubsection}{Advantages}{21}{section*.46}
+\contentsline {subsubsection}{Disadvantages}{21}{section*.47}
+\contentsline {subsection}{\numberline {3.2.2}The Fast Multipole Algorithm{}}{22}{subsection.3.2.2}
+\contentsline {subsubsection}{Advantages}{22}{section*.48}
+\contentsline {subsubsection}{Disadvantages}{22}{section*.49}
+\contentsline {subsection}{\numberline {3.2.3}The Basic Algorithm}{22}{subsection.3.2.3}
+\contentsline {subsection}{\numberline {3.2.4}Advantages}{22}{subsection.3.2.4}
+\contentsline {subsection}{\numberline {3.2.5}Disadvantages}{22}{subsection.3.2.5}
+\contentsline {section}{\numberline {3.3}Conclusion}{22}{section.3.3}
+\contentsline {chapter}{\numberline {A}Technical details}{23}{appendix.A}
+\contentsline {section}{\numberline {A.1}Benchmark computer details}{23}{section.A.1}
+\contentsline {chapter}{\numberline {B}Algorithms and Mathematics}{24}{appendix.B}
+\contentsline {section}{\numberline {B.1}The Particle Mesh Ewald method{}}{24}{section.B.1}
+\contentsline {subsection}{\numberline {B.1.1}Derivation of the reciprocal energy formula}{24}{subsection.B.1.1}
+\contentsline {subsection}{\numberline {B.1.2}Evaluation of the B spline}{24}{subsection.B.1.2}
+\contentsline {subsection}{\numberline {B.1.3}Verlet list algorithm}{25}{subsection.B.1.3}
+\contentsline {subsection}{\numberline {B.1.4}Ewald coefficient estimation algorithm}{25}{subsection.B.1.4}
