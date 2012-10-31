@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2012.5.5)  1 NOV 2012 00:41
+This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2012.5.5)  1 NOV 2012 01:16
 entering extended mode
  %&-line parsing enabled.
 **final_presentation.tex
@@ -1060,7 +1060,7 @@ File: umsb.fd 2009/06/22 v3.00 AMS symbols B
 Package pdftex.def Warning: Option `bb' does not make sense,
 (pdftex.def)                using `viewport' instead on input line 69.
 
-<millenium_run.jpg, id=206, 2055.68pt x 1541.76pt>
+<millenium_run.jpg, id=226, 2055.68pt x 1541.76pt>
 File: millenium_run.jpg Graphic file (type jpg)
  <use millenium_run.jpg>
 [6
@@ -1070,7 +1070,7 @@ File: millenium_run.jpg Graphic file (type jpg)
 Package pdftex.def Warning: Option `bb' does not make sense,
 (pdftex.def)                using `viewport' instead on input line 69.
 
-<plasma.jpg, id=241, 1594.95876pt x 1615.03375pt>
+<plasma.jpg, id=263, 1594.95876pt x 1615.03375pt>
 File: plasma.jpg Graphic file (type jpg)
  <use plasma.jpg>
 Overfull \vbox (47.73447pt too high) detected at line 69
@@ -1083,7 +1083,7 @@ Overfull \vbox (47.73447pt too high) detected at line 69
 Package pdftex.def Warning: Option `bb' does not make sense,
 (pdftex.def)                using `viewport' instead on input line 69.
 
-<molecule.jpg, id=276, 1148.29pt x 939.51pt>
+<molecule.jpg, id=300, 1148.29pt x 939.51pt>
 File: molecule.jpg Graphic file (type jpg)
  <use molecule.jpg>
 Overfull \vbox (6.25615pt too high) detected at line 69
@@ -1104,11 +1104,11 @@ Overfull \vbox (6.25615pt too high) detected at line 69
 ] [14
 
 ]
-<fma_mesh.pdf, id=506, 402.85507pt x 477.75905pt>
+<fma_mesh.pdf, id=544, 402.85507pt x 477.75905pt>
 File: fma_mesh.pdf Graphic file (type pdf)
  <use fma_mesh.pdf> [15
 
- <./fma_mesh.pdf>] <wellsep.pdf, id=548, 321.77718pt x 322.12846pt>
+ <./fma_mesh.pdf>] <wellsep.pdf, id=588, 321.77718pt x 322.12846pt>
 File: wellsep.pdf Graphic file (type pdf)
  <use wellsep.pdf>
 [16
@@ -1127,14 +1127,14 @@ File: wellsep.pdf Graphic file (type pdf)
 
 ] [23
 
-] [24
-
 ]
-<Qarray.jpg, id=840, 1031.855pt x 513.92pt>
+<Qarray.jpg, id=862, 1031.855pt x 513.92pt>
 File: Qarray.jpg Graphic file (type jpg)
- <use Qarray.jpg> [25
+ <use Qarray.jpg> [24
 
- <./Qarray.jpg>] [26
+ <./Qarray.jpg>] [25
+
+] [26
 
 ] [27
 
@@ -1142,15 +1142,74 @@ File: Qarray.jpg Graphic file (type jpg)
 
 ] [29
 
-] [30
+] <pbc.pdf, id=1068, 550.86449pt x 160.6pt>
+File: pbc.pdf Graphic file (type pdf)
 
-] [31
+<use pbc.pdf> [30
 
-] [32
+ <./pbc.pdf>]
+<basic_algo_complex.pdf, id=1104, 587.19376pt x 442.65375pt>
+File: basic_algo_complex.pdf Graphic file (type pdf)
 
-] [33
+<use basic_algo_complex.pdf>
+Overfull \vbox (16.8323pt too high) detected at line 173
+ []
 
-] [34
+[31
+
+ <./basic_algo_complex.pdf>]
+<fma_2k_20k.pdf, id=1181, 587.19376pt x 442.65375pt>
+File: fma_2k_20k.pdf Graphic file (type pdf)
+ <use fma_2k_20k.pdf>
+Overfull \vbox (16.8323pt too high) detected at line 179
+ []
+
+[32
+
+ <./fma_2k_20k.pdf>]
+<pme_algo_complex.pdf, id=1256, 587.19376pt x 442.65375pt>
+File: pme_algo_complex.pdf Graphic file (type pdf)
+
+<use pme_algo_complex.pdf>
+Overfull \vbox (16.8323pt too high) detected at line 185
+ []
+
+[33
+
+ <./pme_algo_complex.pdf>]
+<comp_graph.pdf, id=1328, 587.19376pt x 442.65375pt>
+File: comp_graph.pdf Graphic file (type pdf)
+ <use comp_graph.pdf>
+Overfull \vbox (16.8323pt too high) detected at line 191
+ []
+
+[34
+
+ <./comp_graph.pdf>]
+<comp_graph_low.pdf, id=1403, 587.19376pt x 442.65375pt>
+File: comp_graph_low.pdf Graphic file (type pdf)
+
+<use comp_graph_low.pdf>
+Overfull \vbox (16.8323pt too high) detected at line 197
+ []
+
+[35
+
+ <./comp_graph_low.pdf>] [36
+
+] [37
+
+] [38
+
+] [39
+
+] [40
+
+] [41
+
+] [42
+
+] [43
 
 ]
 \tf@nav=\write7
@@ -1162,17 +1221,18 @@ File: Qarray.jpg Graphic file (type jpg)
 \tf@snm=\write9
 \openout9 = `final_presentation.snm'.
 
- (./final_presentation.aux)
+
+(./final_presentation.aux)
 
 LaTeX Font Warning: Size substitutions with differences
 (Font)              up to 1.0pt have occurred.
 
  ) 
 Here is how much of TeX's memory you used:
- 21505 strings out of 495061
- 453785 string characters out of 1182622
- 548355 words of memory out of 3000000
- 24044 multiletter control sequences out of 15000+50000
+ 21577 strings out of 495061
+ 454749 string characters out of 1182622
+ 548356 words of memory out of 3000000
+ 24090 multiletter control sequences out of 15000+50000
  13618 words of font info for 51 fonts, out of 3000000 for 9000
  28 hyphenation exceptions out of 8191
  50i,16n,61p,407b,579s stack positions out of 5000i,500n,10000p,200000b,50000s
@@ -1183,9 +1243,9 @@ type1/public/amsfonts/cm/cmssbx10.pfb></usr/share/texmf-texlive/fonts/type1/pub
 lic/amsfonts/cm/cmssi10.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfon
 ts/cm/cmssi12.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmss
 i8.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmsy10.pfb>
-Output written on final_presentation.pdf (34 pages, 3664448 bytes).
+Output written on final_presentation.pdf (43 pages, 3817334 bytes).
 PDF statistics:
- 1204 PDF objects out of 1440 (max. 8388607)
- 73 named destinations out of 1000 (max. 500000)
- 137 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 1799 PDF objects out of 2073 (max. 8388607)
+ 93 named destinations out of 1000 (max. 500000)
+ 183 words of extra memory for PDF output out of 10000 (max. 10000000)
 

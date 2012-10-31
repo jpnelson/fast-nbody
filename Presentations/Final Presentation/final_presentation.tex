@@ -145,11 +145,11 @@ Q = \frac{q_i * q_j}{|r_i-r_j|}
 \bcen Basic structure of the Particle Mesh Ewald Method \ecen
 \begin{itemize}
 \item<1-> Interpolate particles to a grid
-\bcen \includegraphics<2>[width=0.75\textwidth]{Qarray.jpg} \ecen
-\item<3-> Perform a fourier transformation on the grid
-\item<4-> Calculate long range potential in reciprocal space using this grid
-\item<5-> Return to real space using another fourier transformation
-\item<6-> Calculate in real space directly for near particles, and use interpolated grid values for the long range potential.
+\bcen \includegraphics<1>[width=0.75\textwidth]{Qarray.jpg} \ecen
+\item<2-> Perform a fourier transformation on the grid
+\item<3-> Calculate long range potential in reciprocal space using this grid
+\item<4-> Return to real space using another fourier transformation
+\item<5-> Calculate in real space directly for near particles, and use interpolated grid values for the long range potential.
 \end{itemize}
 \end{frame}
 
@@ -160,11 +160,62 @@ Q = \frac{q_i * q_j}{|r_i-r_j|}
 \begin{itemize}
 \item<1-> Complexity of $O(n\text{log}(n))$
 \item<2-> Fourier transformation technique leads to Periodic Boundary Conditions
-\item<3-> Return to real space using another fourier transformation
+\bcen \includegraphics<2>[width=0.75\textwidth]{pbc.pdf} \ecen
 \end{itemize}
 \end{frame}
 \note{$O(n\text{log}(n))$ comes from the FFT part}
 
-\end{document}
+\section{Results}
+\begin{frame}
+\frametitle{Basic Algorithm complexity}
+\framesubtitle{Basic Algorithm}
+\bcen \includegraphics[width=\textwidth]{basic_algo_complex.pdf} \ecen
+\end{frame}
 
+\begin{frame}
+\framesubtitle{Fast Multipole Algorithm}
+\frametitle{Fast Multipole Algorithm complexity}
+\bcen \includegraphics[width=\textwidth]{fma_2k_20k.pdf} \ecen
+\end{frame}
+
+\begin{frame}
+\framesubtitle{Particle Mesh Ewald Algorithm}
+\frametitle{Particle Mesh Ewald complexity}
+\bcen \includegraphics[width=\textwidth]{pme_algo_complex.pdf} \ecen
+\end{frame}
+
+\begin{frame}
+\framesubtitle{Comparison}
+\frametitle{Overlayed comparison graph}
+\bcen \includegraphics[width=\textwidth]{comp_graph.pdf} \ecen
+\end{frame}
+
+\begin{frame}
+\framesubtitle{Comparison}
+\frametitle{Overlayed comparison graph}
+\bcen \includegraphics[width=\textwidth]{comp_graph_low.pdf} \ecen
+\end{frame}
+
+\section{Conclusion}
+\begin{frame}
+\frametitle{Conclusion}
+\framesubtitle{Methods}
+\begin{itemize}
+\item<1-> Fast Multipole Algorithm is the fastest with the lowest run times over most cases
+\item<2-> Particle Mesh Ewald has desriable features and more potential for paralellisation and optimisation
+\item<3-> The Basic solution is not feasible for very large system sizes
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Conclusion}
+\framesubtitle{Contributions}
+\begin{itemize}
+\item<1-> Created fucntional implementations of the Basic, Particle Mesh Ewald, and Fast Multipole algorithms in Java. 
+\item<2-> Well documented and coded with readability in mind
+\item<3-> Actualization of often abstractly defined algorithms
+\item<4-> Complexity analysis of algorithms, crossover points found.
+\item<5-> Bridged the gap between mathematicians, computer scientists, and computational chemists.
+\end{itemize}
+\end{frame}
 \end{document}
