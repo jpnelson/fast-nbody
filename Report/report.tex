@@ -86,7 +86,7 @@ Dr Eric \textsc{McCreath} \\
 
 
 \begin{abstract}
-The N body problem is common across the fields of physics, biology and chemistry. The classic solution to this problem has an inhibitive complexity in the class $O(n^2)$. Two alternative methods were examined: The Fast Multipole Algorithm, and the Particle Mesh Ewald Method, with better complexities of $O(n)$ and $O(n \text{log}(n))$, respectively. These algorithms were implemented in Java, and their efficiencies were discussed and compared. The algorithms were run over typical molecular dynamics simulations to determine the most efficient algorithm for the N-body problem. It was found that the \fma{} was the most efficient algorithm for this architecture and implementation, but the \pmem{} may be preferable in high perfomance parallel applications. The algorithms and their advantages / disadvantages were discussed in detail.
+The N body problem is common across the fields of physics, biology and chemistry. The classic solution to this problem has an inhibitive complexity in the class $O(n^2)$. This project examines two competing algorithms: The Fast Multipole Algorithm, and the Particle Mesh Ewald Method, with better complexities of $O(n)$ and $O(n \text{log}(n))$, respectively. These algorithms were implemented in Java, and their efficiencies were discussed and compared. The algorithms were run over typical molecular dynamics simulations to determine the most efficient algorithm for the N-body problem. It was found that the \fma{} was the most efficient algorithm for this architecture and implementation, but the \pmem{} may be preferable in high perfomance parallel applications. The algorithms and their advantages / disadvantages were discussed in detail.
 \end{abstract}
 
 \tableofcontents
@@ -96,11 +96,13 @@ The N body problem is common across the fields of physics, biology and chemistry
 This chapter introduces the N body problem, approaches that have been made in the past, and gives background on related literature.
 \section{The N body problem}
     \subsection{Problem summary}
-    Suppose we have a collection of $n$ bodies in some space, that interact with each other. Each body interacts with every other body in the system in a pairwise way. Often this pairwise interaction is a function of the distance between the bodies, and their properties, such as mass or electric charge. The task is to calculate the total effect on each body from every other body.\\
+    Suppose we have a collection of $n$ bodies in some space. Each body interacts with every other body in the system in a pairwise way. Often this pairwise interaction is a function of the distance between the bodies, and their properties, such as mass or electric charge. The task is to calculate the total effect on each body from every other body.\\
     
-    The N body problem is key to the simulation of many different scientific environments. The bodies may be astrophysical objects, such as planets or galaxies, interacting based on distance and body mass \cite{MilleniumRun}, or atoms in a molecular dynamics simulation, based on distance and particle charge.\cite{NAMD}. During the report, we will mostly discuss the N body problem in regards to Molecular dynamics, however the approaches can be generalised to other fiields.
+    The N body problem is key to the simulation of many different scientific environments. The bodies may be astrophysical objects, such as planets or galaxies, interacting based on distance and body mass \cite{MilleniumRun}, or atoms in a molecular dynamics simulation, based on distance and particle charge \cite{NAMD}. During the report, we will mostly discuss the N body problem in regards to Molecular dynamics, however the approaches can be generalised to other fiields.
     \subsection{History of the problem}
-    The N body problem was first formulated mathematically in Isaac Newton's Principia Mathematica. \cite{principia}. Later, H. Poincar\`{e} showed the impossibility of an analytical solution using first order integrals for $N \geq 3$. \cite{poincare}. This led to the development of several approximation methods. These methods can be roughly classified as either tree methods, or mesh methods.\\
+    The N body problem was first formulated mathematically in Isaac Newton's Principia Mathematica \cite{principia}. Later, H. Poincar\`{e} showed the impossibility of a purely analytical solution using first order integrals for $N \geq 3$ \cite{poincare}. This led to the development of several approximation methods, which use discrete time steps and iterations to calculate approximate forces and trajectories.
+    
+    In more recent years, improvements have been made to these iterative methods. These methods can be roughly classified as either tree methods, or mesh methods.\\
     
     Tree methods are methods that break the simulation space into cells, and use a tree structure to organise these cells, allowing close interactions to be calculated directly, and far ones approximated. The \fma{}, first described by L. Greengard and V. Rokhlin \cite{greengard:315}, is such a method, using multipole expansions to approximate far cells.\\
     
@@ -108,7 +110,7 @@ This chapter introduces the N body problem, approaches that have been made in th
     \subsection{Related work}
     Comparisons of the \fma{} and the \pmem{} that have been made previously have found that the \pmem{} outperforms the \fma{} in the range $10^4$ - $10^5$. (H. Petersen, \cite{petersen:3668}). A. Toukmaji et al.\ \cite{toukmaji:73} claim that the mesh methods are faster in the range $10^3$ - $10^4$, and the multipole tree methods faster for $N > 10^5$.
     \subsection{Contribution}
-    The contribution to this section of work that this paper provides includes a basic Java implementation of the \pmem{} and the \fma{}. This software allows direct comparison of the two algorithms in terms of speed and accuracy. The code was written with readibility in mind, rather than focusing on excessive optimisation, which obscures the algorithm the code implements.
+    The contribution this paper provides is a basic Java implementation of the \pmem{} and the \fma{}. This software allows direct comparison of the two algorithms in terms of speed and accuracy. The code was written with readibility in mind, rather than focusing on excessive optimisation, which obscures the algorithm the code implements. The code also provides a good starting point in understanding these complex algorithms, which are often only described in very abstract terms.
     
     The report seeks to give insight into the approaches from a Computer Science perspective, while giving the background necessary to understand it from a Computational Chemistry perspective.
     
@@ -118,6 +120,8 @@ This chapter introduces the N body problem, approaches that have been made in th
 %_____________ALGORITHMS CHAPTER________________
 \chapter{Algorithms for the N body problem}
 This chapter describes the mathematics and the implementation of the main algorithms discussed in this report: The basic algorithm, the \fma{}. and the \pmem{}. For each of these methods, we examine their running times and accuracy individually, and discuss the details of their implementations in Java.
+
+The N body problem in the context of electrostatics can be formally stated as: given $n$ bodies having positions $r_1,r_2,...,r_n$ and charges $q_1,q_2,...q_n$ find the potential at each body's position.
 \section{The $O(n^2)$ solution}
 \subsection{The algorithm}
         
@@ -133,12 +137,12 @@ The simplest solution to the N body problem is the basic $O(n^2)$ approach of ca
 %%%%%PSEUDOCODE%%%%%%%%%
 \begin{algorithm}
  \SetLine
- \KwData{$r_i$: particle positions, $q_i$: particle charges, N: number of particles, Q: output array of charges}
+ \KwData{$r_i$: particle positions, $q_i$: particle charges, N: number of particles, Q: output array of charges, initialised to zero}
  \For{i=0 to N}{
   \For{j=i to N}{
       \If{$i \not= j$}{
         $d := |r_i - r_j|$\;
-        $Q[i] := q_i * q_j / d$\;
+        $Q[i] += q_i * q_j / d$\;
        }
   }
  }
@@ -175,9 +179,9 @@ The key concept behind the \pmem{} is that of \emph{Ewald Summation}. Ewald Summ
 \[
 \phi(r) = \phi_{\text{sr}}(r) + \phi_{\text{lr}}(r)
 \]
-The advantage of doing this is that $\phi_{\text{sr}}$, the short range term, converges quickly in real space (effects from charges far away from $r$ quickly decrease), while $\phi_{\text{lr}}$ converges quickly in reciprocal space. The \pmem{} takes advantage of this by calculating the $\phi_{\text{sr}}$ term by calculating potential directly for nearby particles, and uses a grid based direct fourier transformation to calculate the long range component.
+The advantage of doing this is that $\phi_{\text{sr}}$, the short range term, converges \footnote{Convergance meaning that the terms of the multipole sequence quickly approach the true value} quickly in real space (effects from charges far away from $r$ quickly decrease), while $\phi_{\text{lr}}$ converges quickly in reciprocal space. The \pmem{} takes advantage of this by calculating the $\phi_{\text{sr}}$ term by calculating potential directly for nearby particles, and uses a grid based direct fourier transformation to calculate the long range component.
 \subsubsection{Real space computation}
-The short range potential at a point can be computed by considering only particles within a small radius of the point. We can keep the radius small as $\phi_{\text{sr}}$ converges quickly in real space. This is also important, as we need to keep the number of particles considered less than $N$, in order to reduce the algorithm from $O(n^2)$ to $O(n)$ complexity. This is the case though, as the radius we consider is constant and less than the size of the simulation cell width, and we assume the particles are distributed randomly within the simulation cell.
+The short range potential at a point can be computed by considering only particles within a small radius of the point. We can keep the radius small as $\phi_{\text{sr}}$ converges quickly in real space. This is also important, as we need to keep the complexity of the number of particles constant, in order to reduce the algorithm from $O(n^2)$ to $O(n)$ complexity. This is the case though, as the radius we consider is constant and less than the size of the simulation cell width, and we assume the particles are distributed randomly within the simulation cell.
 %%%%%%%%FIGURE%%%%%%%%%%%%%
 \begin{figure}
 \bcen \includegraphics{figures/cutoff.pdf} \ecen
@@ -194,7 +198,7 @@ Discrete fourier transformations require a discrete space to transform, however,
 \caption{A distribution of continuous charges, and an interpretation of them as discrete charges}
 \end{figure}
 
-An alternative to using lagrange interpolation is to use cardinal B splines. This modification is known as the \emph{Smooth Particle Mesh Ewald} method, and is advantageous in terms of accuracy, and is also easily differentiable, which is important if the forces are required as well as the potentials.  \cite{essmann:8577} This is the method that was implemented in this paper.
+An alternative to using lagrange interpolation is to use cardinal B splines. This modification is known as the \emph{Smooth Particle Mesh Ewald} method, and is advantageous in terms of accuracy, and is also easily differentiable, which is important if the forces are required as well as the potentials  \cite{essmann:8577}. This is the method that was implemented in this paper.
 
 
 \subsubsection{Periodic boundary conditions}
@@ -258,7 +262,7 @@ The ewald coefficient, $\beta$, is a number describing the ratio between the rea
 \frac{\text{erfc}(\beta r_{\text{cut}})}{r_\text{cut}} \leq \epsilon_\text{tol}
 \label{eq:ewald_coeff}
 \end{equation}
-Where erfc is the complimentary error function, a function that tends quickly to zero, depending on it's argument. The relation means that for $r > r_{cut}$, we have $\frac{\text{erfc}(\beta r_{\text{cut}})}{r_\text{cut}} \leq \epsilon_\text{tol}$, and for all $r > r_\text{cut}$ we can ignore the direct energy contribution, given by equation \ref{eq:energy_dir} \cite{essmann:8577}\\
+Where erfc is the complimentary error function, a function that tends quickly to zero, depending on it's argument. The relation means that for $r > r_{cut}$, we have $\frac{\text{erfc}(\beta r_{\text{cut}})}{r_\text{cut}} \leq \epsilon_\text{tol}$, and for all $r > r_\text{cut}$ we can ignore the direct energy contribution, given by Equation \ref{eq:energy_dir} \cite{essmann:8577}\\
 \begin{equation}
 E_\text{dir} = \frac{1}{2} \sum_{n} \sum_{i,j = 1} ^N \frac{q_i q_j \text{erfc}{\beta |r_j - r_i|}}{|r_j - r_i|}
 \label{eq:energy_dir}
@@ -341,10 +345,10 @@ The accuracy of the \pmem{} was far lower than expected in practice. Total energ
 \subsection{Background}
 The \fma{} is similar to the \pmem{} in that both use a grid structure, and bounded approximations, to speed up computation. However, they are different in the ways they use the mesh, and the way approximations are made.
 \subsubsection{Complex plane}
-It should be noted that for this algorithm, it is simplest to implement in two dimensions. It is possible to to implement in three dimensions, with Spherical Harmonics \cite{Ihler04}, however this is not discussed in this paper. Instead, we work in two dimensions, on the complex plane. We give a point $(x,y)$ on the Real plane the value $z = x + yi$ on the Complex plane. This way, we can represent each point as a single number, and use complex versions of functions while calculating the multipole expansions.
+It should be noted that for this algorithm, it is simplest to implement in two dimensions. It is possible to implement in three dimensions, with Spherical Harmonics \cite{Ihler04}, however this is not discussed in this paper. Instead, we work in two dimensions, on the complex plane. We give a point $(x,y)$ on the Real plane the value $z = x + yi$ on the Complex plane. This way, we can represent each point as a single number, and use complex versions of functions while calculating the multipole expansions.
 
 \subsubsection{Multipole expansions}
-A multipole expansion is a function which is a sum of a series of terms, which converges to some other function (in this case, the potential energy function). This convergence is fast, which makes it a good approximation to use in the \fma{}. These multipole expansions are centered on one point, and are valid for points within a certain distance of this center, but may be shifted and combined to gain more general multipole expansions. \cite{greengard:315}
+A multipole expansion is a function which is a sum of a series of terms, which converges to some other function (in this case, the potential energy function). This convergence is fast, which makes it a good approximation to use in the \fma{}. These multipole expansions are centered on one point, and are valid for points a certain distance away from this center, but may be shifted and combined to gain more general multipole expansions. \cite{greengard:315}
 
 \subsubsection{The mesh}
 The mesh is similar to the one used in the \pmem{}. We say that the mesh has $n$ levels, and at each level we split each cell into quarters, starting with level $0$, which is the simulation cell. Each cell is split in four when moving down a level. We call the four sub cells of a cell $c$ the \emph{children} of $c$. Conversely, we call the cell that $c$ is a sub cell of the \emph{parent} of $c$.
@@ -376,7 +380,7 @@ We describe the potential at a point $x_0 \in \mathbb{C}$ from the charge $q$ at
 \phi_{x_0}(x) = -q\text{log}{|x - x_0|}
 \label{eq:potential}
 \end{equation}
-This function describes the logarithmic potential in 2-Dimensions. \cite{greengard:315} \cite{samaj}.\\
+This function describes the logarithmic potential in 2-Dimensions \cite{greengard:315} \cite{samaj}.\\
 
 A multipole expansion for this function is derived in \cite{greengard:315}. Suppose that $m$ charges of strength $\{q_i,i=1,...,m\}$ are located at points $\{z_i, i=1,...,m\}$, with $|z_i| < r$. Then for any $z \in \mathbb{C}$ with $|z| > r$, the potential $\phi(z)$ is given by
 \begin{equation}
@@ -389,7 +393,7 @@ Q = \sum_{i=1} ^m q_i
 \hspace{0.5cm} \text{and} \hspace{0.5cm}
 a_k = \sum_{i=1} ^m \frac{-q_i z^k _i}{k}
 \end{equation}
-While this is exact for an infinite sum of terms, we can truncate the series at term $p$, and if $p$ is large enough, this approximation is close to the actual potential $\phi(z)$. A description of how close can be found in \cite{greengard:315}
+While this is exact for an infinite sum of terms, we can truncate the series at term $p$, and if $p$ is large enough, this approximation is close to the actual potential $\phi(z)$. A description of how close can be found in \cite{greengard:315}.
 \subsubsection{Shifting multipole expansions}
 A multipole expansion's center may be shifted, which is necessary for the \fma{}. Suppose that
 \begin{equation}
@@ -499,7 +503,7 @@ Using \texttt{VisualVM} \footnote{VisualVM, \url{http://visualvm.java.net/}}, th
 We can see that most of the running time is spent forming local expansions, and doing complex arithmetic. The run time is split over several different methods, which indicates there are no severe efficiency concerns. Most of the run time is spent performing complex arithmetic, which is what should be expected.
 
 \subsection{Accuracy analysis}
-The \fma{} has two main parameters that control accuracy - the number of mesh levels, and the number of terms in the multipole expansion. We call the number of mesh levels $N$ and the number of terms in the multipole expansion $p$. For reasonable accuracy, we should expect $N \approx \text{log}_4(n)$, where $n$ is the number of particles, and $p \approx \text{log}_2(\epsilon)$, where $\epsilon$ is the desired precision. \cite{greengard:315}
+The \fma{} has two main parameters that control accuracy - the number of mesh levels, and the number of terms in the multipole expansion. We call the number of mesh levels $N$ and the number of terms in the multipole expansion $p$. For reasonable accuracy, we should expect $N \approx \text{log}_4(n)$, where $n$ is the number of particles, and $p \approx \text{log}_2(\epsilon)$, where $\epsilon$ is the desired precision \cite{greengard:315}.
 \subsubsection{Maximum mesh level}
 We plot the accuracy of the method as a function of these two parameters. In figures \ref{fig:fma_mesh_acc} and \ref{fig:fma_fixed_mesh_acc}, we demonstrate the effect the mesh level has on the error. 
 
@@ -562,12 +566,12 @@ To determine which algorithm is fastest for $N < 1000$, a higher resolution expe
 \subsubsection{Advantages}
 The \pmem{} has several features that differentiate it from the \fma{}. The first of these is Periodic Boundary Conditions (discussed in Section \ref{sec:pme_period_bound_cond}). Periodic Boundary Conditions allow simulation of large spaces realistically, with no reduction in performance. For practical applications, such as chemistry, boundary condition effects are dramatically reduced.
 
-In addition to this, the \pmem{} as it is described in \cite{darden:10089} is described in three dimensions. The \fma{} requires the addition of Spherical Harmonics for the algorithm to be extended to 3-Dimensions \cite{spherical}, which increases the complexity of the algorithm, and the decreases the algorithm's efficiency.
+In addition to this, the \pmem{} as it is described in \cite{darden:10089} is described in three dimensions. The \fma{} requires the addition of Spherical Harmonics for the algorithm to be extended to 3-Dimensions \cite{spherical}, which increases the intricacy of the algorithm, and the decreases the algorithm's efficiency.
 
 Another advantage of the \pmem{} is it's suitability for parallel execution. Most of the calculations performed in the \pmem{} are independent of each other, and can be easily parallelised with a small amount of overhead (for example, the NAMD \cite{NAMD} molecular dynamics simulation software). Parallel methods for calculating the the Fourier Transformations are well explored \cite{lee05}.
 
 \subsubsection{Disadvantages}
-For some purposes, the Periodic Boundary Conditions introduce error rather than introduce it. This is the case for small systems, that should not tile infinitely in all dimensions. This was the case for the implementation presented in this paper, and padding was required to reduce the effects of the Periodic Boundary Conditions.
+For some purposes, the Periodic Boundary Conditions introduce error rather than reduce it. This is the case for small systems, that should not tile infinitely in all dimensions. This was the case for the implementation presented in this paper, and padding was required to reduce the effects of the Periodic Boundary Conditions.
 
 The mathematics of the \pmem{} is complex and intricate. This makes debugging, writing and maintaining software implementing the \pmem{} more difficult than for the \fma{}. 
 
@@ -584,7 +588,7 @@ The \fma{} is not as well suited to parallelisation as the \pmem{} is. The natur
 
 \subsection{The Basic Algorithm}
 \subsection{Advantages}
-The Basic Algorithm is the fastest for systems with sizes in the range 0 to 750 (see Figure \ref{fig:comp_graph_low}). For small systems, this is the best choice of algorithm, as it has no initialisation time, and it's error is restricted only by the machine precision.
+The Basic Algorithm is the fastest for systems with sizes in the range 0 to 750 (see Figure \ref{fig:comp_graph_low}). For small systems, this is the best choice of algorithm, as it has no initialisation time, and it's error is restricted only by the machine precision. This can be particularly effective on GPU architectures.
 
 The Basic Algorithm is also well suited to parallelisation, and a parallel extension of the algorithm would be trivial, as particle-particle potential calculations are independent of each other.
 \subsection{Disadvantages}
